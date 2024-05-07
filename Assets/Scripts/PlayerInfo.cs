@@ -1,9 +1,0 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerInfo : MonoBehaviour
-{
-    bool team;
-    PlayerClass playerClass;
-}

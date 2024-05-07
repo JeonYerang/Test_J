@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Healer : PlayerClass
+public class Healer : PlayerAttack
 {
-    public Syringe attackPrefab;
-
-    public override void Attack()
+    public void DamageBuff()
     {
-        Syringe syringe = Instantiate(attackPrefab);
-        syringe.InitAndShot(this, attackPoint, attackSpeed);
+
     }
 
-    public void Resurrection(PlayerClass target)
+    public void Resurrection(PlayerAttack target)
     {
 
     }

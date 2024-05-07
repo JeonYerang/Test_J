@@ -4,24 +4,20 @@ using UnityEngine;
 
 public class Syringe : Projectile
 {
-    public void InflictHeal(PlayerClass player)
-    {
-        player.TakeHeal(damage);
-    }
-
     protected override void OnTriggerEnter(Collider other)
     {
-        /*if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            PlayerClass target = other.GetComponent<PlayerClass>();
+            PlayerInfo target = other.GetComponent<PlayerInfo>();
+            PlayerAttack targetAttack = other.GetComponent<PlayerAttack>();
             if(owner.team == target.team)
             {
-                InflictHeal(target);
+                targetAttack.TakeHeal(damage);
             }
             else
             {
-                InflictDamage(target);
+                targetAttack.GetDamage(damage);
             }
-        }*/
+        }
     }
 }

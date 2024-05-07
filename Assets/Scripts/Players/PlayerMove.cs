@@ -26,7 +26,6 @@ public class PlayerMove : MonoBehaviour
     float yInput;
 
     public State state;
-    public PlayerClass playerClass;
 
     private void Awake()
     {
@@ -91,6 +90,12 @@ public class PlayerMove : MonoBehaviour
 
         controller.Move(Vector3.up * gravityValue * Time.deltaTime);
         //animator.SetInteger("State", (int)state);
+    }
+
+    public void Init(float moveSpeed, float jumpPower)
+    {
+        this.moveSpeed = moveSpeed;
+        this.jumpPower = jumpPower;
     }
 
     private void CalcMoveDir(float x, float y)
