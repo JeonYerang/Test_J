@@ -20,10 +20,10 @@ public class PlayerAttack : MonoBehaviour
 
     protected void Init(ClassData classData)
     {
-        this.maxHp = classData.maxHp;
-        this.attackPoint = classData.attackPoint;
-        this.attackSpeed = classData.attackSpeed;
-        this.attackCoolTime = classData.attackCoolTime;
+        //this.maxHp = classData.maxHp;
+        //this.attackPoint = classData.attackPoint;
+        //this.attackSpeed = classData.attackSpeed;
+        //this.attackCoolTime = classData.attackCoolTime;
 
         currentHp = maxHp;
     }
