@@ -22,6 +22,6 @@ public class PlayerInfo : MonoBehaviour
 
     public void DecisionClass()
     {
-        gameObject.AddComponent(PlayerSpawnManager.Instance.classDic[playerClass].playerAttack.GetType());
+        
     }
 }
