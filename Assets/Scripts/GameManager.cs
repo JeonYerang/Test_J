@@ -1,8 +1,11 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,16 +23,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        SetPlayerProperties(PhotonNetwork.LocalPlayer);
+
         if (false == PhotonNetwork.InRoom)
         {
-            StartCoroutine(DebugStart());
-            return;
+            //StartCoroutine(DebugStart());
         }
         else
         {
             //normal game start
         }
     }
+
+    /*private IEnumerator StartCountDown(int sec)
+    {
+
+    }*/
 
     private IEnumerator DebugStart()
     {
@@ -58,5 +67,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    private void SetPlayerProperties(Player player)
+    {
+        PhotonHashtable playerOption = new PhotonHashtable() {
+            { "Team", -1 },
+            { "Class", -1 }};
+
+        player.SetCustomProperties(playerOption);
+
+        /*for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            //PhotonNetwork.PlayerList[i].SetCustomProperties(
+            //    new PhotonHashtable { { "IsAdmin", "Admin" } });
+        }*/
+    }
 }

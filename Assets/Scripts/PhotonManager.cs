@@ -8,13 +8,20 @@ using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
+    public static PhotonManager Instance { get; private set; }
+    public ClassSelectPanel classSelectPanel;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         PhotonNetwork.NickName = $"TestPlayer {Random.Range(100, 1000)}";
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    //룸 커스텀 프로퍼티
     public override void OnConnectedToMaster()
     {
         RoomOptions roomOption = new RoomOptions();
@@ -24,32 +31,55 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         
         PhotonNetwork.JoinOrCreateRoom("TestRoom", roomOption, null);
     }
+
     public override void OnJoinedRoom()
     {
-        //GameObject.Find("Canvas").transform.Find("DebugText").GetComponent<Text>().text
-        //    = PhotonNetwork.CurrentRoom.Name;
+        print($"{PhotonNetwork.CurrentRoom.Name}에 참가함");
 
-        if (PhotonNetwork.IsMasterClient)
+        //public bool IsMine { get => player == PhotonNetwork.LocalPlayer; }
+        //public Player player;
+
+        
+        /*if (PhotonNetwork.IsMasterClient)
         {
             
-        }
+        }*/
 
-        GameManager.isGameReady = true;
+        //GameManager.isGameReady = true;
+
+        classSelectPanel.InitPlayerList();
+    }
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        classSelectPanel.AddPlayerEntry(newPlayer);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        classSelectPanel.RemovePlayerEntry(otherPlayer);
     }
 
     //플레이어 커스텀 프로퍼티 설정
-    private void SetPlayerProperties()
+    private void SetPlayerProperties(Player player)
     {
         PhotonHashtable playerOption = new PhotonHashtable() {
             { "Team", -1 },
             { "Class", -1 }};
 
-        PhotonNetwork.LocalPlayer.SetCustomProperties(playerOption);
+        player.SetCustomProperties(playerOption);
 
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        /*for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             //PhotonNetwork.PlayerList[i].SetCustomProperties(
             //    new PhotonHashtable { { "IsAdmin", "Admin" } });
+        }*/
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, PhotonHashtable changedProps)
+    {
+        if(changedProps.ContainsKey("Class"))
+        {
+            classSelectPanel.OnClassPropertyChanged(targetPlayer);
         }
     }
 }

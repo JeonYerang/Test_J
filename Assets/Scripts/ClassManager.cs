@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public enum PlayerClass
 {
@@ -12,12 +12,6 @@ public enum PlayerClass
     Archer,
     Tanker,
     Healer
-}
-
-public enum PlayerTeam
-{
-    Red,
-    Blue
 }
 
 public class PlayerInfoC
@@ -28,20 +22,18 @@ public class PlayerInfoC
     PlayerClass playerClass;
 }
 
-public class ClassManager : MonoBehaviour
+public class ClassData : ScriptableObject
+{
+    public string className;
+    public Sprite classImage;
+}
+
+public class ClassManager : MonoBehaviourPunCallbacks
 {
     public static ClassManager Instance { get; private set; }
-
-    public Dictionary<PlayerClass, GameObject> classDic = new Dictionary<PlayerClass, GameObject>();
-
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    public void DecisionClass()
-    {
-        
     }
 }
