@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LobbyManager : MonoBehaviourPunCallbacks
+public class LobbyPhotonManager : MonoBehaviourPunCallbacks
 {
-    public static LobbyManager Instance;
+    public static LobbyPhotonManager Instance;
     private PanelManager panelManager;
 
     private void Awake()
@@ -22,11 +22,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnConnected()
     {
         StartCoroutine(WaitConnected());
-        //var customProperties = PhotonNetwork.LocalPlayer.CustomProperties;
-
-        //customProperties["characterSelect"] = 1;
-
-        //PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
     }
 
     IEnumerator WaitConnected()
@@ -68,6 +63,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        RoomManager.Instance.InitTeam();
+
         panelManager.PanelOpen("Room");
     }
 
@@ -92,6 +89,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (changedProps.ContainsKey("Ready"))
         {
             panelManager.roomPanel.SetPlayerReady(targetPlayer.ActorNumber, (bool)changedProps["Ready"]);
+        }
+        if (changedProps.ContainsKey("Team"))
+        {
+            panelManager.roomPanel.SetPlayerTeam(targetPlayer.ActorNumber, (int)changedProps["Team"]);
         }
     }
 }

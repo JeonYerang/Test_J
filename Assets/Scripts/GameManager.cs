@@ -7,12 +7,20 @@ using UnityEngine;
 
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
+public enum GameMode
+{
+    Occupation
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public PhotonView PV;
+
     public Transform spawnPoints;
 
+    public int countDown;
     public static bool isGameReady = false;
 
     private void Awake()
@@ -23,7 +31,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetPlayerProperties(PhotonNetwork.LocalPlayer);
+        SetClassProperties(PhotonNetwork.LocalPlayer);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            StartCountDown(10);
+        }
 
         if (false == PhotonNetwork.InRoom)
         {
@@ -35,10 +48,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /*private IEnumerator StartCountDown(int sec)
+    private void OnEnable()
     {
+        GameUIManager.Instance.ShowSelectPanel();
+    }
 
-    }*/
+    private IEnumerator StartCountDown(int sec)
+    {
+        countDown = sec;
+
+        while(countDown > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            countDown--;
+            PV.RPC("ShowTimer", RpcTarget.All, countDown);
+        }
+    }
+
+    [PunRPC]
+    void ShowTimer(int sec)
+    {
+        GameUIManager.Instance.classSelectPanel.SetCount(countDown);
+    }
 
     private IEnumerator DebugStart()
     {
@@ -67,18 +98,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetPlayerProperties(Player player)
+    private void SetClassProperties(Player player)
     {
-        PhotonHashtable playerOption = new PhotonHashtable() {
-            { "Team", -1 },
-            { "Class", -1 }};
+        PhotonHashtable playerOption = player.CustomProperties;
+
+        playerOption.Add("Class", -1);
 
         player.SetCustomProperties(playerOption);
-
-        /*for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            //PhotonNetwork.PlayerList[i].SetCustomProperties(
-            //    new PhotonHashtable { { "IsAdmin", "Admin" } });
-        }*/
     }
 }

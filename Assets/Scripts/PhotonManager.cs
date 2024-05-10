@@ -10,6 +10,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 {
     public static PhotonManager Instance { get; private set; }
     public ClassSelectPanel classSelectPanel;
+    public GameUIManager uiManager;
 
     private void Awake()
     {
@@ -18,17 +19,24 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PhotonNetwork.NickName = $"TestPlayer {Random.Range(100, 1000)}";
-        PhotonNetwork.ConnectUsingSettings();
+        if (false == PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.NickName = $"TestPlayer {Random.Range(100, 1000)}";
+            PhotonNetwork.ConnectUsingSettings();
+        }
+        else
+        {
+
+        }
     }
 
     public override void OnConnectedToMaster()
     {
         RoomOptions roomOption = new RoomOptions();
         roomOption.MaxPlayers = 8;
-        //roomOption.CustomRoomProperties = new PhotonHashtable() { 
-        //    { "GameMode", -1 }};
-        
+        roomOption.CustomRoomProperties = new PhotonHashtable() {
+                { "GameMode", 0 }};
+
         PhotonNetwork.JoinOrCreateRoom("TestRoom", roomOption, null);
     }
 
@@ -57,22 +65,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         classSelectPanel.RemovePlayerEntry(otherPlayer);
-    }
-
-    //플레이어 커스텀 프로퍼티 설정
-    private void SetPlayerProperties(Player player)
-    {
-        PhotonHashtable playerOption = new PhotonHashtable() {
-            { "Team", -1 },
-            { "Class", -1 }};
-
-        player.SetCustomProperties(playerOption);
-
-        /*for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            //PhotonNetwork.PlayerList[i].SetCustomProperties(
-            //    new PhotonHashtable { { "IsAdmin", "Admin" } });
-        }*/
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, PhotonHashtable changedProps)

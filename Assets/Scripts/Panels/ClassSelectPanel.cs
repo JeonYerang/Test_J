@@ -12,6 +12,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class ClassSelectPanel : MonoBehaviour
 {
+    [SerializeField]
     Text countDownText;
 
     Transform classSelectParent;
@@ -35,6 +36,14 @@ public class ClassSelectPanel : MonoBehaviour
         classToggleGroup = classSelectParent.GetComponent<ToggleGroup>();
 
         InitSelectList();
+    }
+
+    public void SetCount(int count)
+    {
+        if (count <= 0)
+            countDownText.text = "Start!";
+        else
+            countDownText.text = $"{count}s...";
     }
 
     public void InitPlayerList()

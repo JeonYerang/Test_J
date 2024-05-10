@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,7 @@ public class LobbyPanel : MonoBehaviour
     [Header("Create Room Menu")]
     public InputField roomNameInput;
     public Dropdown maxCountDrop;
+    public Dropdown modeDrop;
     public Button createButton;
     public GameObject warningText;
     #endregion
@@ -41,10 +43,7 @@ public class LobbyPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        roomNameInput.text = $"Room {Random.Range(0, 99)}";
-        maxCountDrop.value = 2;
-
-        warningText.SetActive(false);
+        InitCreateArea();
 
         if (!PhotonNetwork.IsConnectedAndReady)
             return;
@@ -52,11 +51,28 @@ public class LobbyPanel : MonoBehaviour
         userInfoArea.SetInfo();
     }
 
+    private void InitCreateArea()
+    {
+        roomNameInput.text = $"Room {UnityEngine.Random.Range(0, 99)}";
+        maxCountDrop.value = 2;
+
+        modeDrop.ClearOptions();
+        List<String> modes = new List<String>();
+        foreach (string mode in Enum.GetNames(typeof(GameMode)))
+        {
+            modes.Add(mode);
+        }
+        modeDrop.AddOptions(modes);
+
+        warningText.SetActive(false);
+    }
+
     private void OnCreateButtonClick()
     {
         string roomName = roomNameInput.text;
 
         int maxPlayer = int.Parse(maxCountDrop.options[maxCountDrop.value].text);
+        int gameMode = modeDrop.value;
 
         if (string.IsNullOrEmpty(roomName))
         {
@@ -64,10 +80,7 @@ public class LobbyPanel : MonoBehaviour
             return;
         }
 
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = maxPlayer;
-
-        PhotonNetwork.CreateRoom(roomName, options);
+        RoomManager.Instance.CreateRoom(roomName, maxPlayer, gameMode);
     }
 
 
@@ -117,11 +130,6 @@ public class LobbyPanel : MonoBehaviour
 
     private void OnRandomButtonClick()
     {
-        string roomName = $"Room {Random.Range(0, 99)}";
-
-        RoomOptions options = new RoomOptions();
-        options.MaxPlayers = 8;
-
-        PhotonNetwork.JoinRandomOrCreateRoom(roomName: roomName, roomOptions: options);
+        RoomManager.Instance.JoinOrCreateRandomRoom();
     }
 }

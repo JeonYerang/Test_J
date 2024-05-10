@@ -8,7 +8,16 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class GameUIManager : MonoBehaviourPunCallbacks
 {
+    public static GameUIManager Instance;
+
     public ClassSelectPanel classSelectPanel;
+
+    private void Awake()
+    {
+        Instance = this;
+
+        classSelectPanel.gameObject.SetActive(false);
+    }
 
     public void ShowLoadingImage()
     {
