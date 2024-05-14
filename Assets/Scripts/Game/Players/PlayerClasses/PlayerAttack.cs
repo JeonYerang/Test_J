@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public abstract class PlayerAttack : MonoBehaviour
 {
     public int maxHp;
     private int currentHp = 0;
@@ -12,11 +13,13 @@ public class PlayerAttack : MonoBehaviour
     public float attackSpeed;
     public float attackCoolTime;
 
-    public Projectile attackPrefab;
+    public bool isAttacking;
 
-    private void Awake()
+    //public event EventHandler<int> GetDamageEvent;
+
+    private void Update()
     {
-
+        
     }
 
     protected void Init()
@@ -24,11 +27,7 @@ public class PlayerAttack : MonoBehaviour
         currentHp = maxHp;
     }
 
-    public virtual void Attack()
-    {
-        Projectile projectile = Instantiate(attackPrefab);
-        projectile.Shot(GetComponent<PlayerInfo>());
-    }
+    public abstract void Attack();
 
     public void GetDamage(int damage)
     {
@@ -51,6 +50,6 @@ public class PlayerAttack : MonoBehaviour
 
     private void Die()
     {
-
+        SpawnManager.instance.DespawnCharacter();
     }
 }

@@ -772,7 +772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameLabel: {fileID: 2523779177873897433}
-  classIcon: {fileID: 0}
+  classIcon: {fileID: 2672777791394104468}
   hpBar: {fileID: 5358051533171947282}
   outline: {fileID: 174763227138822330}
 --- !u!223 &8466235355073321855

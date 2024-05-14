@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,9 +7,9 @@ using UnityEngine;
 
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class TestPhotonManager : MonoBehaviourPunCallbacks
+public class TestManager : MonoBehaviourPunCallbacks
 {
-    public static TestPhotonManager Instance { get; private set; }
+    public static TestManager Instance { get; private set; }
 
     private void Awake()
     {
@@ -34,8 +35,6 @@ public class TestPhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print($"{PhotonNetwork.CurrentRoom.Name}에 참가함");
-        Hashtable playerOption = new Hashtable();
-        playerOption.Add("Team", 0);
-        PhotonNetwork.LocalPlayer.SetCustomProperties(playerOption);
+        PhotonNetwork.LocalPlayer.JoinTeam("Blue");
     }
 }

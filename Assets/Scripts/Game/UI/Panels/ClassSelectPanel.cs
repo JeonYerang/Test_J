@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System;
 using System.Collections;
@@ -13,21 +14,8 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class ClassSelectPanel : MonoBehaviour
 {
-    [SerializeField]
-    Text countDownText;
-
     Transform classSelectParent;
-    [SerializeField]
-    GameObject classSelectPrefab;
-
     Transform playerListParent;
-    [SerializeField]
-    GameObject playerEntryPrefab;
-
-    ToggleGroup classToggleGroup;
-    private List<Toggle> classToggles = new List<Toggle>();
-
-    public Dictionary<int, GameObject> playerListDic = new Dictionary<int, GameObject>();
 
     private void Awake()
     {
@@ -35,8 +23,12 @@ public class ClassSelectPanel : MonoBehaviour
         playerListParent = transform.Find("PlayerList");
 
         classToggleGroup = classSelectParent.GetComponent<ToggleGroup>();
+    }
 
-        InitSelectList();
+    IEnumerator Start()
+    {
+        yield return new WaitUntil(() => GameManager.Instance != null);
+        InitClassList();
     }
 
     private void OnEnable()
@@ -45,6 +37,9 @@ public class ClassSelectPanel : MonoBehaviour
             InitPlayerList();
     }
 
+    #region CountDown
+    [SerializeField]
+    Text countDownText;
     public void SetCount(int count)
     {
         if (count <= 0)
@@ -52,43 +47,57 @@ public class ClassSelectPanel : MonoBehaviour
         else
             countDownText.text = $"{count}s...";
     }
+    #endregion
 
-    public void InitPlayerList()
-    {
-        //기존의 오브젝트 지우기
-        foreach (Transform child in playerListParent)
-        {
-            Destroy(child.gameObject);
-        }
+    #region ClassList
 
-        playerListDic.Clear();
+    [SerializeField]
+    GameObject classTogglePrefab;
 
-        //새로운 오브젝트 생성
-        foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
-        {
-            //같은 팀의 정보만 띄워준다.
-            if (player.CustomProperties["Team"] 
-                == PhotonNetwork.LocalPlayer.CustomProperties["Team"])
-                AddPlayerEntry(player);
-        }
-    }
+    ToggleGroup classToggleGroup;
+    private List<Toggle> classToggles = new List<Toggle>();
 
-    private void InitSelectList()
+    private void InitClassList()
     {
         int i = 0;
         foreach (PlayerClass playerClass in Enum.GetValues(typeof(PlayerClass)))
         {
-            GameObject classEntry = Instantiate(classSelectPrefab, classSelectParent);
+            GameObject classEntry = Instantiate(classTogglePrefab, classSelectParent);
 
-            if (classEntry.transform.Find("ClassLabel").TryGetComponent(out TextMeshProUGUI classText))
-                classText.text = playerClass.ToString();
+            InitClassToggle(classEntry, playerClass, i);
 
-            Toggle classToggle = classEntry.transform.GetComponent<Toggle>();
+            i++;
+        }
+    }
+
+    private void InitClassToggle(GameObject classEntry, PlayerClass playerClass, int index)
+    {
+        //클래스 이름 초기화
+        if (classEntry.transform.Find("ClassLabel").TryGetComponent(out TextMeshProUGUI classText))
+            classText.text = playerClass.ToString();
+        else
+            print("클래스 라벨 없음");
+
+        //클래스 이미지 초기화
+        if (classEntry.transform.Find("ClassImage").TryGetComponent(out Image classImage))
+            classImage.sprite = GameManager.Instance.classList[(int)playerClass].classIcon;
+        else
+            print("클래스 이미지 없음");
+
+        //클래스 설명 초기화
+        if (classEntry.transform.Find("ClassDescription").TryGetComponent(out TextMeshProUGUI classDescription))
+            classDescription.text = GameManager.Instance.classList[(int)playerClass].classDescription;
+        else
+            print("클래스 설명 없음");
+
+        //클래스 토글 초기화
+        if (classEntry.transform.TryGetComponent(out Toggle classToggle))
+        {
+            classToggle = classEntry.transform.GetComponent<Toggle>();
 
             classToggle.group = classToggleGroup;
             classToggles.Add(classToggle);
 
-            int index = i;
             classToggle.onValueChanged.AddListener(
                 isOn =>
                 {
@@ -101,8 +110,62 @@ public class ClassSelectPanel : MonoBehaviour
                         SelectClass(-1);
                     }
                 });
+        }
+        else
+            print("클래스 토글 없음");
+    }
 
-            i++;
+    public void SelectClass(int select)
+    {
+        Player localPlayer = PhotonNetwork.LocalPlayer;
+        Hashtable customProps = localPlayer.CustomProperties;
+
+        customProps["Class"] = select;
+        localPlayer.SetCustomProperties(customProps);
+    }
+
+    public void OnClassPropertyChanged(Player player)
+    {
+        if (!playerListDic.ContainsKey(player.ActorNumber))
+            return;
+
+        Text classLabel =
+            playerListDic[player.ActorNumber].transform.Find("SelectLabel").GetComponent<Text>();
+
+        int select = (int)player.CustomProperties["Class"];
+
+        if (select == -1)
+            classLabel.text = "선택중...";
+        else
+            classLabel.text = ((PlayerClass)select).ToString();
+    }
+    #endregion
+
+    #region PlayerList
+    
+    [SerializeField]
+    GameObject playerEntryPrefab;
+
+    public Dictionary<int, GameObject> playerListDic = new Dictionary<int, GameObject>();
+    public void InitPlayerList()
+    {
+        //기존의 오브젝트 지우기
+        foreach (Transform child in playerListParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        playerListDic.Clear();
+
+        //새로운 오브젝트 생성
+        //같은 팀의 정보만 띄워준다.
+        AddPlayerEntry(PhotonNetwork.LocalPlayer);
+        if (PhotonNetwork.LocalPlayer.TryGetTeamMates(out Player[] teamMates))
+        {
+            foreach (Player teamMate in teamMates)
+            {
+                AddPlayerEntry(teamMate);
+            }
         }
     }
 
@@ -144,31 +207,10 @@ public class ClassSelectPanel : MonoBehaviour
         playerListDic[newPlayer.ActorNumber] = playerEntry;
     }
 
-    public void RemovePlayerEntry(Player leftPlayer)
+    public void RemovePlayerEntry(int leftPlayerActorNum)
     {
-        Destroy(playerListDic[leftPlayer.ActorNumber].gameObject);
-        playerListDic.Remove(leftPlayer.ActorNumber);
+        Destroy(playerListDic[leftPlayerActorNum].gameObject);
+        playerListDic.Remove(leftPlayerActorNum);
     }
-
-    public void SelectClass(int select)
-    {
-        Player localPlayer = PhotonNetwork.LocalPlayer;
-        Hashtable customProps = localPlayer.CustomProperties;
-
-        customProps["Class"] = select;
-        localPlayer.SetCustomProperties(customProps);
-    }
-
-    public void OnClassPropertyChanged(Player player)
-    {
-        Text classLabel = 
-            playerListDic[player.ActorNumber].transform.Find("SelectLabel").GetComponent<Text>();
-
-        int select = (int)player.CustomProperties["Class"];
-
-        if (select == -1)
-            classLabel.text = "선택중...";
-        else
-            classLabel.text = ((PlayerClass)select).ToString();
-    }
+    #endregion
 }

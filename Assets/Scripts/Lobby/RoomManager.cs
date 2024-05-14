@@ -56,59 +56,21 @@ public class RoomManager : MonoBehaviour
 
     public void InitTeam()
     {
-        /*PhotonNetwork.LocalPlayer.JoinTeam("Red");
-        //print($"MyTeam: {PhotonNetwork.LocalPlayer.GetPhotonTeam().Name}");
-        if(PhotonTeamsManager.Instance.TryGetTeamMembers("Red", out Player[] members))
+        if(gameMode != 0) //ÆÀÀüÀÌ ¾Æ´Ò °æ¿ì
         {
-            if (members.Length <= 0)
-                print("Null");
-
-            foreach (var member in members)
-                print(member.NickName);
-
+            return;
         }
-        
-        int i = PhotonTeamsManager.Instance.GetTeamMembersCount("Red");
-        print($"TeamCount: {i}");*/
 
+        Player newPlayer = PhotonNetwork.LocalPlayer;
 
-        Hashtable playerOption = new Hashtable();
+        int BlueTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Blue");
+        int RedTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Red");
 
-        if (!isTeamMode)
-        {
-            playerOption.Add("Team", -1);
-        }
+        string playerTeam = BlueTeamCount > RedTeamCount ? "Red" : "Blue";
+
+        if(newPlayer.GetPhotonTeam() != null && newPlayer.GetPhotonTeam().Name == playerTeam)
+            newPlayer.SwitchTeam(playerTeam);
         else
-        {
-            int a = 0, b = 0, c = 0;
-            foreach(var player in PhotonNetwork.CurrentRoom.Players.Values)
-            {
-                if (player.CustomProperties.ContainsKey("Team"))
-                {
-                    if ((int)player.CustomProperties["Team"] == 0)
-                        a++;
-                    else
-                        b++;
-                }
-            }
-
-            c = a > b ? 1 : 0;
-            playerOption.Add("Team", c);
-
-            /*switch (c)
-            {
-                case 0:
-                    print("Blue");
-                    break;
-                case 1:
-                    print("Red");
-                    break;
-                default:
-                    print("None");
-                    break;
-            }*/
-        }
-
-        PhotonNetwork.LocalPlayer.SetCustomProperties(playerOption);
+            newPlayer.JoinTeam(playerTeam);
     }
 }

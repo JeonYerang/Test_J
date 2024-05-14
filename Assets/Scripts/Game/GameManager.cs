@@ -21,12 +21,6 @@ public enum PlayerClass
     Healer
 }
 
-public enum Team
-{
-    Blue,
-    Red
-}
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -37,8 +31,7 @@ public class GameManager : MonoBehaviour
     public bool isGameStart = false;
     public static bool isGameReady = false;
 
-    public Dictionary<PlayerClass, ClassData> classDic 
-        = new Dictionary<PlayerClass, ClassData>();
+    public ClassData[] classList = new ClassData[3];
 
     private void Awake()
     {
@@ -51,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         if (false == PhotonNetwork.InRoom)
         {
-            gameObject.AddComponent<TestPhotonManager>();
+            gameObject.AddComponent<TestManager>();
         }
     }
 

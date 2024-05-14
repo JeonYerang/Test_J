@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ public class PlayerInfo : MonoBehaviour
     Player player;
     private string playerName;
     public string PlayerName {  get { return playerName; } }
-    private Team team;
-    public Team Team { get { return team; } }
+    private string team;
+    public string Team { get { return team; } }
     private PlayerClass playerClass;
     public PlayerClass PlayerClass { get {  return playerClass; } }
 
@@ -34,10 +35,11 @@ public class PlayerInfo : MonoBehaviour
     public void SetInfo()
     {
         playerName = player.NickName;
-        team = (Team)((int)player.CustomProperties["Team"]);
+        team = player.GetPhotonTeam().Name;
         playerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
 
         playerInfoUI.SetNameLabel(playerName);
         playerInfoUI.SetOutLineColor(team);
+        playerInfoUI.SetClassIcon(GameManager.Instance.classList[(int)playerClass].classIcon);
     }
 }

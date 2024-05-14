@@ -20,14 +20,14 @@ public class PlayerInfoUI : MonoBehaviour
         nameLabel.text = name;
     }
 
-    public void SetOutLineColor(Team team)
+    public void SetOutLineColor(string team)
     {
         switch(team)
         {
-            case Team.Blue:
+            case "Blue":
                 outline.OutlineColor = Color.blue;
                 break;
-            case Team.Red:
+            case "Red":
                 outline.OutlineColor = Color.red;
                 break;
             default:
@@ -36,8 +36,13 @@ public class PlayerInfoUI : MonoBehaviour
         }
     }
 
-    public void SetClassIcon()
+    public void SetClassIcon(Sprite classIcon)
     {
+        this.classIcon.sprite = classIcon;
+    }
 
+    public void SetHpBar(int amount)
+    {
+        hpBar.value = amount;
     }
 }

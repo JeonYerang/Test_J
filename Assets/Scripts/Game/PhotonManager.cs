@@ -16,6 +16,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
+    public override void OnLeftRoom()
+    {
+        SpawnManager.instance.DespawnCharacter();
+    }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         classSelectPanel.AddPlayerEntry(newPlayer);
@@ -23,7 +28,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        classSelectPanel.RemovePlayerEntry(otherPlayer);
+        classSelectPanel.RemovePlayerEntry(otherPlayer.ActorNumber);
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)

@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System;
 using System.Collections;
@@ -97,10 +98,7 @@ public class RoomPanel : MonoBehaviour
                 SetPlayerReady(player.ActorNumber, (bool)player.CustomProperties["Ready"]);
             }
 
-            if (player.CustomProperties.ContainsKey("Team"))
-            {
-                SetPlayerTeam(player.ActorNumber, (int)player.CustomProperties["Team"]);
-            }
+            SetPlayerTeam(player);
         }
     }
 
@@ -161,15 +159,27 @@ public class RoomPanel : MonoBehaviour
         }
     }
 
-    public void SetPlayerTeam(int actorNum, int team)
+    public void SetPlayerTeam(Player player)
     {
-        Image image = playerListDic[actorNum].GetComponent<Image>();
-        if (team == 0)
-            image.color = new Color(.7f, .7f, 1);
-        else if (team == 1)
-            image.color = new Color(1, .7f, .75f);
+        Image image = playerListDic[player.ActorNumber].GetComponent<Image>();
+
+        string team = player.GetPhotonTeam().Name;
+        print(team);
+        switch (team)
+        {
+            case "Blue":
+                image.color = new Color(.7f, .7f, 1);
+                break;
+            case "Red":
+                image.color = new Color(1, .7f, .75f);
+                break;
+            default:
+                image.color = new Color(0.53f, 0.57f, 0.7f);
+                break;
+        }
     }
     #endregion
+
     private void CheckAllReadys()
     {
         //모두 레디상태이면 스타트버튼 활성화
@@ -187,14 +197,14 @@ public class RoomPanel : MonoBehaviour
         localPlayer.SetCustomProperties(customProps);
     }
 
-    private void OnTeamButtonClick()
+    private void OnTeamButtonClick() //레디 중에는 팀 변경 안되게
     {
         Player localPlayer = PhotonNetwork.LocalPlayer;
-        PhotonHashtable customProps = localPlayer.CustomProperties;
 
-        customProps["Team"] = (int)customProps["Team"] == 0 ? 1 : 0;
-
-        localPlayer.SetCustomProperties(customProps);
+        if (localPlayer.GetPhotonTeam().Name == "Blue")
+            localPlayer.SwitchTeam("Red");
+        else
+            localPlayer.SwitchTeam("Blue");
     }
 
     private void OnStartButtonClick()

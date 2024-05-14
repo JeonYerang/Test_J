@@ -5,10 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     protected PlayerInfo owner;
-    [SerializeField]
     protected int damage;
-    [SerializeField]
-    protected float moveSpeed;
 
     protected Rigidbody rb;
 
@@ -17,15 +14,10 @@ public class Projectile : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    public void Reinforce(int plusDamage, float plusSpeed)
-    {
-        damage += plusDamage;
-        moveSpeed += plusSpeed;
-    }
-
-    public virtual void Shot(PlayerInfo owner)
+    public virtual void InitAndShot(PlayerInfo owner, int damage, float moveSpeed)
     {
         this.owner = owner;
+        this.damage = damage;
         rb.velocity = -transform.up * moveSpeed;
     }
 

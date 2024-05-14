@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LobbyPhotonManager : MonoBehaviourPunCallbacks
+public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    public static LobbyPhotonManager Instance;
+    public static LobbyManager Instance;
     private PanelManager panelManager;
 
     private void Awake()
@@ -90,9 +90,9 @@ public class LobbyPhotonManager : MonoBehaviourPunCallbacks
         {
             panelManager.roomPanel.SetPlayerReady(targetPlayer.ActorNumber, (bool)changedProps["Ready"]);
         }
-        if (changedProps.ContainsKey("Team"))
+        if (changedProps.ContainsKey("_pt"))
         {
-            panelManager.roomPanel.SetPlayerTeam(targetPlayer.ActorNumber, (int)changedProps["Team"]);
+            panelManager.roomPanel.SetPlayerTeam(targetPlayer);
         }
     }
 }
