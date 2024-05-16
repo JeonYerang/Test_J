@@ -4,38 +4,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Hashtable = ExitGames.Client.Photon.Hashtable;
+public enum GamePanel
+{
+    Loading,
+    Select,
+    Game,
+    Died,
+    Result
+}
 
 public class GamePanelManager : MonoBehaviourPunCallbacks
 {
     public static GamePanelManager Instance;
 
-    public ClassSelectPanel classSelectPanel;
+    public LoadingPanel loadingPanel;
+    public SelectPanel selectPanel;
+    public GameUIPanel gamePanel;
+    public DiedPanel diedPanel;
+    public ResultPanel resultPanel;
+
+    Dictionary<string, GameObject> panelDic;
 
     private void Awake()
     {
         Instance = this;
 
-        classSelectPanel.gameObject.SetActive(false);
+        panelDic = new Dictionary<string, GameObject>()
+        {
+            { "Loading", loadingPanel.gameObject },
+            { "Select", selectPanel.gameObject },
+            { "Game", gamePanel.gameObject },
+            { "Died", diedPanel.gameObject },
+            { "Result", resultPanel.gameObject },
+        };
     }
 
-    public void ShowLoadingPanel()
+    private void Start()
     {
-
+        foreach (var panel in panelDic)
+        {
+            panel.Value.SetActive(false);
+        }
     }
 
-    public void ShowSelectPanel()
+    public void PanelOpen(GamePanel panelName)
     {
-        classSelectPanel.gameObject.SetActive(true);
-    }
-
-    public void CloseSelectPanel()
-    {
-        classSelectPanel.gameObject.SetActive(false);
-    }
-
-    public void ShowDiedPanel()
-    {
-
+        foreach (var panel in panelDic)
+        {
+            panel.Value.SetActive(panel.Key == panelName.ToString());
+        }
     }
 }

@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SkillManager : MonoBehaviour
 {
-    
-}
+    public void ConditionCheck()
+    {
 
-public class SkillData
-{
-    public string skillName;
-    public int damage;
-    public float coolTime;
+    }
+
+    private IEnumerator CoolTimeCoroutine(float sec)
+    {
+        yield return new WaitForSeconds(sec);
+    }
 }

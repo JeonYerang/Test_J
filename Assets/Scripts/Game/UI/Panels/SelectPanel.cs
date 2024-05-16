@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class ClassSelectPanel : MonoBehaviour
+public class SelectPanel : MonoBehaviour
 {
     Transform classSelectParent;
     Transform playerListParent;

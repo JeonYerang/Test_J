@@ -13,11 +13,16 @@ public abstract class PlayerAttack : MonoBehaviour
     public float attackSpeed;
     public float attackCoolTime;
 
+    protected int attackCount;
+
     public bool isAttacking;
+
+    protected KeyCode attackKey;
+    protected KeyCode altimateKey;
 
     //public event EventHandler<int> GetDamageEvent;
 
-    private void Update()
+    protected virtual void Update()
     {
         
     }
@@ -28,6 +33,7 @@ public abstract class PlayerAttack : MonoBehaviour
     }
 
     public abstract void Attack();
+    public abstract void UltimateAttack();
 
     public void GetDamage(int damage)
     {

@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
     {
         SetClassProperties(PhotonNetwork.LocalPlayer);
 
-        GamePanelManager.Instance.ShowSelectPanel();
+        GamePanelManager.Instance.PanelOpen(GamePanel.Select);
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void ShowTimer(int sec)
     {
-        GamePanelManager.Instance.classSelectPanel.SetCount(sec);
+        GamePanelManager.Instance.selectPanel.SetCount(sec);
     }
 
     [PunRPC]
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        GamePanelManager.Instance.CloseSelectPanel();
+        GamePanelManager.Instance.PanelOpen(GamePanel.Game);
         SpawnManager.instance.SpawnCharacter();
         isGameStart = true;
     }

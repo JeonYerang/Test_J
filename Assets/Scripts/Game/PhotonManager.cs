@@ -9,7 +9,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
     public static PhotonManager Instance { get; private set; }
-    public ClassSelectPanel classSelectPanel;
+    public SelectPanel classSelectPanel;
 
     private void Awake()
     {

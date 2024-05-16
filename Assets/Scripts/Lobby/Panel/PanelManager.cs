@@ -11,7 +11,6 @@ public class PanelManager : MonoBehaviour
     public RoomPanel roomPanel;
     public UpdateInfoPanel updatePanel;
 
-    [SerializeField]
     Dictionary<string, GameObject> panelDic;
 
     private void Awake()
