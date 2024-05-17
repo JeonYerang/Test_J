@@ -18,7 +18,9 @@ public class PlayerMove : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpPower = 5f;
 
+    FixedJoystick joystick;
     CharacterController controller;
+    
     Animator animator;
     PhotonView pv;
 
@@ -33,6 +35,7 @@ public class PlayerMove : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+
         animator = GetComponentInChildren<Animator>();
         pv = GetComponent<PhotonView>();
 
@@ -49,6 +52,9 @@ public class PlayerMove : MonoBehaviour
         //방향키 입력
         xInput = Input.GetAxis("Horizontal");
         yInput = Input.GetAxis("Vertical");
+
+        //xInput = joystick.Horizontal;
+        //yInput = joystick.Vertical;
 
         CalcMoveDir(xInput, yInput);
 

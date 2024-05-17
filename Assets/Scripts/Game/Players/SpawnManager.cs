@@ -40,6 +40,7 @@ public class SpawnManager : MonoBehaviour
         }
 
         spawnedPlayers[PhotonNetwork.LocalPlayer.ActorNumber] = spawnedPlayer;
+        GameManager.Instance.SetPlayer(spawnedPlayer);
     }
 
     public void DespawnCharacter()

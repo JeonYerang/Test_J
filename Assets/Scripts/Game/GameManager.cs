@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public PlayerMove playerMove { get; private set; }
+    public PlayerAttack playerAttack { get; private set; }
     PhotonView PV;
 
     public int startCount;
@@ -68,6 +70,7 @@ public class GameManager : MonoBehaviour
         ReadyForGame();
     }
 
+    #region GameReady
     public void ReadyForGame()
     {
         SetClassProperties(PhotonNetwork.LocalPlayer);
@@ -125,5 +128,12 @@ public class GameManager : MonoBehaviour
         GamePanelManager.Instance.PanelOpen(GamePanel.Game);
         SpawnManager.instance.SpawnCharacter();
         isGameStart = true;
+    }
+    #endregion
+
+    public void SetPlayer(GameObject player)
+    {
+        playerMove = player.GetComponent<PlayerMove>();
+        playerAttack = player.GetComponent<PlayerAttack>();
     }
 }

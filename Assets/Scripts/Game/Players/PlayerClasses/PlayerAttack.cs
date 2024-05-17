@@ -8,32 +8,30 @@ public abstract class PlayerAttack : MonoBehaviour
     public int maxHp;
     private int currentHp = 0;
 
-    //List<Skill> skills
+    //List<SkillData> skills
     public int attackPoint;
     public float attackSpeed;
-    public float attackCoolTime;
 
-    protected int attackCount;
+    public int attackCount { get; protected set; }
 
     public bool isAttacking;
 
-    protected KeyCode attackKey;
-    protected KeyCode altimateKey;
-
     //public event EventHandler<int> GetDamageEvent;
-
-    protected virtual void Update()
-    {
-        
-    }
 
     protected void Init()
     {
         currentHp = maxHp;
     }
 
-    public abstract void Attack();
-    public abstract void UltimateAttack();
+    public virtual void Attack()
+    {
+        if (attackCount < 10) attackCount++;
+    }
+
+    public virtual void UltimateAttack()
+    {
+        attackCount = 0;
+    }
 
     public void GetDamage(int damage)
     {
