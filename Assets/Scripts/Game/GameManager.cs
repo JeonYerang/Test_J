@@ -1,3 +1,4 @@
+using Cinemachine;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
@@ -10,7 +11,7 @@ using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
 public enum GameMode
 {
-    Occupation
+    Domination
 }
 
 public enum PlayerClass
@@ -28,6 +29,9 @@ public class GameManager : MonoBehaviour
     public PlayerMove playerMove { get; private set; }
     public PlayerAttack playerAttack { get; private set; }
     PhotonView PV;
+
+    [SerializeField]
+    CinemachineVirtualCamera cam;
 
     public int startCount;
     public bool isGameStart = false;
@@ -125,7 +129,6 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        GamePanelManager.Instance.PanelOpen(GamePanel.Game);
         SpawnManager.instance.SpawnCharacter();
         isGameStart = true;
     }
@@ -135,5 +138,8 @@ public class GameManager : MonoBehaviour
     {
         playerMove = player.GetComponent<PlayerMove>();
         playerAttack = player.GetComponent<PlayerAttack>();
+
+        cam.Follow = playerMove.transform;
+        GamePanelManager.Instance.PanelOpen(GamePanel.Game);
     }
 }

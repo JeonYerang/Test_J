@@ -8,11 +8,8 @@ public class SkillButton : MonoBehaviour
     int num;
     Skill skill;
 
-    SkillConditionType conditionType;
-    int requiredAmount;
-
     Sprite icon;
-    
+    Image coolIndicator;
 
     public Button skillButton;
 
@@ -35,17 +32,17 @@ public class SkillButton : MonoBehaviour
 
     private void OnClickSkillButton()
     {
-        SkillManager.Instance.UsingSkill(num);
+        
     }
 
     //condition
-    public void ShowCoolTime()
+    public void ShowCoolTime(float amount)
     {
-
+        coolIndicator.fillAmount = amount;
     }
 
-    public void ShowRemainCount()
+    public void ShowRemainCount(float amount)
     {
-
+        coolIndicator.fillAmount = amount;
     }
 }

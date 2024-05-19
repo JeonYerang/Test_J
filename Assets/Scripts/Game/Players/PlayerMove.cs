@@ -64,8 +64,7 @@ public class PlayerMove : MonoBehaviour
         //상태 변화
         if (Input.GetButtonDown("Jump"))
         {
-            if (controller.isGrounded)
-                OnJump();
+            OnJump();
         }
 
         if (controller.velocity.y < 0 && state != State.Climb)
@@ -163,6 +162,9 @@ public class PlayerMove : MonoBehaviour
 
     public void OnJump()
     {
+        if (!controller.isGrounded)
+            return;
+        
         if (state != State.Jump)
             state = State.Jump;
 

@@ -5,13 +5,18 @@ using UnityEngine.UI;
 
 public class ControlButtons : MonoBehaviour
 {
+    PlayerMove playerMove;
+    PlayerAttack playerAttack;
+
     Button[] skillButtons = new Button[2];
     Button jumpButton;
 
-    private void Awake()
+    public void Init()
     {
-        InitSkillButtons();
+        playerMove = GameManager.Instance.playerMove;
+        playerAttack = GameManager.Instance.playerAttack;
         InitJumpButton();
+        InitSkillButtons();
     }
 
     private void InitSkillButtons()
@@ -21,11 +26,23 @@ public class ControlButtons : MonoBehaviour
         for (int i = 0; i < skillButtons.Length; i++)
         {
             skillButtons[i] = buttonsTransform.GetChild(i).GetComponent<Button>();
+            skillButtons[i].onClick.AddListener(OnClickSkillButton);
         }
     }
 
     private void InitJumpButton()
     {
         jumpButton = transform.Find("JumpButton").GetComponent<Button>();
+        jumpButton.onClick.AddListener(OnClickJumpButton);
+    }
+
+    private void OnClickSkillButton()
+    {
+
+    }
+
+    private void OnClickJumpButton()
+    {
+        playerMove.OnJump();
     }
 }

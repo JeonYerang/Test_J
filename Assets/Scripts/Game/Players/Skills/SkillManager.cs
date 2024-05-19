@@ -10,7 +10,7 @@ public class SkillManager : MonoBehaviour
     public static SkillManager Instance { get; private set; }
 
     KeyCode[] skillKeyCodes = new KeyCode[2];
-    List<Skill> skills;
+    public List<Skill> skills;
     Dictionary<string, bool> skillDic = new Dictionary<string, bool>();
 
     private void Awake()
@@ -24,7 +24,7 @@ public class SkillManager : MonoBehaviour
         InitSkillDic();
     }
 
-    private void SetKeyCode()
+    private void SetKeyCode() //Key Manager
     {
         skillKeyCodes[0] = KeyCode.Z;
         skillKeyCodes[1] = KeyCode.X;
@@ -43,33 +43,50 @@ public class SkillManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(skillKeyCodes[0]))
+        for (int i = 0; i < skillKeyCodes.Length; i++)
         {
-            if (skillDic[skills[0]._name]) //스킬이 사용 가능한 상태면
-                UsingSkill(0);
-        }
-        else if (Input.GetKeyDown(skillKeyCodes[1]))
-        {
-            if (skillDic[skills[1]._name])
-                UsingSkill(1);
-        }
-        else if (Input.GetKeyDown(skillKeyCodes[2]))
-        {
-            if (skillDic[skills[2]._name])
-                UsingSkill(2);
+            Skill skill = skills[i];
+            ConditionCheck(skill);
+
+            switch (skill.useType)
+            {
+                case UseType.Basic:
+                    if (Input.GetKeyDown(skillKeyCodes[i]))
+                    {
+                        if (skillDic[skill._name]) //스킬이 사용 가능한 상태면
+                            skill.UsingSkill();
+                    }
+                    break;
+
+                case UseType.OnOff:
+                    if (Input.GetKeyDown(skillKeyCodes[i]))
+                    {
+                        if (skillDic[skill._name]) //스킬이 사용 가능한 상태면
+                        {
+                            if (!((IOnOffableSkill)skill).IsOn)
+                                skill.UsingSkill();
+                            else
+                                ((IOnOffableSkill)skill).UnUsingSkill();
+                        }
+                    }
+                    break;
+
+                case UseType.Charge:
+                    if (Input.GetKey(skillKeyCodes[i]))
+                    {
+                        ((IChargableSkill)skill).Charging();
+                    }
+                    if (Input.GetKeyUp(skillKeyCodes[i]))
+                    {
+                        skill.UsingSkill();
+                    }
+                    break;
+            }
         }
     }
 
-    public void UsingSkill(int num)
+    public void ConditionCheck(Skill skill)
     {
-        skills[num].UsingSkill();
-
-        ConditionCheck(num);
-    }
-
-    public void ConditionCheck(int num)
-    {
-        Skill skill = skills[num];
         SkillConditionType conditionType = skill.conditionType;
 
         switch (conditionType)
@@ -82,7 +99,7 @@ public class SkillManager : MonoBehaviour
                 break;
 
             case SkillConditionType.CoolTime:
-                CoolTimeCoroutine(skill._name, skill.data.requiredAmount);
+                CoolTimeCoroutine(skill);
                 break;
 
             default:
@@ -92,16 +109,25 @@ public class SkillManager : MonoBehaviour
 
     private void CheckCount(Skill skill)
     {
-        if (GameManager.Instance.playerAttack.attackCount > skill.data.requiredAmount)
+        if (GameManager.Instance.playerAttack.attackCount 
+            > ((ICountActivatableSkill)skill).RequiredCount)
             skillDic[skill._name] = true;
         else
             skillDic[skill._name] = false;
     }
 
-    private IEnumerator CoolTimeCoroutine(string skillName, float sec)
+    private IEnumerator CoolTimeCoroutine(Skill skill)
     {
-        skillDic[skillName] = false;
-        yield return new WaitForSeconds(sec);
-        skillDic[skillName] = true;
+        float sec = ((ICoolTimeActivatableSkill)skill).RequiredSec;
+
+        skillDic[skill._name] = false;
+
+        while (sec > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            sec--;
+        }
+
+        skillDic[skill._name] = true;
     }
 }
