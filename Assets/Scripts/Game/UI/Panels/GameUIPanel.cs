@@ -19,8 +19,15 @@ public class GameUIPanel : MonoBehaviour
 
     public void OnEnable()
     {
-        if(GameManager.Instance != null)
-            PlayerSet();
+        if (GameManager.Instance != null)
+            StartCoroutine(WaitPlayerCoroutine());
+    }
+    private IEnumerator WaitPlayerCoroutine()
+    {
+        yield return new WaitUntil(
+            () => GameManager.Instance.playerMove != null);
+            //&& GameManager.Instance.playerAttack != null);
+        PlayerSet();
     }
 
     public void PlayerSet()
@@ -28,6 +35,11 @@ public class GameUIPanel : MonoBehaviour
         playerMove = GameManager.Instance.playerMove;
         playerAttack = GameManager.Instance.playerAttack;
 
+        InitPanel();
+    }
+
+    private void InitPanel()
+    {
         userInfo.Init();
         controlButtons.Init();
     }

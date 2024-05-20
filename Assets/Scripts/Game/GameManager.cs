@@ -14,6 +14,12 @@ public enum GameMode
     Domination
 }
 
+/*public enum Team
+{
+    Blue,
+    Red
+}*/
+
 public enum PlayerClass
 {
     Warrior,
@@ -26,8 +32,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public PlayerMove playerMove { get; private set; }
-    public PlayerAttack playerAttack { get; private set; }
     PhotonView PV;
 
     [SerializeField]
@@ -35,9 +39,9 @@ public class GameManager : MonoBehaviour
 
     public int startCount;
     public bool isGameStart = false;
-    public static bool isGameReady = false;
 
-    public ClassData[] classList = new ClassData[3];
+    public int RedTeamScore = 0;
+    public int BlueTeamScore = 0;
 
     private void Awake()
     {
@@ -129,11 +133,16 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        SpawnManager.instance.SpawnCharacter();
+        SpawnManager.Instance.SpawnCharacter();
         isGameStart = true;
     }
     #endregion
 
+    #region Player
+    public PlayerMove playerMove { get; private set; }
+    public PlayerAttack playerAttack { get; private set; }
+    public ClassData[] classList = new ClassData[3];
+    
     public void SetPlayer(GameObject player)
     {
         playerMove = player.GetComponent<PlayerMove>();
@@ -141,5 +150,11 @@ public class GameManager : MonoBehaviour
 
         cam.Follow = playerMove.transform;
         GamePanelManager.Instance.PanelOpen(GamePanel.Game);
+    }
+    #endregion
+
+    public void SetScore()
+    {
+
     }
 }

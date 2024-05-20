@@ -18,7 +18,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        SpawnManager.instance.DespawnCharacter();
+        SpawnManager.Instance.DespawnCharacter();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

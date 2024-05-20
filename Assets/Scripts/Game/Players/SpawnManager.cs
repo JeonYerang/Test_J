@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public static SpawnManager instance;
+    public static SpawnManager Instance;
     public Transform[] spawnPoints;
 
     public Dictionary<int, GameObject> spawnedPlayers 
@@ -16,7 +16,7 @@ public class SpawnManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     public void SpawnCharacter()
@@ -42,6 +42,25 @@ public class SpawnManager : MonoBehaviour
 
         spawnedPlayers[PhotonNetwork.LocalPlayer.ActorNumber] = spawnedPlayer;
         GameManager.Instance.SetPlayer(spawnedPlayer);
+    }
+
+    private void SetPlayerClassComponent(Player player)
+    {
+        switch ((PlayerClass)player.CustomProperties["Class"])
+        {
+            case PlayerClass.Tanker:
+                
+                break;
+
+            case PlayerClass.Warrior:
+                break;
+
+            case PlayerClass.Archer:
+                break;
+
+            case PlayerClass.Healer:
+                break;
+        }
     }
 
     public void DespawnCharacter()

@@ -106,6 +106,7 @@ public class RoomPanel : MonoBehaviour
     {
         //오브젝트 생성
         var playerEntry = Instantiate(playerEntryPrefab, playerListTransform, false);
+        SetPlayerTeam(newPlayer);
 
         //텍스트 설정
         Text nameText = playerEntry.transform.Find("NameLabel").GetComponent<Text>();

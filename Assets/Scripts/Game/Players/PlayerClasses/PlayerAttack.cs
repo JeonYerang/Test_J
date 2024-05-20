@@ -7,6 +7,8 @@ public abstract class PlayerAttack : MonoBehaviour
 {
     public int maxHp;
     private int currentHp = 0;
+    public int CurrentHp {  get { return currentHp; } }
+    public int HpAmount { get { return currentHp / maxHp; } }
 
     //List<SkillData> skills
     public int attackPoint;
@@ -54,6 +56,6 @@ public abstract class PlayerAttack : MonoBehaviour
 
     private void Die()
     {
-        SpawnManager.instance.DespawnCharacter();
+        SpawnManager.Instance.DespawnCharacter();
     }
 }
