@@ -50,18 +50,11 @@ public class GameManager : MonoBehaviour
         //DontDestroyOnLoad(this);
     }
 
-    private void Start()
-    {
-        if (false == PhotonNetwork.InRoom)
-        {
-            gameObject.AddComponent<TestManager>();
-        }
-    }
-
     private void OnEnable()
     {
         if(false == PhotonNetwork.InRoom)
         {
+            gameObject.AddComponent<TestManager>();
             StartCoroutine(DebugModeSetting());
         }
         else
@@ -134,6 +127,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         SpawnManager.Instance.SpawnCharacter();
+
         isGameStart = true;
     }
     #endregion
@@ -145,6 +139,7 @@ public class GameManager : MonoBehaviour
     
     public void SetPlayer(GameObject player)
     {
+        print("SetPlayer");
         playerMove = player.GetComponent<PlayerMove>();
         playerAttack = player.GetComponent<PlayerAttack>();
 

@@ -1,12 +1,14 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Cinemachine.CinemachineTriggerAction.ActionSettings;
 
-public class LobbyManager : MonoBehaviourPunCallbacks
+public class LobbyPTManager : MonoBehaviourPunCallbacks
 {
-    public static LobbyManager Instance;
+    public static LobbyPTManager Instance;
     private PanelManager panelManager;
 
     private void Awake()
@@ -63,7 +65,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        RoomManager.Instance.InitTeam();
+        if (RoomManager.Instance.isTeamMode) //팀전일 경우
+            RoomManager.Instance.InitTeam();
 
         panelManager.PanelOpen("Room");
     }
@@ -71,6 +74,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         panelManager.PanelOpen("Lobby");
+
+        Player player = PhotonNetwork.LocalPlayer;
+
+        //팀 정보 초기화
+        if (player.GetPhotonTeam() != null)
+            player.LeaveCurrentTeam();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -88,11 +97,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         if (changedProps.ContainsKey("Ready"))
         {
-            panelManager.roomPanel.SetPlayerReady(targetPlayer.ActorNumber, (bool)changedProps["Ready"]);
+            panelManager.roomPanel.SetPlayerReady(targetPlayer);
         }
         if (changedProps.ContainsKey("_pt"))
         {
-            panelManager.roomPanel.SetPlayerTeam(targetPlayer);
+            panelManager.roomPanel.SetEntryTeamColor(targetPlayer);
         }
     }
 }

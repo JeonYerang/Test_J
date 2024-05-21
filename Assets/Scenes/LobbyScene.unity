@@ -5999,12 +5999,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomTitle: {fileID: 806096124}
   modeText: {fileID: 1284451789}
-  playerListTransform: {fileID: 1021499669}
-  playerEntryPrefab: {fileID: 3438379008951751218, guid: 28b1ef0272dd53049a63f01cf6f304e1, type: 3}
   exitButton: {fileID: 129101525}
   teamChangeButton: {fileID: 226044315}
   readyToggle: {fileID: 1874055539}
   startButton: {fileID: 1905729956}
+  playerListTransform: {fileID: 1021499669}
+  playerEntryPrefab: {fileID: 3438379008951751218, guid: 28b1ef0272dd53049a63f01cf6f304e1, type: 3}
 --- !u!1 &1436002280
 GameObject:
   m_ObjectHideFlags: 0

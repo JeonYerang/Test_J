@@ -37,10 +37,7 @@ public class GamePanelManager : MonoBehaviourPunCallbacks
             { "Died", diedPanel.gameObject },
             { "Result", resultPanel.gameObject },
         };
-    }
 
-    private void Start()
-    {
         foreach (var panel in panelDic)
         {
             panel.Value.SetActive(false);

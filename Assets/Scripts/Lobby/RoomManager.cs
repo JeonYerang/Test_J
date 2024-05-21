@@ -56,21 +56,25 @@ public class RoomManager : MonoBehaviour
 
     public void InitTeam()
     {
-        if(gameMode != 0) //ÆÀÀüÀÌ ¾Æ´Ò °æ¿ì
-        {
-            return;
-        }
-
         Player newPlayer = PhotonNetwork.LocalPlayer;
 
         int BlueTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Blue");
         int RedTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Red");
 
         string playerTeam = BlueTeamCount > RedTeamCount ? "Red" : "Blue";
+        print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
 
-        if(newPlayer.GetPhotonTeam() != null && newPlayer.GetPhotonTeam().Name == playerTeam)
+        if(newPlayer.GetPhotonTeam() != null)
+        {
+            print($"SwitchTeam: {newPlayer.GetPhotonTeam().Name}");
+            print($"To: {playerTeam}");
             newPlayer.SwitchTeam(playerTeam);
+            print($"Res: {newPlayer.GetPhotonTeam().Name}");
+        }
         else
+        {
             newPlayer.JoinTeam(playerTeam);
+        }
+        print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
     }
 }

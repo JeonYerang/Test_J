@@ -16,16 +16,16 @@ public class RoomPanel : MonoBehaviour
     public Text roomTitle;
     public Text modeText;
 
+    public Button exitButton;
+    public Button teamChangeButton;
+    public Toggle readyToggle;
+    public Button startButton;
+
     public RectTransform playerListTransform;
     public GameObject playerEntryPrefab;
 
     public Dictionary<int, Transform> playerListDic = new Dictionary<int, Transform>();
     private Dictionary<int, bool> playersReadyDic = new Dictionary<int, bool>();
-
-    public Button exitButton;
-    public Button teamChangeButton;
-    public Toggle readyToggle;
-    public Button startButton;
 
     private void Awake()
     {
@@ -38,10 +38,10 @@ public class RoomPanel : MonoBehaviour
     private void OnEnable()
     {
         if (false == PhotonNetwork.InRoom) return;
-
+        
         InitPanel();
 
-        SetMasterPlayer();
+        SetMasterOption();
         LoadPlayerList();
 
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -49,6 +49,7 @@ public class RoomPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        ResetPlayerList();
         playerListDic.Clear();
     }
 
@@ -71,34 +72,29 @@ public class RoomPanel : MonoBehaviour
     }
 
     #region PlayerSet
-    private void SetMasterPlayer()
+    private void SetMasterOption()
     {
+        //일반 유저는 준비 버튼, 방장은 시작 버튼을 활성화
         readyToggle.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
         startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         startButton.interactable = false;
 
-        //방장이면 항상 레디상태
-        if (PhotonNetwork.IsMasterClient)
-            OnReadyToggleChanged(true);
+        readyToggle.isOn = false;
     }
 
     private void LoadPlayerList()
     {
-        foreach (Transform child in playerListTransform)
-        {
-            Destroy(child.gameObject); //??
-        }
-
         foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
         {
             JoinPlayer(player);
+        }
+    }
 
-            if (player.CustomProperties.ContainsKey("Ready"))
-            {
-                SetPlayerReady(player.ActorNumber, (bool)player.CustomProperties["Ready"]);
-            }
-
-            SetPlayerTeam(player);
+    private void ResetPlayerList()
+    {
+        foreach (Transform child in playerListTransform)
+        {
+            Destroy(child.gameObject);
         }
     }
 
@@ -106,7 +102,6 @@ public class RoomPanel : MonoBehaviour
     {
         //오브젝트 생성
         var playerEntry = Instantiate(playerEntryPrefab, playerListTransform, false);
-        SetPlayerTeam(newPlayer);
 
         //텍스트 설정
         Text nameText = playerEntry.transform.Find("NameLabel").GetComponent<Text>();
@@ -127,14 +122,15 @@ public class RoomPanel : MonoBehaviour
             playerEntry.transform.Find("ReadyText").GetComponent<Text>().text = "ready!";
         }
 
-        //딕셔너리 추가
+        //playerList 딕셔너리 추가
         playerListDic[newPlayer.ActorNumber] = playerEntry.GetComponent<RectTransform>();
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            playersReadyDic.Add(newPlayer.ActorNumber, false);
-            CheckAllReadys();
-        }
+        //팀 색상 지정
+        if(RoomManager.Instance.isTeamMode)
+            SetEntryTeamColor(newPlayer);
+
+        //ready 딕셔너리 추가
+        SetPlayerReady(newPlayer);
     }
 
     public void LeavePlayer(Player leftPlayer)
@@ -147,25 +143,44 @@ public class RoomPanel : MonoBehaviour
         }
     }
 
-    public void SetPlayerReady(int actorNum, bool isReady)
+    public void SetPlayerReady(Player player)
     {
+        if (!player.CustomProperties.ContainsKey("Ready"))
+            return;
+
+        int actorNum = player.ActorNumber;
+        bool isReady = (bool)player.CustomProperties["Ready"];
+
         GameObject readyText = playerListDic[actorNum].Find("ReadyText").gameObject;
         readyText.SetActive(isReady);
+        teamChangeButton.interactable = !isReady;
 
+        print(PhotonNetwork.IsMasterClient);
         if (PhotonNetwork.IsMasterClient)
         {
-            playersReadyDic[actorNum] = isReady;
+            print(player.IsLocal);
+
+            if (!player.IsLocal)
+            {
+                if (!playersReadyDic.ContainsKey(actorNum))
+                    playersReadyDic.Add(actorNum, isReady);
+                else
+                    playersReadyDic[actorNum] = isReady;
+            }
 
             CheckAllReadys();
         }
     }
 
-    public void SetPlayerTeam(Player player)
+    public void SetEntryTeamColor(Player player)
     {
+        if(!player.CustomProperties.ContainsKey("_pt"))
+            return;
+
         Image image = playerListDic[player.ActorNumber].GetComponent<Image>();
 
         string team = player.GetPhotonTeam().Name;
-        print(team);
+
         switch (team)
         {
             case "Blue":

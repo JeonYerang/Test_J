@@ -37,6 +37,11 @@ public class SelectPanel : MonoBehaviour
             InitPlayerList();
     }
 
+    private void OnDisable()
+    {
+        ResetPlayerList();
+    }
+
     #region CountDown
     [SerializeField]
     Text countDownText;
@@ -147,19 +152,11 @@ public class SelectPanel : MonoBehaviour
     GameObject playerEntryPrefab;
 
     public Dictionary<int, GameObject> playerListDic = new Dictionary<int, GameObject>();
-    public void InitPlayerList()
+    private void InitPlayerList()
     {
-        //기존의 오브젝트 지우기
-        foreach (Transform child in playerListParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        playerListDic.Clear();
-
-        //새로운 오브젝트 생성
-        //같은 팀의 정보만 띄워준다.
+        //내 정보
         AddPlayerEntry(PhotonNetwork.LocalPlayer);
+        //팀원 정보
         if (PhotonNetwork.LocalPlayer.TryGetTeamMates(out Player[] teamMates))
         {
             foreach (Player teamMate in teamMates)
@@ -169,10 +166,22 @@ public class SelectPanel : MonoBehaviour
         }
     }
 
+    private void ResetPlayerList()
+    {
+        //기존의 오브젝트 지우기
+        foreach (Transform child in playerListParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        playerListDic.Clear();
+    }
+
     public void AddPlayerEntry(Player newPlayer)
     {
         GameObject playerEntry = Instantiate(playerEntryPrefab, playerListParent);
 
+        //이름 세팅
         playerEntry.name = newPlayer.ActorNumber.ToString();
 
         if (playerEntry.transform.Find("NameLabel").TryGetComponent(out Text nameText))
@@ -185,12 +194,18 @@ public class SelectPanel : MonoBehaviour
             }
         }
 
+        //직업 세팅
         if (playerEntry.transform.Find("SelectLabel").TryGetComponent(out Text classLabel))
         {
             int select = -1;
             if (newPlayer.CustomProperties.ContainsKey("Class"))
             {
                 select = (int)newPlayer.CustomProperties["Class"];
+            }
+            else
+            {
+                print($"{newPlayer} has not 'Class' key");
+                return;
             }
 
             if (select == -1)
@@ -204,7 +219,12 @@ public class SelectPanel : MonoBehaviour
             }
         }
 
-        playerListDic[newPlayer.ActorNumber] = playerEntry;
+        if(playerListDic.ContainsKey(newPlayer.ActorNumber))
+            playerListDic[newPlayer.ActorNumber] = playerEntry;
+
+        else
+            playerListDic.Add(newPlayer.ActorNumber, playerEntry);
+
     }
 
     public void RemovePlayerEntry(int leftPlayerActorNum)
