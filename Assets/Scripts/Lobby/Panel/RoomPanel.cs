@@ -40,8 +40,6 @@ public class RoomPanel : MonoBehaviour
         if (false == PhotonNetwork.InRoom) return;
         
         InitPanel();
-
-        SetMasterOption();
         LoadPlayerList();
 
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -68,10 +66,11 @@ public class RoomPanel : MonoBehaviour
             modeText.text = Enum.GetName(typeof(GameMode), (GameMode)mode);
         }
 
-        teamChangeButton.gameObject.SetActive(RoomManager.Instance.isTeamMode);
+        teamChangeButton.gameObject.SetActive(CreateRoomManager.Instance.isTeamMode);
+
+        SetMasterOption();
     }
 
-    #region PlayerSet
     private void SetMasterOption()
     {
         //일반 유저는 준비 버튼, 방장은 시작 버튼을 활성화
@@ -79,14 +78,15 @@ public class RoomPanel : MonoBehaviour
         startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         startButton.interactable = false;
 
-        readyToggle.isOn = false;
+        readyToggle.isOn = PhotonNetwork.IsMasterClient; //방장은 항상 레디상태
     }
 
+    #region PlayerSet
     private void LoadPlayerList()
     {
         foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
         {
-            JoinPlayer(player);
+            AddPlayerEntry(player);
         }
     }
 
@@ -98,7 +98,7 @@ public class RoomPanel : MonoBehaviour
         }
     }
 
-    public void JoinPlayer(Player newPlayer)
+    public void AddPlayerEntry(Player newPlayer)
     {
         //오브젝트 생성
         var playerEntry = Instantiate(playerEntryPrefab, playerListTransform, false);
@@ -122,18 +122,21 @@ public class RoomPanel : MonoBehaviour
             playerEntry.transform.Find("ReadyText").GetComponent<Text>().text = "ready!";
         }
 
-        //playerList 딕셔너리 추가
-        playerListDic[newPlayer.ActorNumber] = playerEntry.GetComponent<RectTransform>();
+        //playerList 딕셔너리 세팅
+        if (!playerListDic.ContainsKey(newPlayer.ActorNumber))
+            playerListDic.Add(newPlayer.ActorNumber, playerEntry.GetComponent<RectTransform>());
+        else
+            playerListDic[newPlayer.ActorNumber] = playerEntry.GetComponent<RectTransform>();
 
-        //팀 색상 지정
-        if(RoomManager.Instance.isTeamMode)
-            SetEntryTeamColor(newPlayer);
+        //레디 여부
+        SetReadyText(newPlayer);
 
-        //ready 딕셔너리 추가
-        SetPlayerReady(newPlayer);
+        //팀 색상
+        if (CreateRoomManager.Instance.isTeamMode)
+            SetTeamColor(newPlayer);
     }
 
-    public void LeavePlayer(Player leftPlayer)
+    public void RemovePlayerEntry(Player leftPlayer)
     {
         Destroy(playerListDic[leftPlayer.ActorNumber].gameObject);
         playerListDic.Remove(leftPlayer.ActorNumber);
@@ -142,39 +145,69 @@ public class RoomPanel : MonoBehaviour
             playersReadyDic.Remove(leftPlayer.ActorNumber);
         }
     }
+    #endregion
 
-    public void SetPlayerReady(Player player)
+    #region Ready
+    private void OnReadyToggleChanged(bool isReady)
+    {
+        Player localPlayer = PhotonNetwork.LocalPlayer;
+        PhotonHashtable customProps = localPlayer.CustomProperties;
+
+        customProps["Ready"] = isReady;
+        //print($"{localPlayer.NickName}이/가 준비합니다: {isReady}");
+
+        localPlayer.SetCustomProperties(customProps);
+    }
+
+    public void SetReadyText(Player player)
     {
         if (!player.CustomProperties.ContainsKey("Ready"))
             return;
 
         int actorNum = player.ActorNumber;
         bool isReady = (bool)player.CustomProperties["Ready"];
+        //print($"player's ready state: {isReady}");
 
         GameObject readyText = playerListDic[actorNum].Find("ReadyText").gameObject;
         readyText.SetActive(isReady);
-        teamChangeButton.interactable = !isReady;
 
-        print(PhotonNetwork.IsMasterClient);
+        if (player.IsLocal && !player.IsMasterClient) //플레이어가 나이고, 방장이 아닐경우
+        {
+            teamChangeButton.interactable = !isReady; //레디 중에는 팀 변경 안되게
+        }
+
+        //ready 딕셔너리 세팅
         if (PhotonNetwork.IsMasterClient)
         {
-            print(player.IsLocal);
-
-            if (!player.IsLocal)
-            {
-                if (!playersReadyDic.ContainsKey(actorNum))
-                    playersReadyDic.Add(actorNum, isReady);
-                else
-                    playersReadyDic[actorNum] = isReady;
-            }
+            if (!playersReadyDic.ContainsKey(actorNum))
+                playersReadyDic.Add(actorNum, isReady);
+            else
+                playersReadyDic[actorNum] = isReady;
 
             CheckAllReadys();
         }
     }
 
-    public void SetEntryTeamColor(Player player)
+    private void CheckAllReadys()
     {
-        if(!player.CustomProperties.ContainsKey("_pt"))
+        //모두 레디상태이면 스타트버튼 활성화
+        startButton.interactable = playersReadyDic.Values.All(x => x);
+    }
+    #endregion
+
+    #region Team
+    private void OnTeamButtonClick() 
+    {
+        Player localPlayer = PhotonNetwork.LocalPlayer;
+
+        if (localPlayer.GetPhotonTeam().Name == "Blue")
+            localPlayer.SwitchTeam("Red");
+        else
+            localPlayer.SwitchTeam("Blue");
+    }
+    public void SetTeamColor(Player player)
+    {
+        if (!player.CustomProperties.ContainsKey("_pt"))
             return;
 
         Image image = playerListDic[player.ActorNumber].GetComponent<Image>();
@@ -196,33 +229,6 @@ public class RoomPanel : MonoBehaviour
     }
     #endregion
 
-    private void CheckAllReadys()
-    {
-        //모두 레디상태이면 스타트버튼 활성화
-        startButton.interactable = playersReadyDic.Values.All(x => x);
-    }
-
-    #region OnClickButtons
-    private void OnReadyToggleChanged(bool isReady)
-    {
-        Player localPlayer = PhotonNetwork.LocalPlayer;
-        PhotonHashtable customProps = localPlayer.CustomProperties;
-
-        customProps["Ready"] = isReady;
-
-        localPlayer.SetCustomProperties(customProps);
-    }
-
-    private void OnTeamButtonClick() //레디 중에는 팀 변경 안되게
-    {
-        Player localPlayer = PhotonNetwork.LocalPlayer;
-
-        if (localPlayer.GetPhotonTeam().Name == "Blue")
-            localPlayer.SwitchTeam("Red");
-        else
-            localPlayer.SwitchTeam("Blue");
-    }
-
     private void OnStartButtonClick()
     {
         SceneManager.LoadScene("GameScene");
@@ -232,5 +238,5 @@ public class RoomPanel : MonoBehaviour
     {
         PhotonNetwork.LeaveRoom();
     }
-    #endregion
+    
 }

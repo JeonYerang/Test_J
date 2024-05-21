@@ -65,8 +65,8 @@ public class LobbyPTManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (RoomManager.Instance.isTeamMode) //팀전일 경우
-            RoomManager.Instance.InitTeam();
+        if (CreateRoomManager.Instance.isTeamMode) //팀전일 경우
+            CreateRoomManager.Instance.InitTeam();
 
         panelManager.PanelOpen("Room");
     }
@@ -84,12 +84,12 @@ public class LobbyPTManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        panelManager.roomPanel.JoinPlayer(newPlayer);
+        panelManager.roomPanel.AddPlayerEntry(newPlayer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        panelManager.roomPanel.LeavePlayer(otherPlayer);
+        panelManager.roomPanel.RemovePlayerEntry(otherPlayer);
     }
 
     //커스텀 프로퍼티가 변경되면 호출되는 함수
@@ -97,11 +97,11 @@ public class LobbyPTManager : MonoBehaviourPunCallbacks
     {
         if (changedProps.ContainsKey("Ready"))
         {
-            panelManager.roomPanel.SetPlayerReady(targetPlayer);
+            panelManager.roomPanel.SetReadyText(targetPlayer);
         }
         if (changedProps.ContainsKey("_pt"))
         {
-            panelManager.roomPanel.SetEntryTeamColor(targetPlayer);
+            panelManager.roomPanel.SetTeamColor(targetPlayer);
         }
     }
 }

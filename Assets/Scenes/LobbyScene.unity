@@ -1442,7 +1442,7 @@ GameObject:
   - component: {fileID: 249502546}
   - component: {fileID: 249502545}
   m_Layer: 0
-  m_Name: RoomManager
+  m_Name: CreateRoomManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1954,7 +1954,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.000030517578, y: -0.000869751}
-  m_SizeDelta: {x: 0, y: -315.59998}
+  m_SizeDelta: {x: 0, y: -320.93332}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &390727103
 MonoBehaviour:
@@ -4064,7 +4064,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 8400000, guid: 1dec2f0e3265e374caa574cb375f6f95, type: 2}
+  m_Texture: {fileID: 8400000, guid: 80cb614c38a8c2d45b38d710b8410ad4, type: 2}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -4812,7 +4812,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 8
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 1dec2f0e3265e374caa574cb375f6f95, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: 80cb614c38a8c2d45b38d710b8410ad4, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -6016,7 +6016,7 @@ GameObject:
   - component: {fileID: 1436002282}
   - component: {fileID: 1436002281}
   m_Layer: 0
-  m_Name: LobbyManager
+  m_Name: LobbyPTManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

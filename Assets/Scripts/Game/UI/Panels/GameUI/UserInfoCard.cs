@@ -11,7 +11,6 @@ using UnityEngine.UI;
 
 public class UserInfoCard : MonoBehaviour
 {
-
     private void Awake()
     {
         myInfo = transform.Find("MyInfo");
@@ -38,6 +37,7 @@ public class UserInfoCard : MonoBehaviour
         SetClass();
         //SetHpBar();
     }
+
     public void SetClass()
     {
         Player player = PhotonNetwork.LocalPlayer;

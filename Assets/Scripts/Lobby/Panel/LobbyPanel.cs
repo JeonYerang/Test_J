@@ -80,7 +80,7 @@ public class LobbyPanel : MonoBehaviour
             return;
         }
 
-        RoomManager.Instance.CreateRoom(roomName, maxPlayer, gameMode);
+        CreateRoomManager.Instance.CreateRoom(roomName, maxPlayer, gameMode);
     }
 
 
@@ -130,6 +130,6 @@ public class LobbyPanel : MonoBehaviour
 
     private void OnRandomButtonClick()
     {
-        RoomManager.Instance.JoinOrCreateRandomRoom();
+        CreateRoomManager.Instance.JoinOrCreateRandomRoom();
     }
 }

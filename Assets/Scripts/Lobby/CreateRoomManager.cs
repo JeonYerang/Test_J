@@ -8,9 +8,9 @@ using UnityEngine;
 
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class RoomManager : MonoBehaviour
+public class CreateRoomManager : MonoBehaviour
 {
-    public static RoomManager Instance {  get; private set; }
+    public static CreateRoomManager Instance {  get; private set; }
 
     public string roomName;
     public int maxPlayer;
@@ -56,7 +56,7 @@ public class RoomManager : MonoBehaviour
 
     public void InitTeam()
     {
-        Player newPlayer = PhotonNetwork.LocalPlayer;
+        Player player = PhotonNetwork.LocalPlayer;
 
         int BlueTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Blue");
         int RedTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Red");
@@ -64,16 +64,16 @@ public class RoomManager : MonoBehaviour
         string playerTeam = BlueTeamCount > RedTeamCount ? "Red" : "Blue";
         print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
 
-        if(newPlayer.GetPhotonTeam() != null)
+        if(player.GetPhotonTeam() != null)
         {
-            print($"SwitchTeam: {newPlayer.GetPhotonTeam().Name}");
+            print($"SwitchTeam: {player.GetPhotonTeam().Name}");
             print($"To: {playerTeam}");
-            newPlayer.SwitchTeam(playerTeam);
-            print($"Res: {newPlayer.GetPhotonTeam().Name}");
+            player.SwitchTeam(playerTeam);
+            print($"Res: {player.GetPhotonTeam().Name}");
         }
         else
         {
-            newPlayer.JoinTeam(playerTeam);
+            player.JoinTeam(playerTeam);
         }
         print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
     }

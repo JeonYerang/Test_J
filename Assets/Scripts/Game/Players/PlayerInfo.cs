@@ -21,9 +21,15 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField]
     PlayerInfoUI playerInfoUI;
 
+    [SerializeField]
+    Camera playerCam;
+    [SerializeField]
+    RenderTexture profileTex;
+
     private void Awake()
     {
         pv = GetComponent<PhotonView>();
+        //playerCam = transform.Find("PlayerCam").GetComponent<Camera>();
     }
 
     private void OnEnable()
@@ -41,5 +47,8 @@ public class PlayerInfo : MonoBehaviour
         playerInfoUI.SetNameLabel(playerName);
         playerInfoUI.SetOutLineColor(team);
         playerInfoUI.SetClassIcon(GameManager.Instance.classList[(int)playerClass].classIcon);
+
+        if(pv.IsMine)
+            playerCam.targetTexture = profileTex;
     }
 }
