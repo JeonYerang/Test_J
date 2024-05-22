@@ -1,3 +1,5 @@
+using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,6 +16,13 @@ public class PlayerInfoUI : MonoBehaviour
     Slider hpBar;
     [SerializeField]
     Outline outline;
+
+    public void Init(string playerName, string team, PlayerClass playerClass)
+    {
+        SetNameLabel(playerName);
+        SetOutLineColor(team);
+        SetClassIcon(GameManager.Instance.classList[(int)playerClass].classIcon);
+    }
 
     public void SetNameLabel(string name)
     {

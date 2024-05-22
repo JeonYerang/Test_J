@@ -7,7 +7,6 @@ public class SkillData : ScriptableObject
     public string _name;
 
     public int damage;
-    public int numOfShot;
     public float distance;
     public float range;
 

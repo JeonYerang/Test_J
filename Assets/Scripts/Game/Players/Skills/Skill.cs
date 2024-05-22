@@ -67,3 +67,10 @@ public interface IChargableSkill
     void EndCharging();
 }
 #endregion
+
+public enum SkillType
+{
+    Attack,
+    Skill,
+    Ultimate
+}

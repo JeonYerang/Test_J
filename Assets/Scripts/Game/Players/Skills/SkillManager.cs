@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Windows;
 
 
 public class SkillManager : MonoBehaviour
 {
     public static SkillManager Instance { get; private set; }
 
-    KeyCode[] skillKeyCodes = new KeyCode[2];
+    PlayerAttack playerAttack;
+
+    KeyCode attackKeyCode;
+    KeyCode skillKeyCode;
+    KeyCode ultimateKeyCode;
+
     public List<Skill> skills;
-    Dictionary<string, bool> skillDic = new Dictionary<string, bool>();
+    Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill>
+    Dictionary<string, bool> skillUsableDic = new Dictionary<string, bool>(); //<skill name, is usable>
 
     private void Awake()
     {
@@ -25,101 +32,109 @@ public class SkillManager : MonoBehaviour
 
     private void SetKeyCode() //Key Manager
     {
-        skillKeyCodes[0] = KeyCode.Z;
-        skillKeyCodes[1] = KeyCode.X;
-        skillKeyCodes[2] = KeyCode.C;
+        skillKeyDic.Clear();
+
+        attackKeyCode = KeyCode.Z;
+        skillKeyCode = KeyCode.X;
+        ultimateKeyCode = KeyCode.C;
     }
 
     private void InitSkillDic()
     {
-        skillDic.Clear();
+        skillUsableDic.Clear();
 
-        foreach(var skill in skills)
+        foreach (var skill in skills)
         {
-            skillDic.Add(skill._name, false);
+            skillUsableDic.Add(skill._name, false);
         }
     }
 
+    public Skill currentSkill;
+    private string chargingKeyFlag;
     private void Update()
     {
-        for (int i = 0; i < skillKeyCodes.Length; i++)
+        ConditionCheck();
+
+        if (UnityEngine.Input.anyKeyDown)
         {
-            Skill skill = skills[i];
-            ConditionCheck(skill);
+            string input = UnityEngine.Input.inputString;
+            print(input);
 
-            switch (skill.useType)
+            if (skillKeyDic.ContainsKey(input))
             {
-                case UseType.Basic:
-                    if (Input.GetKeyDown(skillKeyCodes[i]))
+                currentSkill = skillKeyDic[input];
+
+                if (currentSkill.useType == UseType.Charge)
+                {
+                    if(chargingKeyFlag == null)
                     {
-                        if (skillDic[skill._name]) //스킬이 사용 가능한 상태면
-                            skill.UsingSkill();
+                        chargingKeyFlag = input;
+                        //playerAttack.Charging();
+                        print("차지 시작");
                     }
+                }
+                else
+                {
+                    //playerAttack.Attack(currentSkill);
+                    print("스킬 사용");
+                }
+            }
+        }
+        if (chargingKeyFlag != null && UnityEngine.Input.GetKeyUp(chargingKeyFlag))
+        {
+            currentSkill = skillKeyDic[chargingKeyFlag];
+            chargingKeyFlag = null;
+
+            //playerAttack.EndCharging();
+            //playerAttack.Attack(currentSkill);
+            print("차지 끝");
+        }
+    }
+
+    public void ConditionCheck()
+    {
+        foreach(Skill skill in skills)
+        {
+            SkillConditionType conditionType = skill.conditionType;
+
+            switch (conditionType)
+            {
+                case SkillConditionType.Basic:
                     break;
 
-                case UseType.OnOff:
-                    if (Input.GetKeyDown(skillKeyCodes[i]))
-                    {
-                        if (skillDic[skill._name]) //스킬이 사용 가능한 상태면
-                        {
-                            if (!((IOnOffableSkill)skill).IsOn)
-                                skill.UsingSkill();
-                            else
-                                ((IOnOffableSkill)skill).UnUsingSkill();
-                        }
-                    }
+                case SkillConditionType.Count:
+                    CheckCount(skill);
                     break;
 
-                case UseType.Charge:
-                    if (Input.GetKey(skillKeyCodes[i]))
-                    {
-                        ((IChargableSkill)skill).Charging();
-                    }
-                    if (Input.GetKeyUp(skillKeyCodes[i]))
-                    {
-                        skill.UsingSkill();
-                    }
+                case SkillConditionType.CoolTime:
+                    CheckCoolTime(skill);
+                    break;
+
+                default:
                     break;
             }
         }
     }
 
-    public void ConditionCheck(Skill skill)
-    {
-        SkillConditionType conditionType = skill.conditionType;
-
-        switch (conditionType)
-        {
-            case SkillConditionType.Basic:
-                break;
-
-            case SkillConditionType.Count:
-                CheckCount(skill);
-                break;
-
-            case SkillConditionType.CoolTime:
-                CoolTimeCoroutine(skill);
-                break;
-
-            default:
-                break;
-        }
-    }
-
     private void CheckCount(Skill skill)
     {
-        if (GameManager.Instance.playerAttack.attackCount 
+        if (GameManager.Instance.playerAttack.AttackCount 
             > ((ICountActivatableSkill)skill).RequiredCount)
-            skillDic[skill._name] = true;
+            skillUsableDic[skill._name] = true;
         else
-            skillDic[skill._name] = false;
+            skillUsableDic[skill._name] = false;
+    }
+
+    private void CheckCoolTime(Skill skill)
+    {
+
     }
 
     private IEnumerator CoolTimeCoroutine(Skill skill)
     {
         float sec = ((ICoolTimeActivatableSkill)skill).RequiredSec;
 
-        skillDic[skill._name] = false;
+        skillUsableDic[skill._name] = false;
 
         while (sec > 0)
         {
@@ -127,6 +142,6 @@ public class SkillManager : MonoBehaviour
             sec--;
         }
 
-        skillDic[skill._name] = true;
+        skillUsableDic[skill._name] = true;
     }
 }

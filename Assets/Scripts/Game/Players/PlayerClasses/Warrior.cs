@@ -16,17 +16,19 @@ public class Warrior : PlayerAttack //공격속도 - 데미지 +
         switch (comboCount)
         {
             case 0:
-                GameObject attack = Instantiate(attackPrefab[0]);
+                Instantiate(attackPrefab[0], transform.position, transform.rotation);
                 comboCount++;
+                comboCoroutine = StartCoroutine(ComboCoroutine());
                 break;
 
             case 1:
-                GameObject attack2 = Instantiate(attackPrefab[0]);
+                Instantiate(attackPrefab[1], transform.position, transform.rotation);
                 comboCount++;
+                comboCoroutine = StartCoroutine(ComboCoroutine());
                 break;
 
             case 2:
-                GameObject attack3 = Instantiate(attackPrefab[0]);
+                Instantiate(attackPrefab[2], transform.position, transform.rotation);
                 comboCount = 0;
                 break;
 
@@ -35,8 +37,10 @@ public class Warrior : PlayerAttack //공격속도 - 데미지 +
         }
     }
 
-    public override void UltimateAttack()
+    Coroutine comboCoroutine = null;
+    private IEnumerator ComboCoroutine()
     {
-        base.UltimateAttack();
+        yield return new WaitForSeconds(3);
+        comboCount = 0;
     }
 }

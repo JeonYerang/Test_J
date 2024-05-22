@@ -5,9 +5,8 @@ using UnityEngine;
 public class Tanker : PlayerAttack //공격속도 - 데미지 -
 {
     public bool isShiledOn;
-    public int shieldHp;
 
-    public GameObject shield;
+    public Shield shield;
     public GameObject ultimateAttackPrefab;
 
     public override void Attack()
@@ -17,35 +16,11 @@ public class Tanker : PlayerAttack //공격속도 - 데미지 -
 
     public void ShieldOn()
     {
-        StartCoroutine(ShieldHpCoroutine());
-        shield.SetActive(true);
+        shield.gameObject.SetActive(true);
     }
 
     public void ShieldOff()
     {
-        StopCoroutine(ShieldHpCoroutine());
-        shield.SetActive(false);
-    }
-
-    private IEnumerator ShieldHpCoroutine()
-    {
-        while(shieldHp > 0)
-        {
-            yield return new WaitForSeconds(1f);
-            shieldHp--;
-        }
-
-        ShieldBreak();
-    }
-
-    private void ShieldBreak()
-    {
-        //부서지는 이펙트
-        shield.SetActive(false);
-    }
-
-    public override void UltimateAttack() //돌진 후 기절시키기
-    {
-        base.UltimateAttack();
+        shield.gameObject.SetActive(false);
     }
 }

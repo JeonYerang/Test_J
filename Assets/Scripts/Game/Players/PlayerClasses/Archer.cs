@@ -7,61 +7,52 @@ public class Archer : PlayerAttack //공격속도 + 데미지 -
     public Arrow attackPrefab;
     public GameObject ultimateAttackPrefab;
 
-    public int chargeCount;
-
-    /*protected override void Update()
+    #region Charging
+    public int ChargeCount { get; protected set; }
+    public void Charging()
     {
-        if (Input.GetKey(KeyCode.A))
-        {
-            Charge();
-        }
-        else if (Input.GetKeyUp(KeyCode.A))
-        {
-            EndCharge();
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            UltimateAttack();
-        }
-    }*/
-
-    public void Charge()
-    {
+        state = AttackState.Charge;
         StartCoroutine(ChargingCoroutine());
     }
 
-    public void EndCharge()
+    public void EndCharging()
     {
+        state = AttackState.Idle;
         StopCoroutine(ChargingCoroutine());
-        Attack();
     }
 
-    private IEnumerator ChargingCoroutine()
+    protected IEnumerator ChargingCoroutine()
     {
-        while(chargeCount < 3)
+        while (Input.GetKeyUp(KeyCode.K))
         {
             yield return new WaitForSeconds(2f);
-            chargeCount++;
+
+            if(ChargeCount < 3)
+                ChargeCount++;
         }
     }
 
-    public override void Attack() //차지공격
+    public override void Attack()
     {
         base.Attack();
 
         int damage = attackPoint;
-        float speed = attackSpeed;
+        switch (ChargeCount)
+        {
+            case 1:
+                damage *= 2;
+                break;
 
-        Arrow arrow = Instantiate(attackPrefab, transform.position, Quaternion.identity);
-        arrow.SetLevel(chargeCount);
-        arrow.InitAndShot(GetComponent<PlayerInfo>(), damage, speed);
+            case 2:
+                damage *= 4;
+                break;
 
-        chargeCount = 0;
+            default:
+                break;
+        }
+
+        Instantiate(attackPrefab, transform.position, transform.rotation);
     }
-
-    public override void UltimateAttack() //연속공격
-    {
-        base.UltimateAttack();
-    }
+    #endregion
 }
 

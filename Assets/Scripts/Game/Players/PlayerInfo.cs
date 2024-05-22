@@ -15,8 +15,10 @@ public class PlayerInfo : MonoBehaviour
     Player player;
     private string playerName;
     public string PlayerName {  get { return playerName; } }
+
     private string team;
     public string Team { get { return team; } }
+
     private PlayerClass playerClass;
     public PlayerClass PlayerClass { get {  return playerClass; } }
 
@@ -42,9 +44,7 @@ public class PlayerInfo : MonoBehaviour
         team = player.GetPhotonTeam().Name;
         playerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
 
-        playerInfoUI.SetNameLabel(playerName);
-        playerInfoUI.SetOutLineColor(team);
-        playerInfoUI.SetClassIcon(GameManager.Instance.classList[(int)playerClass].classIcon);
+        playerInfoUI.Init(playerName, team, playerClass);
 
         if (pv.IsMine)
         {
