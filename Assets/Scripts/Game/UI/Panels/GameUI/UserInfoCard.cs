@@ -55,7 +55,9 @@ public class UserInfoCard : MonoBehaviour
 
     #region TeamInfo
     Transform teamInfos;
+    [SerializeField]
     GameObject teamPrefab;
+
     Dictionary<int, Transform> teamDic = new Dictionary<int, Transform>();
     Dictionary<int, Slider> teamHpDic = new Dictionary<int, Slider>();
     private void InitTeamInfos()
@@ -77,44 +79,18 @@ public class UserInfoCard : MonoBehaviour
                 teamInfo.Find("NameLabel").GetComponent<TextMeshProUGUI>().text 
                     = member.NickName;
                 teamDic.Add(member.ActorNumber, teamInfo);
-                SetTeamClass(member);
-                //SetTeamHp(member);
+                SetClass(member);
+                //SetHpBar(member);
             }
         }
-    }
-    public void SetTeamClass(Player player)
-    {
-        int num = (int)player.CustomProperties["Class"];
-
-        if (num == -1)
-        {
-            teamDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
-            = null;
-        }
-        else
-        {
-            teamDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
-            = GameManager.Instance.classList[num].classIcon;
-        }
-    }
-    public void SetTeamHp(Player player)
-    {
-        float amount = 0;
-        //스폰되어있는 상태면
-        if (SpawnManager.Instance.spawnedPlayers.ContainsKey(player.ActorNumber))
-        {
-            PlayerAttack playerAttack
-            = SpawnManager.Instance.spawnedPlayers[player.ActorNumber].GetComponent<PlayerAttack>();
-            amount = playerAttack.HpAmount;
-        }
-
-        teamHpDic[player.ActorNumber].value = amount;
     }
     #endregion
 
     #region EnemyInfo
     Transform enemyInfos;
+    [SerializeField]
     GameObject enemyPrefab;
+
     Dictionary<int, Transform> enemyDic = new Dictionary<int, Transform>();
     Dictionary<int, Slider> enemyHpDic = new Dictionary<int, Slider>();
     private void InitEnemyInfos()
@@ -126,6 +102,7 @@ public class UserInfoCard : MonoBehaviour
             Destroy(t.gameObject);
         }
 
+        //내가 파란팀이면 적군은 빨간팀
         string myTeam = PhotonNetwork.LocalPlayer.GetPhotonTeam().Name;
         string enemyTeam = myTeam == "Blue" ? "Red" : "Blue";
 
@@ -133,33 +110,42 @@ public class UserInfoCard : MonoBehaviour
         {
             foreach (Player member in members)
             {
-                Transform enemyInfo = Instantiate(enemyPrefab, teamInfos).transform;
+                Transform enemyInfo = Instantiate(enemyPrefab, enemyInfos).transform;
                 enemyInfo.Find("NameLabel").GetComponent<TextMeshProUGUI>().text 
                     = member.NickName;
-                teamDic.Add(member.ActorNumber, enemyInfo);
-                SetEnemyClass(member);
-                //SetEnemyHp(member);
+                enemyDic.Add(member.ActorNumber, enemyInfo);
+                SetClass(member);
+                //SetHpBar(member);
             }
         }
     }
-    public void SetEnemyClass(Player player)
-    {
-        int num = (int) player.CustomProperties["Class"];
+    #endregion
 
-        if(num == -1)
+    public void SetClass(Player player)
+    {
+        if (!player.CustomProperties.ContainsKey("Class"))
+            return;
+
+        int num = (int)player.CustomProperties["Class"];
+
+        if (teamDic.ContainsKey(player.ActorNumber)) //팀원이면
+        {
+            teamDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
+                = num == -1 ?
+                null : GameManager.Instance.classList[num].classIcon;
+        }
+        else if (enemyDic.ContainsKey(player.ActorNumber)) //적군이면
         {
             enemyDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
-            = null;
+                = num == -1 ?
+                null : GameManager.Instance.classList[num].classIcon;
         }
-        else
-        {
-            enemyDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
-            = GameManager.Instance.classList[num].classIcon;
-        }
+
     }
-    public void SetEnemyHp(Player player)
+    public void SetHpBar(Player player)
     {
         float amount = 0;
+        //스폰되어있는 상태면
         if (SpawnManager.Instance.spawnedPlayers.ContainsKey(player.ActorNumber))
         {
             PlayerAttack playerAttack
@@ -167,7 +153,13 @@ public class UserInfoCard : MonoBehaviour
             amount = playerAttack.HpAmount;
         }
 
-        enemyHpDic[player.ActorNumber].value = amount;
+        if (teamDic.ContainsKey(player.ActorNumber)) //팀원이면
+        {
+            teamHpDic[player.ActorNumber].value = amount;
+        }
+        else if (enemyDic.ContainsKey(player.ActorNumber)) //적군이면
+        {
+            enemyHpDic[player.ActorNumber].value = amount;
+        }
     }
-    #endregion
 }

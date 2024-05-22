@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ControlButtons : MonoBehaviour
+public class ControlButtonArea : MonoBehaviour
 {
     PlayerMove playerMove;
     PlayerAttack playerAttack;

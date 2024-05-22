@@ -9,6 +9,8 @@ using UnityEngine;
 public class PlayerInfo : MonoBehaviour
 {
     PhotonView pv;
+    Camera playerCam;
+    GameObject renderObj;
 
     Player player;
     private string playerName;
@@ -21,15 +23,11 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField]
     PlayerInfoUI playerInfoUI;
 
-    [SerializeField]
-    Camera playerCam;
-    [SerializeField]
-    RenderTexture profileTex;
-
     private void Awake()
     {
         pv = GetComponent<PhotonView>();
-        //playerCam = transform.Find("PlayerCam").GetComponent<Camera>();
+        playerCam = transform.Find("PlayerCam").GetComponent<Camera>();
+        renderObj = transform.Find("Renderer").gameObject;
     }
 
     private void OnEnable()
@@ -48,7 +46,10 @@ public class PlayerInfo : MonoBehaviour
         playerInfoUI.SetOutLineColor(team);
         playerInfoUI.SetClassIcon(GameManager.Instance.classList[(int)playerClass].classIcon);
 
-        if(pv.IsMine)
-            playerCam.targetTexture = profileTex;
+        if (pv.IsMine)
+        {
+            renderObj.layer = LayerMask.NameToLayer("Me");
+            playerCam.gameObject.SetActive(true);
+        }
     }
 }

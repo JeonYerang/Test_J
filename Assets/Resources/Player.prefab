@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 156247933049695629}
   - component: {fileID: 156247933049695628}
   - component: {fileID: 174763227138822330}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 156247933247501545}
   - component: {fileID: 4893663158471552256}
   - component: {fileID: 7523172492337294557}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -262,8 +262,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInfoUI: {fileID: 5249630214322730195}
-  playerCam: {fileID: 4717706274750572250}
-  profileTex: {fileID: 8400000, guid: 5546f3e41a4ea0c4ebdd868bcc9a3339, type: 2}
 --- !u!114 &156247933247501545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -658,7 +656,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8422002039454094708
 Transform:
   m_ObjectHideFlags: 0
@@ -707,7 +705,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 8
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 5546f3e41a4ea0c4ebdd868bcc9a3339, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1

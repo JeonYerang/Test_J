@@ -37,6 +37,7 @@ public class RoomPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        print("OnEnable");
         if (false == PhotonNetwork.InRoom) return;
         
         InitPanel();
@@ -48,11 +49,11 @@ public class RoomPanel : MonoBehaviour
     private void OnDisable()
     {
         ResetPlayerList();
-        playerListDic.Clear();
     }
 
     private void InitPanel()
     {
+        print("InitPanel");
         roomTitle.text = PhotonNetwork.CurrentRoom.Name;
 
         int mode = -1;
@@ -73,12 +74,14 @@ public class RoomPanel : MonoBehaviour
 
     private void SetMasterOption()
     {
+        print("here");
         //일반 유저는 준비 버튼, 방장은 시작 버튼을 활성화
         readyToggle.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
         startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         startButton.interactable = false;
 
         readyToggle.isOn = PhotonNetwork.IsMasterClient; //방장은 항상 레디상태
+        //OnReadyToggleChanged(false);
     }
 
     #region PlayerSet
@@ -92,6 +95,7 @@ public class RoomPanel : MonoBehaviour
 
     private void ResetPlayerList()
     {
+        playerListDic.Clear();
         foreach (Transform child in playerListTransform)
         {
             Destroy(child.gameObject);
@@ -150,11 +154,11 @@ public class RoomPanel : MonoBehaviour
     #region Ready
     private void OnReadyToggleChanged(bool isReady)
     {
+        print("ReadyToggleChange");
         Player localPlayer = PhotonNetwork.LocalPlayer;
         PhotonHashtable customProps = localPlayer.CustomProperties;
 
         customProps["Ready"] = isReady;
-        //print($"{localPlayer.NickName}이/가 준비합니다: {isReady}");
 
         localPlayer.SetCustomProperties(customProps);
     }
@@ -166,7 +170,6 @@ public class RoomPanel : MonoBehaviour
 
         int actorNum = player.ActorNumber;
         bool isReady = (bool)player.CustomProperties["Ready"];
-        //print($"player's ready state: {isReady}");
 
         GameObject readyText = playerListDic[actorNum].Find("ReadyText").gameObject;
         readyText.SetActive(isReady);
@@ -184,12 +187,16 @@ public class RoomPanel : MonoBehaviour
             else
                 playersReadyDic[actorNum] = isReady;
 
-            CheckAllReadys();
+            CheckAllReady();
         }
     }
 
-    private void CheckAllReadys()
+    private void CheckAllReady()
     {
+        /*foreach(var actorNum in playersReadyDic.Keys)
+        {
+            print($"{PhotonNetwork.CurrentRoom.Players[actorNum].NickName} is ready?: {playersReadyDic[actorNum]}");
+        }*/
         //모두 레디상태이면 스타트버튼 활성화
         startButton.interactable = playersReadyDic.Values.All(x => x);
     }

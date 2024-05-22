@@ -10,12 +10,14 @@ public class GameUIPanel : MonoBehaviour
 
     [SerializeField]
     UserInfoCard userInfo;
+    public UserInfoCard UserInfo { get { return userInfo; } }
     [SerializeField]
-    ControlButtons controlButtons;
+    ControlButtonArea controlButtons;
+    public ControlButtonArea ControlButtons { get { return controlButtons; } }
 
     [SerializeField]
     FixedJoystick joystick;
-    public FixedJoystick Joystick {  get; private set; }
+    public FixedJoystick Joystick { get { return joystick; } }
 
     public void OnEnable()
     {
