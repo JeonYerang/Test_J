@@ -58,7 +58,6 @@ public class SkillManager : MonoBehaviour
         if (UnityEngine.Input.anyKeyDown)
         {
             string input = UnityEngine.Input.inputString;
-            print(input);
 
             if (skillKeyDic.ContainsKey(input))
             {

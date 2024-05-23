@@ -37,11 +37,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera cam;
 
-    public int startCount;
     public bool isGameStart = false;
-
-    public int RedTeamScore = 0;
-    public int BlueTeamScore = 0;
 
     private void Awake()
     {
@@ -72,6 +68,8 @@ public class GameManager : MonoBehaviour
     }
 
     #region GameReady
+    public int startCount;
+
     public void ReadyForGame()
     {
         SetClassProperties(PhotonNetwork.LocalPlayer);
@@ -148,8 +146,19 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public void SetScore()
-    {
+    #region Score
+    public int redTeamScore = 0;
+    public int blueTeamScore = 0;
 
+    public void GetScore(string teamName, int score)
+    {
+        if (teamName == "Red")
+            redTeamScore += score;
+
+        else if (teamName == "Blue")
+            blueTeamScore += score;
+
+        print($"{teamName}∆¿¿Ã {score}¡°¿ª »πµÊ!");
     }
+    #endregion
 }

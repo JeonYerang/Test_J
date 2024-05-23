@@ -101,7 +101,6 @@ public class Territory : MonoBehaviour
         yield return null;
     }
 
-    Coroutine colorCoroutine = null;
     private void Occupied(string teamName = null)
     {
         if (CurrentTeam == teamName)
@@ -114,24 +113,41 @@ public class Territory : MonoBehaviour
         else print("Áß¸³");
 
         if(colorCoroutine != null) StopCoroutine(colorCoroutine);
-        switch (teamName)
+        colorCoroutine = StartCoroutine(ColorChanged(teamName));
+
+        if (getScoreCoroutine != null) StopCoroutine(getScoreCoroutine);
+        getScoreCoroutine = StartCoroutine(GetScoreCoroutine(teamName));
+    }
+
+    Coroutine getScoreCoroutine = null;
+    IEnumerator GetScoreCoroutine(string teamName)
+    {
+        while (true)
         {
-            case "Blue":
-                colorCoroutine = StartCoroutine(CrystalColorChanged(colorVectors[1]));
-                break;
-
-            case "Red":
-                colorCoroutine = StartCoroutine(CrystalColorChanged(colorVectors[2]));
-                break;
-
-            default:
-                colorCoroutine = StartCoroutine(CrystalColorChanged(colorVectors[0]));
-                break;
+            GameManager.Instance.GetScore(teamName, 1);
+            yield return new WaitForSeconds(1);
         }
     }
 
-    IEnumerator CrystalColorChanged(Vector2 target)
+    Coroutine colorCoroutine = null;
+    IEnumerator ColorChanged(string teamName)
     {
+        Vector2 target;
+        switch (teamName)
+        {
+            case "Blue":
+                target = colorVectors[1];
+                break;
+
+            case "Red":
+                target = colorVectors[2];
+                break;
+
+            default:
+                target = colorVectors[0];
+                break;
+        }
+
         Vector2 before = crystalMat.mainTextureOffset;
         Vector2 amount = new Vector2(0.01f, 1);
 
