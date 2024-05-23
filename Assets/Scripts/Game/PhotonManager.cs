@@ -37,8 +37,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         if (changedProps.ContainsKey("Class"))
         {
-            panelManager.selectPanel.OnClassPropertyChanged(targetPlayer);
-            panelManager.gamePanel.UserInfo.SetClass(targetPlayer);
+            if (panelManager != null)
+            {
+                panelManager.selectPanel.OnClassPropertyChanged(targetPlayer);
+                panelManager.gamePanel.UserInfo.SetClass(targetPlayer);
+            }
         }
     }
 }

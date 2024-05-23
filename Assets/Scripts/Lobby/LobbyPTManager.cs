@@ -97,7 +97,7 @@ public class LobbyPTManager : MonoBehaviourPunCallbacks
     {
         if (changedProps.ContainsKey("Ready"))
         {
-            print("Ready change");
+            //print("Ready change");
             panelManager.roomPanel.SetReadyText(targetPlayer);
         }
         if (changedProps.ContainsKey("_pt"))

@@ -43,6 +43,8 @@ MonoBehaviour:
   - GameStart
   - AddPlayer
   - RemovePlayer
+  - GetScore
+  - BroadCastRemainCount
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

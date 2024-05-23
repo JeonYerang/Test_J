@@ -18,6 +18,8 @@ public class Territory : MonoBehaviour
     List<Player> bluePlayers = new List<Player>();
 
     PhotonView pv;
+    [SerializeField]
+    ScoreUI scoreUI;
 
     private void Awake()
     {
@@ -37,6 +39,7 @@ public class Territory : MonoBehaviour
         crystalMat.mainTextureOffset = colorVectors[0];
     }
 
+    #region Add & Remove Player
     [PunRPC]
     private void AddPlayer(Player player)
     {
@@ -78,45 +81,90 @@ public class Territory : MonoBehaviour
 
         CompareCount();
     }
+    #endregion
 
+    #region Check
     private void CompareCount()
     {
-        if(redPlayers.Count == bluePlayers.Count)
+        int redCount = redPlayers.Count;
+        int blueCount = bluePlayers.Count;
+
+        string newTeam = null;
+
+        if ((redCount == 0) ^ (blueCount == 0)) //한 팀만 0일 경우
         {
-            Occupied();
-        }
-        else if(redPlayers.Count > bluePlayers.Count)
-        {
-            Occupied("Red");
+            newTeam
+                = redPlayers.Count > bluePlayers.Count ? "Red" : "Blue";
+
+            if (CurrentTeam != newTeam) //원래 점령 중이던 팀이 새로 점령하는 팀과 같지 않을 경우
+            {
+                if (countCoroutine != null)
+                    StopCoroutine(countCoroutine);
+
+                countCoroutine = StartCoroutine(OccupiedCountDown(newTeam));
+            }
         }
         else
         {
-            Occupied("Blue");
+            if (countCoroutine != null)
+                StopCoroutine(countCoroutine);
+
+            Occupied(); //중립
+
+            if (redCount == 0) //아무도 없으면
+            {
+                scoreUI.SetOccupiedText("");
+            }
+            else
+            {
+                scoreUI.SetOccupiedText("격전중");
+            }
+        }
+    }
+    #endregion
+
+    #region Occupied
+    Coroutine countCoroutine = null;
+    int occupiedCount = 5;
+    private IEnumerator OccupiedCountDown(string teamName)
+    {
+        scoreUI.SetOccupiedText($"{teamName}팀 점령시도중");
+
+        int currentCount = occupiedCount;
+        while (currentCount >= 0)
+        {
+            if (PhotonNetwork.IsMasterClient)
+                pv.RPC("BroadCastRemainCount", RpcTarget.All, teamName, currentCount);
+            yield return new WaitForSeconds(1);
+            currentCount--;
         }
     }
 
-    Coroutine countCoroutine = null;
-    private IEnumerator OccupiedCountDown()
+    [PunRPC]
+    public void BroadCastRemainCount(string teamName, int count)
     {
-        yield return null;
-    }
+        print($"점령까지 {count}s");
 
+        if(count == 0)
+            Occupied(teamName);
+    }
+    
     private void Occupied(string teamName = null)
     {
-        if (CurrentTeam == teamName)
-        {
-            return;
-        }
-
-        CurrentTeam = teamName;
-        if (teamName != null) print($"{teamName}팀이 점령함");
-        else print("중립");
-
+        //영역 색상 변경 코루틴
         if(colorCoroutine != null) StopCoroutine(colorCoroutine);
         colorCoroutine = StartCoroutine(ColorChanged(teamName));
 
-        if (getScoreCoroutine != null) StopCoroutine(getScoreCoroutine);
-        getScoreCoroutine = StartCoroutine(GetScoreCoroutine(teamName));
+        if (PhotonNetwork.IsMasterClient)
+            if (getScoreCoroutine != null) StopCoroutine(getScoreCoroutine);
+
+        if (teamName != null) //중립이 아닐 경우
+        {
+            scoreUI.SetOccupiedText($"{teamName}팀 점령중");
+
+            if(PhotonNetwork.IsMasterClient)
+                getScoreCoroutine = StartCoroutine(GetScoreCoroutine(teamName));
+        }
     }
 
     Coroutine getScoreCoroutine = null;
@@ -124,9 +172,14 @@ public class Territory : MonoBehaviour
     {
         while (true)
         {
-            GameManager.Instance.GetScore(teamName, 1);
+            pv.RPC("GetScore", RpcTarget.All, teamName, 1);
             yield return new WaitForSeconds(1);
         }
+    }
+    [PunRPC]
+    private void GetScore(string teamName, int score)
+    {
+        GameManager.Instance.GetScore(teamName, score);
     }
 
     Coroutine colorCoroutine = null;
@@ -170,6 +223,7 @@ public class Territory : MonoBehaviour
             crystalMat.mainTextureOffset = target;
         }
     }
+    #endregion
 
     private void OnTriggerEnter(Collider other)
     {

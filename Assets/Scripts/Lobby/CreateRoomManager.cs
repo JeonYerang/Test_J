@@ -62,7 +62,7 @@ public class CreateRoomManager : MonoBehaviour
         int RedTeamCount = PhotonTeamsManager.Instance.GetTeamMembersCount("Red");
 
         string playerTeam = BlueTeamCount > RedTeamCount ? "Red" : "Blue";
-        print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
+        //print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
 
         if(player.GetPhotonTeam() != null)
         {
@@ -75,6 +75,6 @@ public class CreateRoomManager : MonoBehaviour
         {
             player.JoinTeam(playerTeam);
         }
-        print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
+        //print($"Blue: {BlueTeamCount}, Red: {RedTeamCount}");
     }
 }

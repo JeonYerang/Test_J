@@ -37,7 +37,6 @@ public class RoomPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        print("OnEnable");
         if (false == PhotonNetwork.InRoom) return;
         
         InitPanel();
@@ -53,7 +52,6 @@ public class RoomPanel : MonoBehaviour
 
     private void InitPanel()
     {
-        print("InitPanel");
         roomTitle.text = PhotonNetwork.CurrentRoom.Name;
 
         int mode = -1;
@@ -74,7 +72,6 @@ public class RoomPanel : MonoBehaviour
 
     private void SetMasterOption()
     {
-        print("here");
         //일반 유저는 준비 버튼, 방장은 시작 버튼을 활성화
         readyToggle.gameObject.SetActive(!PhotonNetwork.IsMasterClient);
         startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
@@ -154,7 +151,7 @@ public class RoomPanel : MonoBehaviour
     #region Ready
     private void OnReadyToggleChanged(bool isReady)
     {
-        print("ReadyToggleChange");
+        //print("ReadyToggleChange");
         Player localPlayer = PhotonNetwork.LocalPlayer;
         PhotonHashtable customProps = localPlayer.CustomProperties;
 

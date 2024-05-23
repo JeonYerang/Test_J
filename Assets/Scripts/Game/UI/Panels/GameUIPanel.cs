@@ -5,44 +5,38 @@ using UnityEngine;
 
 public class GameUIPanel : MonoBehaviour
 {
-    PlayerMove playerMove;
-    PlayerAttack playerAttack;
+    public UserInfoUI UserInfo {  get; private set; }
+    public ScoreUI Score { get; private set; }
+    public SkillButtonUI SkillButtons { get; private set; }
+    public FixedJoystick Joystick { get; private set; }
 
-    [SerializeField]
-    UserInfoCard userInfo;
-    public UserInfoCard UserInfo { get { return userInfo; } }
-    [SerializeField]
-    ControlButtonArea controlButtons;
-    public ControlButtonArea ControlButtons { get { return controlButtons; } }
+    private void Awake()
+    {
+        UserInfo = transform.Find("UsersUI").GetComponent<UserInfoUI>();
+        Score = transform.Find("ScoreUI").GetComponent<ScoreUI>();
+        SkillButtons = transform.Find("SkillButtons").GetComponent<SkillButtonUI>();
+        Joystick = transform.Find("FixedJoystick").GetComponent<FixedJoystick>();
+    }
 
-    [SerializeField]
-    FixedJoystick joystick;
-    public FixedJoystick Joystick { get { return joystick; } }
-
-    public void OnEnable()
+    private void OnEnable()
     {
         if (GameManager.Instance != null)
             StartCoroutine(WaitPlayerCoroutine());
     }
+
     private IEnumerator WaitPlayerCoroutine()
     {
         yield return new WaitUntil(
             () => GameManager.Instance.playerMove != null);
-            //&& GameManager.Instance.playerAttack != null);
-        PlayerSet();
-    }
+        //&& GameManager.Instance.playerAttack != null);
 
-    public void PlayerSet()
-    {
-        playerMove = GameManager.Instance.playerMove;
-        playerAttack = GameManager.Instance.playerAttack;
-
+        //게임매니저에 플레이어가 세팅되면 패널을 초기화함
         InitPanel();
     }
 
     private void InitPanel()
     {
-        userInfo.Init();
-        controlButtons.Init();
+        UserInfo.Init();
+        SkillButtons.Init();
     }
 }

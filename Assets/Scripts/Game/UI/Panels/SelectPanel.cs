@@ -44,13 +44,13 @@ public class SelectPanel : MonoBehaviour
 
     #region CountDown
     [SerializeField]
-    Text countDownText;
+    TextMeshProUGUI countDownText;
     public void SetCount(int count)
     {
         if (count <= 0)
             countDownText.text = "Start!";
         else
-            countDownText.text = $"{count}s...";
+            countDownText.text = $"게임 시작까지 남은 시간: {count}s...";
     }
     #endregion
 
@@ -131,11 +131,12 @@ public class SelectPanel : MonoBehaviour
 
     public void OnClassPropertyChanged(Player player)
     {
-        if (!playerListDic.ContainsKey(player.ActorNumber))
+        if (!playerListDic.ContainsKey(player.ActorNumber) 
+            || !player.CustomProperties.ContainsKey("Class"))
             return;
 
-        Text classLabel =
-            playerListDic[player.ActorNumber].transform.Find("SelectLabel").GetComponent<Text>();
+        TextMeshProUGUI classLabel =
+            playerListDic[player.ActorNumber].transform.Find("SelectLabel").GetComponent<TextMeshProUGUI>();
 
         int select = (int)player.CustomProperties["Class"];
 
@@ -146,7 +147,7 @@ public class SelectPanel : MonoBehaviour
     }
     #endregion
 
-    #region PlayerList
+    #region SelectList
     
     [SerializeField]
     GameObject playerEntryPrefab;
@@ -184,7 +185,7 @@ public class SelectPanel : MonoBehaviour
         //이름 세팅
         playerEntry.name = newPlayer.ActorNumber.ToString();
 
-        if (playerEntry.transform.Find("NameLabel").TryGetComponent(out Text nameText))
+        if (playerEntry.transform.Find("NameLabel").TryGetComponent(out TextMeshProUGUI nameText))
         {
             nameText.text = newPlayer.NickName;
 
@@ -194,36 +195,17 @@ public class SelectPanel : MonoBehaviour
             }
         }
 
-        //직업 세팅
-        if (playerEntry.transform.Find("SelectLabel").TryGetComponent(out Text classLabel))
-        {
-            int select = -1;
-            if (newPlayer.CustomProperties.ContainsKey("Class"))
-            {
-                select = (int)newPlayer.CustomProperties["Class"];
-            }
-            else
-            {
-                print($"{newPlayer} has not 'Class' key");
-                return;
-            }
-
-            if (select == -1)
-            {
-                classLabel.text = "선택중...";
-            }
-            else
-            {
-                classLabel.text = Enum.GetName(typeof(PlayerClass), (PlayerClass)select);
-                classToggles[select].isOn = true;
-            }
-        }
-
+        //딕셔너리 추가
         if(playerListDic.ContainsKey(newPlayer.ActorNumber))
             playerListDic[newPlayer.ActorNumber] = playerEntry;
 
         else
             playerListDic.Add(newPlayer.ActorNumber, playerEntry);
+
+
+        //직업 세팅
+        if (newPlayer.CustomProperties.ContainsKey("Class"))
+            OnClassPropertyChanged(newPlayer);
 
     }
 

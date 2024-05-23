@@ -150,6 +150,7 @@ public class GameManager : MonoBehaviour
     public int redTeamScore = 0;
     public int blueTeamScore = 0;
 
+    [PunRPC]
     public void GetScore(string teamName, int score)
     {
         if (teamName == "Red")
@@ -160,5 +161,6 @@ public class GameManager : MonoBehaviour
 
         print($"{teamName}∆¿¿Ã {score}¡°¿ª »πµÊ!");
     }
+
     #endregion
 }
