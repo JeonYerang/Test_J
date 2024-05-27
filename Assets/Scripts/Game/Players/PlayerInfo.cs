@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,22 +9,22 @@ using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour
 {
+    public Player player;
     PhotonView pv;
+
     Camera playerCam;
     GameObject renderObj;
 
-    Player player;
-    private string playerName;
-    public string PlayerName {  get { return playerName; } }
-
-    private string team;
-    public string Team { get { return team; } }
-
-    private PlayerClass playerClass;
-    public PlayerClass PlayerClass { get {  return playerClass; } }
+    public string PlayerName {  get; private set; }
+    public string Team {  get; private set; }
+    public PlayerClass PlayerClass { get; private set; }
 
     [SerializeField]
     PlayerInfoUI playerInfoUI;
+
+    public bool IsMine { get { return pv.IsMine; }}
+    public bool IsTeam { 
+        get { return PhotonNetwork.LocalPlayer.GetPhotonTeam().Name == Team; } }
 
     private void Awake()
     {
@@ -40,16 +41,22 @@ public class PlayerInfo : MonoBehaviour
 
     public void SetInfo()
     {
-        playerName = player.NickName;
-        team = player.GetPhotonTeam().Name;
-        playerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
+        PlayerName = player.NickName;
+        Team = player.GetPhotonTeam().Name;
+        PlayerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
 
-        playerInfoUI.Init(playerName, team, playerClass);
+        playerInfoUI.Init(this);
 
         if (pv.IsMine)
         {
             renderObj.layer = LayerMask.NameToLayer("Me");
             playerCam.gameObject.SetActive(true);
         }
+    }
+
+    public void SetClass()
+    {
+        PlayerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
+        playerInfoUI.SetClassIcon();
     }
 }

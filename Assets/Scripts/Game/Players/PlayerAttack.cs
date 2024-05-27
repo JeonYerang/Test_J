@@ -1,3 +1,6 @@
+using Photon.Pun;
+using Photon.Realtime;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -24,12 +27,14 @@ public abstract class PlayerAttack : MonoBehaviour
 
     public bool CanAttack { get { return state == AttackState.Idle; } }
 
-    //public event EventHandler<int> GetDamageEvent;
+    public event EventHandler<Player> onChangedHp;
 
     protected void Init()
     {
         currentHp = maxHp;
         state = AttackState.Idle;
+
+        onChangedHp += GameUIManager.Instance.UserInfo.SetHpBar;
     }
 
     #region Attack
@@ -69,7 +74,7 @@ public abstract class PlayerAttack : MonoBehaviour
         if (state == AttackState.Die)
             return;
 
-        state = AttackState.BeAttacked;
+        //state = AttackState.BeAttacked;
         currentHp -= damage;
 
         if(currentHp <= 0)
@@ -77,6 +82,9 @@ public abstract class PlayerAttack : MonoBehaviour
             currentHp = 0;
             Die();
         }
+
+        Player player = GetComponent<PlayerInfo>().player;
+        onChangedHp?.Invoke(this, player);
     }
 
     public void TakeHeal(int amount)
@@ -88,17 +96,14 @@ public abstract class PlayerAttack : MonoBehaviour
 
         if (currentHp > maxHp)
             currentHp = maxHp;
+
+        Player player = GetComponent<PlayerInfo>().player;
+        onChangedHp?.Invoke(this, player);
     }
 
     private void Die()
     {
         state = AttackState.Die;
-        StartCoroutine(DespawnCharacterCoroutine());
-    }
-
-    private IEnumerator DespawnCharacterCoroutine()
-    {
-        yield return new WaitForSeconds(3f);
         SpawnManager.Instance.DespawnCharacter();
     }
     #endregion

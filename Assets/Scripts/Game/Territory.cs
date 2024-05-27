@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Territory : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class Territory : MonoBehaviour
     PhotonView pv;
     [SerializeField]
     ScoreUI scoreUI;
+    [SerializeField]
+    GameObject occupiedCountRing;
 
     private void Awake()
     {
@@ -37,6 +40,7 @@ public class Territory : MonoBehaviour
     private void Start()
     {
         crystalMat.mainTextureOffset = colorVectors[0];
+        occupiedCountRing.SetActive(false);
     }
 
     #region Add & Remove Player
@@ -129,6 +133,7 @@ public class Territory : MonoBehaviour
     private IEnumerator OccupiedCountDown(string teamName)
     {
         scoreUI.SetOccupiedText($"{teamName}팀 점령시도중");
+        occupiedCountRing.SetActive(true);
 
         int currentCount = occupiedCount;
         while (currentCount >= 0)
@@ -145,8 +150,17 @@ public class Territory : MonoBehaviour
     {
         print($"점령까지 {count}s");
 
-        if(count == 0)
+        if (count != 0)
+            occupiedCountRing.transform.GetChild(0).GetComponent<Image>().fillAmount
+                = (occupiedCount - count) / occupiedCount;
+        //0나누기
+        else
+        {
+            occupiedCountRing.SetActive(false);
             Occupied(teamName);
+        }
+
+        print(occupiedCountRing.transform.GetChild(0).GetComponent<Image>().name);
     }
     
     private void Occupied(string teamName = null)

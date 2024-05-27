@@ -19,7 +19,7 @@ public class GamePanelManager : MonoBehaviourPunCallbacks
 
     public LoadingPanel loadingPanel;
     public SelectPanel selectPanel;
-    public GameUIPanel gamePanel;
+    public GameUIManager gamePanel;
     public DiedPanel diedPanel;
     public ResultPanel resultPanel;
 
@@ -35,7 +35,7 @@ public class GamePanelManager : MonoBehaviourPunCallbacks
             { "Select", selectPanel.gameObject },
             { "Game", gamePanel.gameObject },
             { "Died", diedPanel.gameObject },
-            { "Result", resultPanel.gameObject },
+            { "Result", resultPanel.gameObject }
         };
 
         foreach (var panel in panelDic)

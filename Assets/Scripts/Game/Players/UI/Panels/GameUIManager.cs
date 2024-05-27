@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameUIPanel : MonoBehaviour
+public class GameUIManager : MonoBehaviour
 {
+    public static GameUIManager Instance { get; private set; }
+
     public UserInfoUI UserInfo {  get; private set; }
     public ScoreUI Score { get; private set; }
     public SkillButtonUI SkillButtons { get; private set; }
@@ -12,6 +14,8 @@ public class GameUIPanel : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         UserInfo = transform.Find("UsersUI").GetComponent<UserInfoUI>();
         Score = transform.Find("ScoreUI").GetComponent<ScoreUI>();
         SkillButtons = transform.Find("SkillButtons").GetComponent<SkillButtonUI>();

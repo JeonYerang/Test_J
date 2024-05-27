@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -33,12 +34,12 @@ public class UserInfoUI : MonoBehaviour
     Slider hpBar;
     private void InitMyInfo()
     {
-        myInfo.Find("NameLabel").GetComponent<TextMeshProUGUI>().text 
-            = PhotonNetwork.LocalPlayer.NickName;
         hpBar = myInfo.Find("HPBar").GetComponent<Slider>();
 
+        myInfo.Find("NameLabel").GetComponent<TextMeshProUGUI>().text 
+            = PhotonNetwork.LocalPlayer.NickName;
         SetClass();
-        //SetHpBar();
+        SetHpBar();
     }
 
     public void SetClass()
@@ -54,6 +55,7 @@ public class UserInfoUI : MonoBehaviour
         float amount = playerAttack.HpAmount;
         hpBar.value = amount;
     }
+
     #endregion
 
     #region TeamInfo
@@ -143,6 +145,7 @@ public class UserInfoUI : MonoBehaviour
         }
 
     }
+
     public void SetHpBar(Player player)
     {
         float amount = 0;
@@ -161,6 +164,18 @@ public class UserInfoUI : MonoBehaviour
         else if (enemyDic.ContainsKey(player.ActorNumber)) //적군이면
         {
             enemyHpDic[player.ActorNumber].value = amount;
+        }
+    }
+
+    public void SetHpBar(object sender, Player player)
+    {
+        if (player.IsLocal)
+        {
+            SetHpBar();
+        }
+        else
+        {
+            SetHpBar(player);
         }
     }
 }

@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
 public enum GameMode
@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     CinemachineVirtualCamera cam;
 
     public bool isGameStart = false;
+
+    public event EventHandler onGetScore;
 
     private void Awake()
     {
@@ -137,7 +139,6 @@ public class GameManager : MonoBehaviour
     
     public void SetPlayer(GameObject player)
     {
-        print("SetPlayer");
         playerMove = player.GetComponent<PlayerMove>();
         playerAttack = player.GetComponent<PlayerAttack>();
 
@@ -147,19 +148,19 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Score
-    public int redTeamScore = 0;
-    public int blueTeamScore = 0;
+    public int RedTeamScore { get; private set; }
+    public int BlueTeamScore {  get; private set; }
 
     [PunRPC]
     public void GetScore(string teamName, int score)
     {
         if (teamName == "Red")
-            redTeamScore += score;
+            RedTeamScore += score;
 
         else if (teamName == "Blue")
-            blueTeamScore += score;
+            BlueTeamScore += score;
 
-        print($"{teamName}∆¿¿Ã {score}¡°¿ª »πµÊ!");
+        onGetScore?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion

@@ -1,5 +1,6 @@
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,6 +9,9 @@ using UnityEngine.UI;
 
 public class PlayerInfoUI : MonoBehaviour
 {
+    PlayerInfo playerInfo;
+    PlayerAttack playerAttack;
+
     [SerializeField]
     TextMeshProUGUI nameLabel;
     [SerializeField]
@@ -17,21 +21,32 @@ public class PlayerInfoUI : MonoBehaviour
     [SerializeField]
     Outline outline;
 
-    public void Init(string playerName, string team, PlayerClass playerClass)
+    private void Start()
     {
-        SetNameLabel(playerName);
-        SetOutLineColor(team);
-        SetClassIcon(GameManager.Instance.classList[(int)playerClass].classIcon);
+        playerAttack = GetComponentInParent<PlayerAttack>();
+        playerAttack.onChangedHp += SetHpBar;
     }
 
-    public void SetNameLabel(string name)
+    public void Init(PlayerInfo playerInfo)
     {
+        this.playerInfo = playerInfo;
+
+        SetNameLabel();
+        SetOutLineColor();
+        SetClassIcon();
+    }
+
+    public void SetNameLabel()
+    {
+        string name = playerInfo.PlayerName;
         nameLabel.text = name;
     }
 
-    public void SetOutLineColor(string team)
+    public void SetOutLineColor()
     {
-        switch(team)
+        string team = playerInfo.Team;
+
+        switch (team)
         {
             case "Blue":
                 outline.OutlineColor = Color.blue;
@@ -45,13 +60,16 @@ public class PlayerInfoUI : MonoBehaviour
         }
     }
 
-    public void SetClassIcon(Sprite classIcon)
+    public void SetClassIcon()
     {
+        PlayerClass playerClass = playerInfo.PlayerClass;
+        Sprite classIcon = GameManager.Instance.classList[(int)playerClass].classIcon;
         this.classIcon.sprite = classIcon;
     }
 
-    public void SetHpBar(int amount)
+    public void SetHpBar(object sender, Player player)
     {
+        float amount = playerAttack.HpAmount;
         hpBar.value = amount;
     }
 }
