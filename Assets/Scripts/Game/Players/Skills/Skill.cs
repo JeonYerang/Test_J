@@ -17,11 +17,6 @@ public abstract class Skill : MonoBehaviour
         this.owner = GameManager.Instance.playerAttack;
     }
 
-    public bool ConditionCheck(int amount)
-    {
-        return false;
-    }
-
     public abstract void UsingSkill();
 }
 
@@ -33,13 +28,13 @@ public enum SkillConditionType
     Count
 }
 
-public interface ICoolTimeActivatableSkill
+public interface ICoolDownableSkill
 {
     float RequiredSec { get; set; }
     float RemainSec { get; set; }
 }
 
-public interface ICountActivatableSkill
+public interface ICountableSkill
 {
     int RequiredCount { get; set; }
 }
@@ -68,9 +63,28 @@ public interface IChargableSkill
 }
 #endregion
 
-public enum SkillType
+public class ArrowShot : Skill, IChargableSkill
 {
-    Attack,
-    Skill,
-    Ultimate
+    public int MaxChargeCount { get; set; }
+    public int CurrentChargeCount { get; set; }
+
+    public void Charging()
+    {
+        StartCoroutine(ChargeCoroutine());
+    }
+
+    public void EndCharging()
+    {
+        
+    }
+
+    IEnumerator ChargeCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+    }
+
+    public override void UsingSkill()
+    {
+        throw new System.NotImplementedException();
+    }
 }

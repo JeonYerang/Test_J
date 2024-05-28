@@ -235,7 +235,8 @@ public class RoomPanel : MonoBehaviour
 
     private void OnStartButtonClick()
     {
-        SceneManager.LoadScene("GameScene");
+        LoadingSceneManager.LoadScene("GameScene");
+        //SceneManager.LoadScene("GameScene");
     }
 
     private void OnExitButtonClick()

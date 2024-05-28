@@ -9,6 +9,11 @@ public class LoadingSceneManager : MonoBehaviour
     public static string nextScene;
     [SerializeField] Slider progressBar;
 
+    private void Start()
+    {
+        StartCoroutine(LoadSceneCoroutine());
+    }
+
     public static void LoadScene(string sceneName)
     {
         nextScene = sceneName;

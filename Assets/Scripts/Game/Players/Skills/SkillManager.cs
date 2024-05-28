@@ -13,7 +13,7 @@ public class SkillManager : MonoBehaviour
     KeyCode skillKeyCode;
     KeyCode ultimateKeyCode;
 
-    public List<Skill> skills;
+    public List<Skill> MySkills;
     Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill>
     Dictionary<string, bool> skillUsableDic = new Dictionary<string, bool>(); //<skill name, is usable>
 
@@ -41,7 +41,7 @@ public class SkillManager : MonoBehaviour
     {
         skillUsableDic.Clear();
 
-        foreach (var skill in skills)
+        foreach (var skill in MySkills)
         {
             skillUsableDic.Add(skill._name, false);
         }
@@ -90,7 +90,7 @@ public class SkillManager : MonoBehaviour
 
     public void ConditionCheck()
     {
-        foreach(Skill skill in skills)
+        foreach(Skill skill in MySkills)
         {
             SkillConditionType conditionType = skill.conditionType;
 
@@ -116,7 +116,7 @@ public class SkillManager : MonoBehaviour
     private void CheckCount(Skill skill)
     {
         if (GameManager.Instance.playerAttack.AttackCount 
-            > ((ICountActivatableSkill)skill).RequiredCount)
+            > ((ICountableSkill)skill).RequiredCount)
             skillUsableDic[skill._name] = true;
         else
             skillUsableDic[skill._name] = false;
@@ -129,7 +129,7 @@ public class SkillManager : MonoBehaviour
 
     private IEnumerator CoolTimeCoroutine(Skill skill)
     {
-        float sec = ((ICoolTimeActivatableSkill)skill).RequiredSec;
+        float sec = ((ICoolDownableSkill)skill).RequiredSec;
 
         skillUsableDic[skill._name] = false;
 
