@@ -63,7 +63,7 @@ public interface IChargableSkill
 }
 #endregion
 
-public class ArrowShot : Skill, IChargableSkill
+public class ChargingSkill : Skill
 {
     public int MaxChargeCount { get; set; }
     public int CurrentChargeCount { get; set; }
