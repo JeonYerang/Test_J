@@ -53,12 +53,15 @@ public class SpawnManager : MonoBehaviour
                 break;
 
             case PlayerClass.Warrior:
+
                 break;
 
             case PlayerClass.Archer:
+
                 break;
 
             case PlayerClass.Healer:
+
                 break;
         }
     }

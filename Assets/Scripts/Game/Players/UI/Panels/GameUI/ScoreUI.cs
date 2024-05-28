@@ -10,7 +10,7 @@ public class ScoreUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI occupiedTeamText;
     [SerializeField] TextMeshProUGUI blueTeamScoreText;
     [SerializeField] TextMeshProUGUI redTeamScoreText;
-    [SerializeField] TextMeshProUGUI systemText;
+    [SerializeField] TextMeshProUGUI killLog;
 
     private void Start()
     {
@@ -28,8 +28,8 @@ public class ScoreUI : MonoBehaviour
         redTeamScoreText.text = GameManager.Instance.RedTeamScore.ToString();
     }
 
-    public void SetSystemText(string text)
+    public void SetKillLog(string text)
     {
-        systemText.text = text;
+        killLog.text = text;
     }
 }

@@ -133,40 +133,44 @@ public class Territory : MonoBehaviour
     private IEnumerator OccupiedCountDown(string teamName)
     {
         scoreUI.SetOccupiedText($"{teamName}팀 점령시도중");
+
         occupiedCountRing.SetActive(true);
 
-        int currentCount = occupiedCount;
+        float currentCount = occupiedCount;
+
         while (currentCount >= 0)
         {
             if (PhotonNetwork.IsMasterClient)
-                pv.RPC("BroadCastRemainCount", RpcTarget.All, teamName, currentCount);
-            yield return new WaitForSeconds(1);
-            currentCount--;
+                pv.RPC("BroadCastRemainCount", RpcTarget.All, currentCount);
+
+            yield return new WaitForSeconds(0.2f);
+
+            currentCount -= 0.2f;
         }
+
+        if (PhotonNetwork.IsMasterClient)
+            pv.RPC("BroadCastCompleteCount", RpcTarget.All, teamName);
     }
 
     [PunRPC]
-    public void BroadCastRemainCount(string teamName, int count)
+    public void BroadCastRemainCount(float count)
     {
-        print($"점령까지 {count}s");
-
-        if (count != 0)
-            occupiedCountRing.transform.GetChild(0).GetComponent<Image>().fillAmount
-                = (occupiedCount - count) / occupiedCount;
-        //0나누기
-        else
-        {
-            occupiedCountRing.SetActive(false);
-            Occupied(teamName);
-        }
-
-        print(occupiedCountRing.transform.GetChild(0).GetComponent<Image>().name);
+        occupiedCountRing.transform.GetChild(0).GetComponent<Image>().fillAmount
+                = 1 - (count / occupiedCount);
     }
-    
+
+    [PunRPC]
+    public void BroadCastCompleteCount(string teamName)
+    {
+        Occupied(teamName);
+    }
+
     private void Occupied(string teamName = null)
     {
+        occupiedCountRing.SetActive(false);
+
         //영역 색상 변경 코루틴
-        if(colorCoroutine != null) StopCoroutine(colorCoroutine);
+        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
         colorCoroutine = StartCoroutine(ColorChanged(teamName));
 
         if (PhotonNetwork.IsMasterClient)

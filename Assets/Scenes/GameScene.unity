@@ -4059,7 +4059,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 86, y: 23}
+  m_AnchoredPosition: {x: 86, y: 25}
   m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1256539367
@@ -4732,7 +4732,7 @@ MonoBehaviour:
   occupiedTeamText: {fileID: 1920023538}
   blueTeamScoreText: {fileID: 22900465}
   redTeamScoreText: {fileID: 1783442262}
-  systemText: {fileID: 1907741900}
+  killLog: {fileID: 1907741900}
 --- !u!1 &1488037091
 GameObject:
   m_ObjectHideFlags: 0
@@ -6433,7 +6433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 85, y: -45}
+  m_AnchoredPosition: {x: 85, y: -50}
   m_SizeDelta: {x: -100, y: 20}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1940893662
@@ -6814,7 +6814,7 @@ GameObject:
   - component: {fileID: 2135899457}
   - component: {fileID: 2135899456}
   m_Layer: 5
-  m_Name: SystemMessage
+  m_Name: KillLog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
