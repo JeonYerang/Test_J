@@ -17,7 +17,7 @@ public abstract class PlayerAttack : MonoBehaviour
     public AttackState state;
 
     public int maxHp;
-    private int currentHp = 0;
+    protected int currentHp = 0;
     public int CurrentHp { get { return currentHp; } }
     public int HpAmount { get { return currentHp / maxHp; } }
 
