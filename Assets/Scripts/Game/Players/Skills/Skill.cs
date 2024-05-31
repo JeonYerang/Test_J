@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static PlayerAttack;
 
 public abstract class Skill : MonoBehaviour
 {
-    PlayerAttack owner;
+    protected PlayerAttack owner;
 
     public string _name;
     public SkillData data;
 
     public SkillConditionType conditionType;
-    public UseType useType;
+    public SkillUseType useType;
+
+    public void Init(SkillData data)
+    {
+        this.data = data;
+    }
 
     public void SetOwner()
     {
@@ -41,50 +48,106 @@ public interface ICountableSkill
 #endregion
 
 #region <사용 방법>
-public enum UseType
+public enum SkillUseType
 {
     Basic,
-    OnOff,
-    Charge
+    Charge,
+    Combo,
+    OnOff
 }
 
-public interface IOnOffableSkill
-{
-    bool IsOn { get; set; }
-    void UnUsingSkill();
-}
 
-public interface IChargableSkill
+public class ChargeSkill : Skill
 {
-    int MaxChargeCount { get; set; }
-    int CurrentChargeCount { get; set; }
-    void Charging();
-    void EndCharging();
-}
-#endregion
+    public float maxChargeCount;
+    public float CurrentChargeCount { get; set; }
 
-public class ChargingSkill : Skill
-{
-    public int MaxChargeCount { get; set; }
-    public int CurrentChargeCount { get; set; }
-
-    public void Charging()
+    public virtual void StartCharge()
     {
-        StartCoroutine(ChargeCoroutine());
+        owner.StartCharge();
+        chargeCoroutine = StartCoroutine(ChargeCoroutine());
     }
 
-    public void EndCharging()
+    public virtual void EndCharge()
     {
-        
+        if (chargeCoroutine != null)
+            StopCoroutine(ChargeCoroutine());
+
+        UsingSkill();
     }
 
-    IEnumerator ChargeCoroutine()
+    protected Coroutine chargeCoroutine = null;
+    protected IEnumerator ChargeCoroutine()
     {
-        yield return new WaitForSeconds(3);
+        CurrentChargeCount = 0;
+        while (CurrentChargeCount < maxChargeCount)
+        {
+            CurrentChargeCount += Time.deltaTime;
+            yield return null;
+        }
     }
 
     public override void UsingSkill()
     {
-        throw new System.NotImplementedException();
+        //차징카운트에 따라...
     }
 }
+public class ComboSkill : Skill
+{
+    public GameObject[] comboAttackPrefabs;
+    public string[] comboAnimationNames;
+    public int[] comboDamages;
+    public int maxComboCount;
+    public int currentComboCount { get; set; }
+
+    public override void UsingSkill() //콤보공격
+    {
+        Instantiate(comboAttackPrefabs[currentComboCount], 
+            transform.position, transform.rotation);
+
+        if (comboCoroutine != null) StopCoroutine(comboCoroutine);
+
+        if (currentComboCount < maxComboCount)
+        {
+            currentComboCount++;
+            comboCoroutine = StartCoroutine(ComboCoroutine());
+        }
+        else
+            currentComboCount = 0;
+    }
+
+    Coroutine comboCoroutine = null;
+    private IEnumerator ComboCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+        currentComboCount = 0;
+    }
+}
+public class OnOffSkill : Skill
+{
+    GameObject skillObj;
+    public bool IsOn { get; set; }
+
+    public void On()
+    {
+        if(skillObj == null)
+        {
+            skillObj = Instantiate(data.skillPrefab,
+            owner.transform.position, owner.transform.rotation, owner.transform);
+        }
+        else
+            skillObj.gameObject.SetActive(true);
+    }
+
+    public void Off()
+    {
+        skillObj.gameObject.SetActive(false);
+    }
+
+    public override void UsingSkill()
+    {
+        if(IsOn) skillObj.gameObject.SetActive(false);
+        else skillObj.gameObject.SetActive(true);
+    }
+}
+#endregion

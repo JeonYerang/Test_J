@@ -5,10 +5,9 @@ using UnityEngine;
 public class Archer : PlayerAttack //공격속도 + 데미지 -
 {
     public Arrow attackPrefab;
-    public GameObject ultimateAttackPrefab;
 
     #region Charging
-    public int ChargeCount { get; protected set; }
+    /*public int ChargeCount { get; protected set; }
     public void Charging()
     {
         state = AttackState.Charge;
@@ -52,7 +51,7 @@ public class Archer : PlayerAttack //공격속도 + 데미지 -
         }
 
         Instantiate(attackPrefab, transform.position, transform.rotation);
-    }
+    }*/
     #endregion
 }
 

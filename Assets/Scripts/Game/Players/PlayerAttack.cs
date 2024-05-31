@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class PlayerAttack : MonoBehaviour
@@ -21,13 +22,17 @@ public abstract class PlayerAttack : MonoBehaviour
     public int CurrentHp { get { return currentHp; } }
     public int HpAmount { get { return currentHp / maxHp; } }
 
-    //List<SkillData> skills
     public int attackPoint;
     public float attackSpeed;
 
     public bool CanAttack { get { return state == AttackState.Idle; } }
 
+    PlayerClass playerClass;
+    List<Skill> skills = new List<Skill>();
+
     public event EventHandler<Player> onChangedHp;
+
+    public Animator animator;
 
     protected void Init()
     {
@@ -37,29 +42,31 @@ public abstract class PlayerAttack : MonoBehaviour
         onChangedHp += GameUIManager.Instance.UserInfo.SetHpBar;
     }
 
-    #region Attack
-    public int AttackCount { get; protected set; }
-    public virtual void Attack()
+    #region Charge
+    public virtual void StartCharge()
     {
-        state = AttackState.Attack;
+        state = AttackState.Charge;
 
-        if (AttackCount < 10) AttackCount++;
+        //animator.SetTrigger("");
     }
 
-    public virtual void UsingSkill(Skill skill)
+    public virtual void EndCharge()
+    {
+        //animator.SetTrigger("");
+    }
+    #endregion
+
+    #region Attack
+    public int AttackCount { get; protected set; }
+    
+    public virtual void UsingSkill(Skill skill) //스킬 인덱스로 참조하는 건?
     {
         state = AttackState.Attack;
 
+        //animator.SetTrigger(animationName);
         skill.UsingSkill();
 
         if (AttackCount < 10) AttackCount++;
-    }
-
-    public virtual void UsingUltimateSkill()
-    {
-        state = AttackState.Attack;
-
-        AttackCount = 0;
     }
 
     protected void ReturnIdleState()

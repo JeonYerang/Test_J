@@ -53,15 +53,15 @@ public class SkillManager : MonoBehaviour
     {
         ConditionCheck();
 
-        if (UnityEngine.Input.anyKeyDown)
+        if (Input.anyKeyDown)
         {
-            string input = UnityEngine.Input.inputString;
+            string input = Input.inputString;
 
             if (skillKeyDic.ContainsKey(input))
             {
                 currentSkill = skillKeyDic[input];
 
-                if (currentSkill.useType == UseType.Charge)
+                if (currentSkill.useType == SkillUseType.Charge)
                 {
                     if(chargingKeyFlag == null)
                     {
@@ -77,7 +77,7 @@ public class SkillManager : MonoBehaviour
                 }
             }
         }
-        if (chargingKeyFlag != null && UnityEngine.Input.GetKeyUp(chargingKeyFlag))
+        if (chargingKeyFlag != null && Input.GetKeyUp(chargingKeyFlag))
         {
             currentSkill = skillKeyDic[chargingKeyFlag];
             chargingKeyFlag = null;
