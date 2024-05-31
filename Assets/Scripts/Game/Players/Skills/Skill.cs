@@ -56,7 +56,6 @@ public enum SkillUseType
     OnOff
 }
 
-
 public class ChargeSkill : Skill
 {
     public float maxChargeCount;
@@ -146,8 +145,8 @@ public class OnOffSkill : Skill
 
     public override void UsingSkill()
     {
-        if(IsOn) On();
-        else Off();
+        if(IsOn) Off();
+        else On();
     }
 }
 #endregion

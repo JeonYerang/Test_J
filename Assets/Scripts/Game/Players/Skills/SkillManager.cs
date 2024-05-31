@@ -15,7 +15,11 @@ public class SkillManager : MonoBehaviour
 
     public List<Skill> MySkills;
     Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill>
+    
     Dictionary<string, bool> skillUsableDic = new Dictionary<string, bool>(); //<skill name, is usable>
+    Dictionary<string, float> skillCoolDic;
+
+
 
     private void Awake()
     {

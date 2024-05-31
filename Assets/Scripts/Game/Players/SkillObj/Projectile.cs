@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    public void InitAndShot(PlayerInfo owner, int damage, float moveSpeed)
+    public virtual void InitAndShot(PlayerInfo owner, int damage, float moveSpeed)
     {
         this.owner = owner;
         this.damage = damage;
