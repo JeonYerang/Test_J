@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : SkillObject
+public class Projectile : MonoBehaviour
 {
+    protected PlayerInfo owner;
+    protected int damage;
     protected Rigidbody rb;
 
     protected void Awake()
@@ -11,7 +13,7 @@ public class Projectile : SkillObject
         rb = GetComponent<Rigidbody>();
     }
 
-    public override void InitAndShot(PlayerInfo owner, int damage, float moveSpeed)
+    public void InitAndShot(PlayerInfo owner, int damage, float moveSpeed)
     {
         this.owner = owner;
         this.damage = damage;

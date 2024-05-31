@@ -146,8 +146,8 @@ public class OnOffSkill : Skill
 
     public override void UsingSkill()
     {
-        if(IsOn) skillObj.gameObject.SetActive(false);
-        else skillObj.gameObject.SetActive(true);
+        if(IsOn) On();
+        else Off();
     }
 }
 #endregion
