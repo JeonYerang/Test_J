@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static PlayerAttack;
 
 public abstract class Skill : MonoBehaviour
 {
@@ -11,12 +8,15 @@ public abstract class Skill : MonoBehaviour
     public string _name;
     public SkillData data;
 
+    public float damage;
+
     public SkillConditionType conditionType;
     public SkillUseType useType;
 
     public void Init(SkillData data)
     {
         this.data = data;
+        damage = data.damage;
     }
 
     public void SetOwner()
@@ -56,10 +56,12 @@ public enum SkillUseType
     OnOff
 }
 
-public class ChargeSkill : Skill
+public abstract class ChargeSkill : Skill
 {
     public float maxChargeCount;
     public float CurrentChargeCount { get; set; }
+
+    public GameObject ChargingEffect;
 
     public virtual void StartCharge()
     {
@@ -85,25 +87,21 @@ public class ChargeSkill : Skill
             yield return null;
         }
     }
-
-    public override void UsingSkill()
-    {
-        //차징카운트에 따라...
-    }
 }
-public class ComboSkill : Skill
+public abstract class ComboSkill : Skill
 {
-    public GameObject[] comboAttackPrefabs;
-    public string[] comboAnimationNames;
-    public int[] comboDamages;
     public int maxComboCount;
     public int currentComboCount { get; set; }
 
     public override void UsingSkill() //콤보공격
     {
-        Instantiate(comboAttackPrefabs[currentComboCount], 
-            transform.position, transform.rotation);
+        //스킬
 
+        ComboCheck();
+    }
+
+    protected void ComboCheck()
+    {
         if (comboCoroutine != null) StopCoroutine(comboCoroutine);
 
         if (currentComboCount < maxComboCount)
@@ -122,26 +120,13 @@ public class ComboSkill : Skill
         currentComboCount = 0;
     }
 }
-public class OnOffSkill : Skill
+public abstract class OnOffSkill : Skill
 {
-    GameObject skillObj;
     public bool IsOn { get; set; }
 
-    public void On()
-    {
-        if(skillObj == null)
-        {
-            skillObj = Instantiate(data.skillPrefab,
-            owner.transform.position, owner.transform.rotation, owner.transform);
-        }
-        else
-            skillObj.gameObject.SetActive(true);
-    }
+    protected abstract void On();
 
-    public void Off()
-    {
-        skillObj.gameObject.SetActive(false);
-    }
+    protected abstract void Off();
 
     public override void UsingSkill()
     {
@@ -150,3 +135,9 @@ public class OnOffSkill : Skill
     }
 }
 #endregion
+
+//Q.왜 추상클래스가 아닌 인터페이스?
+//A.스킬의 조건과 스킬의 사용 방법을 각각 상속받기 위해
+//예를 들면 쿨타임이 있으면서, 차징이 가능한 스킬
+//추상클래스는 하나밖에 상속을 못 받으니까...
+//기능을 확장한다기보다는 어떤 스킬이 가지고 있는 기능 중 하나로 정의하고 싶었음.
