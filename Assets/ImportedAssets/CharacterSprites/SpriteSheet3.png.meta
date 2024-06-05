@@ -141,11 +141,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SpriteSheet3_0
+      name: Idle0
       rect:
         serializedVersion: 2
         x: 0
-        y: 824
+        y: 834
         width: 64
         height: 64
       alignment: 0
@@ -162,11 +162,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_1
+      name: Idle1
       rect:
         serializedVersion: 2
         x: 64
-        y: 824
+        y: 834
         width: 64
         height: 64
       alignment: 0
@@ -183,15 +183,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_2
+      name: Ready0
       rect:
         serializedVersion: 2
         x: 0
-        y: 760
+        y: 770
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -204,15 +204,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_3
+      name: Ready1
       rect:
         serializedVersion: 2
         x: 64
-        y: 760
+        y: 770
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -225,15 +225,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_4
+      name: Walk0
       rect:
         serializedVersion: 2
         x: 0
-        y: 696
+        y: 706
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -246,15 +246,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_5
+      name: Walk1
       rect:
         serializedVersion: 2
         x: 64
-        y: 696
+        y: 706
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -267,15 +267,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_6
+      name: Walk2
       rect:
         serializedVersion: 2
         x: 128
-        y: 696
+        y: 706
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -288,15 +288,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_7
+      name: Walk3
       rect:
         serializedVersion: 2
         x: 192
-        y: 696
+        y: 706
         width: 64
         height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -309,11 +309,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_8
+      name: Crawl0
       rect:
         serializedVersion: 2
         x: 0
-        y: 632
+        y: 642
         width: 64
         height: 64
       alignment: 0
@@ -330,11 +330,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_9
+      name: Crawl1
       rect:
         serializedVersion: 2
         x: 64
-        y: 632
+        y: 642
         width: 64
         height: 64
       alignment: 0
@@ -351,11 +351,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_10
+      name: Crawl2
       rect:
         serializedVersion: 2
         x: 128
-        y: 632
+        y: 642
         width: 64
         height: 64
       alignment: 0
@@ -372,11 +372,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_11
+      name: Crawl3
       rect:
         serializedVersion: 2
         x: 192
-        y: 632
+        y: 642
         width: 64
         height: 64
       alignment: 0
@@ -393,11 +393,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_12
+      name: Climb0
       rect:
         serializedVersion: 2
         x: 0
-        y: 568
+        y: 578
         width: 64
         height: 64
       alignment: 0
@@ -414,11 +414,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_13
+      name: Climb1
       rect:
         serializedVersion: 2
         x: 64
-        y: 568
+        y: 578
         width: 64
         height: 64
       alignment: 0
@@ -435,11 +435,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_14
+      name: Jump0
       rect:
         serializedVersion: 2
         x: 0
-        y: 504
+        y: 514
         width: 64
         height: 64
       alignment: 0
@@ -456,11 +456,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_15
+      name: Jump1
       rect:
         serializedVersion: 2
         x: 64
-        y: 504
+        y: 514
         width: 64
         height: 64
       alignment: 0
@@ -477,11 +477,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SpriteSheet3_16
+      name: Jump2
       rect:
         serializedVersion: 2
         x: 128
-        y: 504
+        y: 514
         width: 64
         height: 64
       alignment: 0
@@ -502,7 +502,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 440
+        y: 450
         width: 64
         height: 64
       alignment: 0
@@ -523,7 +523,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 440
+        y: 450
         width: 64
         height: 64
       alignment: 0
@@ -544,7 +544,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 440
+        y: 450
         width: 64
         height: 64
       alignment: 0
@@ -565,7 +565,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 376
+        y: 386
         width: 64
         height: 64
       alignment: 0
@@ -586,7 +586,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 376
+        y: 386
         width: 64
         height: 64
       alignment: 0
@@ -607,7 +607,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 376
+        y: 386
         width: 64
         height: 64
       alignment: 0
@@ -628,7 +628,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 312
+        y: 322
         width: 64
         height: 64
       alignment: 0
@@ -649,7 +649,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 312
+        y: 322
         width: 64
         height: 64
       alignment: 0
@@ -670,7 +670,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 312
+        y: 322
         width: 64
         height: 64
       alignment: 0
@@ -691,7 +691,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 312
+        y: 322
         width: 64
         height: 64
       alignment: 0
@@ -712,7 +712,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 248
+        y: 258
         width: 64
         height: 64
       alignment: 0
@@ -733,7 +733,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 248
+        y: 258
         width: 64
         height: 64
       alignment: 0
@@ -754,7 +754,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 248
+        y: 258
         width: 64
         height: 64
       alignment: 0
@@ -775,7 +775,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 248
+        y: 258
         width: 64
         height: 64
       alignment: 0
@@ -796,7 +796,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 184
+        y: 194
         width: 64
         height: 64
       alignment: 0
@@ -817,7 +817,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 184
+        y: 194
         width: 64
         height: 64
       alignment: 0
@@ -838,7 +838,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 120
+        y: 130
         width: 64
         height: 64
       alignment: 0
@@ -859,7 +859,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 120
+        y: 130
         width: 64
         height: 64
       alignment: 0
@@ -876,11 +876,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ready0
+      name: SpriteSheet3_35
       rect:
         serializedVersion: 2
         x: 0
-        y: 56
+        y: 66
         width: 64
         height: 64
       alignment: 0
@@ -890,18 +890,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 001c48fe8f22eb147a0a0613d6566f9c
-      internalID: 1472294366
+      spriteID: 4d373acf7ce849a46a815f4b69a7dd48
+      internalID: -354296805
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ready1
+      name: SpriteSheet3_36
       rect:
         serializedVersion: 2
         x: 64
-        y: 56
+        y: 66
         width: 64
         height: 64
       alignment: 0
@@ -911,8 +911,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6bec5644b2126df47a88a0a0b16afbe4
-      internalID: -340507995
+      spriteID: f950caf0dbeb8f540b3f242b4b62ad01
+      internalID: 73416986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet3_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fe2d895b5af92e4c850eae41126a2f1
+      internalID: 1988627350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet3_38
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c7bd8c68d93d594f8327f26ca69f804
+      internalID: -1503576918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet3_39
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 2
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dd1bb198f3c9d74f9772d9e08d45e5f
+      internalID: -1496107471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Represent
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 839
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bda8a7d22e8f774bbbf8290a354d315
+      internalID: -44548110
       vertices: []
       indices: 
       edges: []
@@ -928,21 +1012,23 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Ready0: 1472294366
-      Ready1: -340507995
-      SpriteSheet3_0: 99737094
-      SpriteSheet3_1: 1847185872
-      SpriteSheet3_10: 1815648643
-      SpriteSheet3_11: -2023121392
-      SpriteSheet3_12: 1767581398
-      SpriteSheet3_13: -1972650551
-      SpriteSheet3_14: -2040847984
-      SpriteSheet3_15: -697385240
-      SpriteSheet3_16: -1227653128
+      Climb0: 1767581398
+      Climb1: -1972650551
+      Crawl0: 1127513564
+      Crawl1: -299552873
+      Crawl2: 1815648643
+      Crawl3: -2023121392
+      Idle0: 99737094
+      Idle1: 1847185872
+      Jump0: -2040847984
+      Jump1: -697385240
+      Jump2: -1227653128
+      Ready0: -1129203081
+      Ready1: -666886882
+      Represent: -44548110
       SpriteSheet3_17: 1934571330
       SpriteSheet3_18: 2042014598
       SpriteSheet3_19: 1306704609
-      SpriteSheet3_2: -1129203081
       SpriteSheet3_20: 2100654850
       SpriteSheet3_21: 1900766558
       SpriteSheet3_22: 1706440494
@@ -953,18 +1039,20 @@ TextureImporter:
       SpriteSheet3_27: 414749551
       SpriteSheet3_28: -90717372
       SpriteSheet3_29: 309885457
-      SpriteSheet3_3: -666886882
       SpriteSheet3_30: -265787891
       SpriteSheet3_31: 1243958801
       SpriteSheet3_32: 194612120
       SpriteSheet3_33: 1932712604
       SpriteSheet3_34: -722749423
-      SpriteSheet3_4: -1638781555
-      SpriteSheet3_5: 1882625022
-      SpriteSheet3_6: 49975505
-      SpriteSheet3_7: 857310860
-      SpriteSheet3_8: 1127513564
-      SpriteSheet3_9: -299552873
+      SpriteSheet3_35: -354296805
+      SpriteSheet3_36: 73416986
+      SpriteSheet3_37: 1988627350
+      SpriteSheet3_38: -1503576918
+      SpriteSheet3_39: -1496107471
+      Walk0: -1638781555
+      Walk1: 1882625022
+      Walk2: 49975505
+      Walk3: 857310860
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
