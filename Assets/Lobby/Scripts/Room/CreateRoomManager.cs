@@ -28,8 +28,11 @@ public class CreateRoomManager : MonoBehaviour
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = maxPlayer;
         options.CustomRoomProperties = new Hashtable() {
-            { "Master", PhotonNetwork.LocalPlayer.NickName },
+            { "MasterName", PhotonNetwork.LocalPlayer.NickName },
             { "GameMode", gameMode }};
+
+        options.CustomRoomPropertiesForLobby 
+            = new string[] { "MasterName", "GameMode" };
 
         PhotonNetwork.CreateRoom(roomName, options);
     }
@@ -42,13 +45,16 @@ public class CreateRoomManager : MonoBehaviour
         options.MaxPlayers = 8;
         int randMode = Random.Range(0, System.Enum.GetValues(typeof(GameMode)).Length);
         options.CustomRoomProperties = new Hashtable() {
-            { "Master", PhotonNetwork.LocalPlayer.NickName },
+            { "MasterName", PhotonNetwork.LocalPlayer.NickName },
             { "GameMode", randMode }};
+
+        options.CustomRoomPropertiesForLobby
+            = new string[] { "MasterName", "GameMode" };
 
         PhotonNetwork.JoinRandomOrCreateRoom(roomName: roomName, roomOptions: options);
     }
 
-    public void InitTeam()
+    public void InitTeam() //Check: 한 번 입장했었던 방에 재입장하는 경우 확인 필요
     {
         Player player = PhotonNetwork.LocalPlayer;
 

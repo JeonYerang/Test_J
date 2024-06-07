@@ -137,7 +137,7 @@ public class RoomPanel : MonoBehaviour
             playerEntryDic[newPlayer.ActorNumber] = playerEntry.GetComponent<RectTransform>();
 
         //레디 여부
-        SetReadyText(newPlayer);
+        SetReady(newPlayer);
 
         //팀 색상
         //if(팀전이면)
@@ -148,18 +148,14 @@ public class RoomPanel : MonoBehaviour
     {
         Destroy(playerEntryDic[leftPlayer.ActorNumber].gameObject);
         playerEntryDic.Remove(leftPlayer.ActorNumber);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            playersReadyDic.Remove(leftPlayer.ActorNumber);
-        }
+
+        RemoveReady(leftPlayer);
     }
     #endregion
 
     #region Ready
     private void OnReadyToggleChanged(bool isReady)
     {
-        print(isReady);
-
         Player localPlayer = PhotonNetwork.LocalPlayer;
         PhotonHashtable customProps = localPlayer.CustomProperties;
 
@@ -168,7 +164,7 @@ public class RoomPanel : MonoBehaviour
         localPlayer.SetCustomProperties(customProps);
     }
 
-    public void SetReadyText(Player player)
+    public void SetReady(Player player)
     {
         if (!player.CustomProperties.ContainsKey("Ready"))
             return;
@@ -194,6 +190,19 @@ public class RoomPanel : MonoBehaviour
                 playersReadyDic.Add(actorNum, isReady);
             else
                 playersReadyDic[actorNum] = isReady;
+
+            CheckAllReady();
+        }
+    }
+
+    private void RemoveReady(Player player)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            int actorNum = player.ActorNumber;
+
+            if (playersReadyDic.ContainsKey(actorNum))
+                playersReadyDic.Remove(actorNum);
 
             CheckAllReady();
         }

@@ -1,12 +1,13 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginPanel : MonoBehaviour
 {
-    public InputField nickNameInput;
+    public TMP_InputField nickNameInput;
     public Button loginButton;
     public Button exitButton;
     public GameObject warningText;

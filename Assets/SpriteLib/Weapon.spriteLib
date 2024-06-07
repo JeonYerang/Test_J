@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e6fedc2472449cead18ef23b5cb30d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library:
+  - m_Name: Idle
+    m_Hash: 1008081451
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: 0
+      m_Hash: 886824737
+      m_Sprite: {fileID: 1937979140, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 1937979140, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+    - m_Name: 1
+      m_Hash: 64810935
+      m_Sprite: {fileID: 219446646, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 219446646, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 2
+  - m_Name: Walk
+    m_Hash: 765711723
+    m_CategoryList: []
+    m_OverrideEntries:
+    - m_Name: 0
+      m_Hash: 886824737
+      m_Sprite: {fileID: -1556824521, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -1556824521, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+    - m_Name: 1
+      m_Hash: 64810935
+      m_Sprite: {fileID: -515664118, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -515664118, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+    - m_Name: 2
+      m_Hash: 450215437
+      m_Sprite: {fileID: -1627594965, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: -1627594965, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+    - m_Name: 3
+      m_Hash: 768773787
+      m_Sprite: {fileID: 921575284, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+      m_FromMain: 0
+      m_SpriteOverride: {fileID: 921575284, guid: a0dc9cc91cf3a9a41b5b4ab3eed73179, type: 3}
+    m_FromMain: 0
+    m_EntryOverrideCount: 4
+  m_PrimaryLibraryGUID: 

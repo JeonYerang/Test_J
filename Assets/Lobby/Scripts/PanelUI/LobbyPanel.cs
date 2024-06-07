@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,28 +12,6 @@ public class LobbyPanel : MonoBehaviour
 {
     [HideInInspector]
     public UserInfoArea userInfoArea;
-
-    #region Create Room
-    [Header("Create Room Menu")]
-    public InputField roomNameInput;
-    public Dropdown maxCountDrop;
-    public Dropdown modeDrop;
-    public Button createButton;
-    public GameObject warningText;
-    #endregion
-
-    [Space(10)]
-
-    #region Find Room
-    [Header("Find Room Menu")]
-    public RectTransform roomListTransform;
-    public GameObject roomEntryPrefab;
-    public Button randomButton;
-
-    public Dictionary<string, Transform> roomEntryDic 
-        = new Dictionary<string, Transform>();
-    public List<RoomInfo> currentRoomList = new List<RoomInfo>();
-    #endregion
 
     private void Awake()
     {
@@ -51,7 +30,14 @@ public class LobbyPanel : MonoBehaviour
         userInfoArea.SetInfo();
     }
 
-    #region CreateRoom
+    #region Create Room
+    [Header("Create Room Menu")]
+    public InputField roomNameInput;
+    public Dropdown maxCountDrop;
+    public Dropdown modeDrop;
+    public Button createButton;
+    public GameObject warningText;
+
     private void InitCreateArea()
     {
         roomNameInput.text = $"Room {UnityEngine.Random.Range(0, 99)}";
@@ -85,7 +71,18 @@ public class LobbyPanel : MonoBehaviour
     }
     #endregion
 
-    #region FindRoom
+    [Space(10)]
+
+    #region Find Room
+    [Header("Find Room Menu")]
+    public RectTransform roomListTransform;
+    public GameObject roomEntryPrefab;
+    public Button randomButton;
+
+    public Dictionary<string, GameObject> roomEntryDic 
+        = new Dictionary<string, GameObject>();
+    public List<RoomInfo> currentRoomList = new List<RoomInfo>();
+
     public void UpdateRoomList(List<RoomInfo> roomList) //roomList: 변동사항이 있는 방들만 전달
     {
         foreach (RoomInfo room in roomList)
@@ -93,8 +90,8 @@ public class LobbyPanel : MonoBehaviour
             //방이 삭제된 경우
             if (room.RemovedFromList == true)
             {
-                roomEntryDic.TryGetValue(room.Name, out Transform destroyedRoom);
-                Destroy(destroyedRoom);
+                if(roomEntryDic.TryGetValue(room.Name, out GameObject destroyedRoom))
+                    Destroy(destroyedRoom);
                 roomEntryDic.Remove(room.Name);
             }
             else
@@ -102,16 +99,16 @@ public class LobbyPanel : MonoBehaviour
                 //방이 처음 생성된 경우
                 if (roomEntryDic.ContainsKey(room.Name) == false)
                 {
-                    Transform newRoomEntry
-                        = Instantiate(roomEntryPrefab, roomListTransform).transform;
+                    var newRoomEntry
+                        = Instantiate(roomEntryPrefab, roomListTransform);
                     roomEntryDic.Add(room.Name, newRoomEntry);
                     SetRoomEntry(room, newRoomEntry.transform);
                 }
                 //기존에 존재하던 방인 경우: 방 정보 업데이트
                 else
                 {
-                    var newRoomEntry = roomListTransform.Find(room.Name).transform;
-                    SetRoomEntry(room, newRoomEntry);
+                    if (roomEntryDic.TryGetValue(room.Name, out GameObject roomEntry))
+                        SetRoomEntry(room, roomEntry.transform);
                 }
             }
         }
@@ -120,16 +117,32 @@ public class LobbyPanel : MonoBehaviour
     private void SetRoomEntry(RoomInfo roomInfo, Transform roomEntry)
     {
         string roomName = roomInfo.Name;
+        string gameMode = null;
+        string masterName = null;
 
-        if (roomInfo.CustomProperties.ContainsKey("Master"))
+        if (roomInfo.CustomProperties.ContainsKey("MasterName"))
+            masterName = roomInfo.CustomProperties["MasterName"].ToString();
 
+        if (roomInfo.CustomProperties.ContainsKey("GameMode"))
+        {
+            int modeNum = (int)(roomInfo.CustomProperties["GameMode"]);
+            gameMode = Enum.GetName(typeof(GameMode), (GameMode)modeNum);
+        }
 
         roomEntry.name = roomName;
 
-        roomEntry.Find("RoomName").GetComponent<Text>().text = roomName;
-        roomEntry.Find("MasterName").GetComponent<Text>().text = roomInfo.CustomProperties["Master"].ToString();
-        roomEntry.Find("UserCount").GetComponent<Text>().text 
+
+        roomEntry.Find("RoomName").GetComponent<TextMeshProUGUI>().text = roomName;
+
+        if(gameMode != null)
+            roomEntry.Find("ModeLabel").GetComponent<TextMeshProUGUI>().text = gameMode;
+
+        if(masterName != null)
+            roomEntry.Find("Master").Find("NameLabel").GetComponent<TextMeshProUGUI>().text = masterName;
+        
+        roomEntry.Find("UserCount").GetComponent<TextMeshProUGUI>().text 
             = $"{roomInfo.PlayerCount}/{roomInfo.MaxPlayers}";
+
 
         roomEntry.GetComponent<Button>().onClick.AddListener(
             () => PhotonNetwork.JoinRoom(roomName));
