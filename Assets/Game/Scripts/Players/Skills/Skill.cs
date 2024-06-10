@@ -1,17 +1,19 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class Skill : MonoBehaviour
 {
     protected PlayerAttack owner;
+    public bool canUse;
 
     public string _name;
     public SkillData data;
 
     public float damage;
 
-    public SkillConditionType conditionType;
-    public SkillUseType useType;
+    public SkillType type;
 
     public void Init(SkillData data)
     {
@@ -19,36 +21,23 @@ public abstract class Skill : MonoBehaviour
         damage = data.damage;
     }
 
-    public void SetOwner()
+    public void SetOwner(PlayerAttack owner)
     {
-        this.owner = GameManager.Instance.playerAttack;
+        this.owner = owner;
     }
 
     public abstract void UsingSkill();
 }
 
-#region <사용 조건>
 public enum SkillConditionType
 {
-    Basic,
+    None,
     CoolTime,
     Count
 }
 
-public interface ICoolDownableSkill
-{
-    float RequiredSec { get; set; }
-    float RemainSec { get; set; }
-}
-
-public interface ICountableSkill
-{
-    int RequiredCount { get; set; }
-}
-#endregion
-
-#region <사용 방법>
-public enum SkillUseType
+#region <스킬 타입>
+public enum SkillType
 {
     Basic,
     Charge,
@@ -56,23 +45,81 @@ public enum SkillUseType
     OnOff
 }
 
-public abstract class ChargeSkill : Skill
+public class SkillUseType
+{
+
+}
+
+public class SkillEffects
+{
+    string animationName;
+    ParticleSystem particle;
+    GameObject skillPrefab;
+}
+
+public class CoolTimeSkill : Skill
+{
+    public float requiredSec;
+    public float RemainSec { get; private set; }
+
+    public void StartCoolTime()
+    {
+        if (coolTimeCoroutine != null)
+            coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
+    }
+
+    protected Coroutine coolTimeCoroutine = null;
+    protected IEnumerator CoolTimeCoroutine()
+    {
+        RemainSec = requiredSec;
+
+        canUse = false;
+        while (RemainSec > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            RemainSec--;
+        }
+        canUse = true;
+    }
+
+    public override void UsingSkill()
+    {
+    }
+}
+
+public abstract class CountSkill : Skill
+{
+    public int RequiredCount { get; private set; }
+
+    public void CheckCount()
+    {
+        if (RequiredCount > owner.AttackCount)
+            canUse = true;
+        else
+            canUse = false;
+    }
+}
+
+public class ChargeSkill : Skill
 {
     public float maxChargeCount;
-    public float CurrentChargeCount { get; set; }
+    public float CurrentChargeCount { get; private set; }
 
     public GameObject ChargingEffect;
+    public bool IsCharging {  get; private set; }
 
-    public virtual void StartCharge()
+    public void StartCharge()
     {
         owner.StartCharge();
         chargeCoroutine = StartCoroutine(ChargeCoroutine());
+        IsCharging = true;
     }
 
-    public virtual void EndCharge()
+    public void EndCharge()
     {
         if (chargeCoroutine != null)
             StopCoroutine(ChargeCoroutine());
+        IsCharging = false;
 
         UsingSkill();
     }
@@ -87,8 +134,13 @@ public abstract class ChargeSkill : Skill
             yield return null;
         }
     }
+
+    public override void UsingSkill()
+    {
+        throw new System.NotImplementedException();
+    }
 }
-public abstract class ComboSkill : Skill
+public class ComboSkill : Skill
 {
     public int maxComboCount;
     public int currentComboCount { get; set; }
@@ -96,7 +148,7 @@ public abstract class ComboSkill : Skill
     public override void UsingSkill() //콤보공격
     {
         //스킬
-
+        //animator.SetTrigger("Attack");
         ComboCheck();
     }
 
@@ -120,13 +172,14 @@ public abstract class ComboSkill : Skill
         currentComboCount = 0;
     }
 }
-public abstract class OnOffSkill : Skill
+
+public class OnOffSkill : Skill
 {
     public bool IsOn { get; set; }
 
-    protected abstract void On();
+    protected void On() { }
 
-    protected abstract void Off();
+    protected void Off() { }
 
     public override void UsingSkill()
     {
@@ -135,6 +188,9 @@ public abstract class OnOffSkill : Skill
     }
 }
 #endregion
+
+
+
 
 //Q.왜 추상클래스가 아닌 인터페이스?
 //A.스킬의 조건과 스킬의 사용 방법을 각각 상속받기 위해

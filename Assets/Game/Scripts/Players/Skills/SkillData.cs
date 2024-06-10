@@ -15,3 +15,4 @@ public class SkillData : ScriptableObject
     public string animationName;
     public GameObject skillPrefab;
 }
+

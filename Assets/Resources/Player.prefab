@@ -207,6 +207,7 @@ GameObject:
   - component: {fileID: 4893663158471552256}
   - component: {fileID: 7523172492337294557}
   - component: {fileID: 6429734904497068733}
+  - component: {fileID: 5090811067806230526}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -333,8 +334,23 @@ MonoBehaviour:
   maxHp: 10
   attackPoint: 0
   attackSpeed: 0
+  animator: {fileID: 0}
   attackPrefab: {fileID: 0}
-  ultimateAttackPrefab: {fileID: 0}
+--- !u!111 &5090811067806230526
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156247933247501541}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &760636755180518707
 GameObject:
   m_ObjectHideFlags: 0

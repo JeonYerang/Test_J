@@ -15,23 +15,23 @@ public class ChargingArrow : ChargeSkill
 
 public class ShieldSkill : OnOffSkill
 {
-    GameObject skillObj;
+    Shield shield;
 
-    protected override void On()
+    /*protected override void On()
     {
-        if (skillObj == null)
+        if (shield == null)
         {
-            skillObj = Instantiate(data.skillPrefab,
-            owner.transform.position, owner.transform.rotation, owner.transform);
+            shield = Instantiate(data.skillPrefab, owner.transform.position, 
+            owner.transform.rotation, owner.transform).GetComponent<Shield>();
         }
         else
-            skillObj.gameObject.SetActive(true);
+            shield.gameObject.SetActive(true);
     }
 
     protected override void Off()
     {
-        skillObj.gameObject.SetActive(false);
-    }
+        shield.gameObject.SetActive(false);
+    }*/
 }
 
 public class ComboAttack : ComboSkill

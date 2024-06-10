@@ -7,18 +7,11 @@ public class SkillManager : MonoBehaviour
 {
     public static SkillManager Instance { get; private set; }
 
-    PlayerAttack playerAttack;
-
-    KeyCode attackKeyCode;
-    KeyCode skillKeyCode;
-    KeyCode ultimateKeyCode;
-
     public List<Skill> MySkills;
     Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill>
     
     Dictionary<string, bool> skillUsableDic = new Dictionary<string, bool>(); //<skill name, is usable>
     Dictionary<string, float> skillCoolDic;
-
 
 
     private void Awake()
@@ -35,10 +28,6 @@ public class SkillManager : MonoBehaviour
     private void SetKeyCode() //Key Manager
     {
         skillKeyDic.Clear();
-
-        attackKeyCode = KeyCode.Z;
-        skillKeyCode = KeyCode.X;
-        ultimateKeyCode = KeyCode.C;
     }
 
     private void InitSkillDic()
@@ -65,7 +54,7 @@ public class SkillManager : MonoBehaviour
             {
                 currentSkill = skillKeyDic[input];
 
-                if (currentSkill.useType == SkillUseType.Charge)
+                if (currentSkill.type == SkillType.Charge)
                 {
                     if(chargingKeyFlag == null)
                     {
@@ -96,53 +85,35 @@ public class SkillManager : MonoBehaviour
     {
         foreach(Skill skill in MySkills)
         {
-            SkillConditionType conditionType = skill.conditionType;
+            SkillType type = skill.type;
 
-            switch (conditionType)
+            /*switch (type)
             {
-                case SkillConditionType.Basic:
-                    break;
-
-                case SkillConditionType.Count:
-                    CheckCount(skill);
-                    break;
-
-                case SkillConditionType.CoolTime:
-                    CheckCoolTime(skill);
-                    break;
+                
 
                 default:
                     break;
-            }
+            }*/
         }
     }
 
-    private void CheckCount(Skill skill)
+    /*public void CoolTimeCheck()
     {
-        if (GameManager.Instance.playerAttack.AttackCount 
-            > ((ICountableSkill)skill).RequiredCount)
-            skillUsableDic[skill._name] = true;
-        else
-            skillUsableDic[skill._name] = false;
-    }
+        if (coolTimeCoroutine != null)
+            coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
+    }*/
 
-    private void CheckCoolTime(Skill skill)
+    protected Coroutine coolTimeCoroutine = null;
+    /*protected IEnumerator CoolTimeCoroutine()
     {
+        RemainSec = requiredSec;
 
-    }
-
-    private IEnumerator CoolTimeCoroutine(Skill skill)
-    {
-        float sec = ((ICoolDownableSkill)skill).RequiredSec;
-
-        skillUsableDic[skill._name] = false;
-
-        while (sec > 0)
+        canUse = false;
+        while (RemainSec > 0)
         {
             yield return new WaitForSeconds(1f);
-            sec--;
+            RemainSec--;
         }
-
-        skillUsableDic[skill._name] = true;
-    }
+        canUse = true;
+    }*/
 }
