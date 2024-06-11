@@ -2,15 +2,17 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public abstract class Skill : MonoBehaviour
 {
     protected PlayerAttack owner;
-    public bool canUse;
 
-    public string _name;
     public SkillData data;
 
+    public string _name;
+
+    public float coolTime;
     public float damage;
 
     public SkillType type;
@@ -26,14 +28,11 @@ public abstract class Skill : MonoBehaviour
         this.owner = owner;
     }
 
-    public abstract void UsingSkill();
-}
-
-public enum SkillConditionType
-{
-    None,
-    CoolTime,
-    Count
+    public virtual void Shot()
+    {
+        Instantiate(data.skillPrefab[0], owner.transform.position, owner.transform.rotation);
+        owner.SetAnimator(data.skillAnimation[0]);
+    }
 }
 
 #region <스킬 타입>
@@ -45,58 +44,15 @@ public enum SkillType
     OnOff
 }
 
-public class SkillUseType
+public class SkillRealeser : MonoBehaviour
 {
+    public string[] skillAnimation;
+    public GameObject[] skillPrefab;
 
-}
-
-public class SkillEffects
-{
-    string animationName;
-    ParticleSystem particle;
-    GameObject skillPrefab;
-}
-
-public class CoolTimeSkill : Skill
-{
-    public float requiredSec;
-    public float RemainSec { get; private set; }
-
-    public void StartCoolTime()
+    public virtual void Shot()
     {
-        if (coolTimeCoroutine != null)
-            coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
-    }
-
-    protected Coroutine coolTimeCoroutine = null;
-    protected IEnumerator CoolTimeCoroutine()
-    {
-        RemainSec = requiredSec;
-
-        canUse = false;
-        while (RemainSec > 0)
-        {
-            yield return new WaitForSeconds(1f);
-            RemainSec--;
-        }
-        canUse = true;
-    }
-
-    public override void UsingSkill()
-    {
-    }
-}
-
-public abstract class CountSkill : Skill
-{
-    public int RequiredCount { get; private set; }
-
-    public void CheckCount()
-    {
-        if (RequiredCount > owner.AttackCount)
-            canUse = true;
-        else
-            canUse = false;
+        //Instantiate(data.skillPrefab[0], owner.transform.position, owner.transform.rotation);
+        //owner.SetAnimator(data.skillAnimation[0]);
     }
 }
 
@@ -106,11 +62,11 @@ public class ChargeSkill : Skill
     public float CurrentChargeCount { get; private set; }
 
     public GameObject ChargingEffect;
-    public bool IsCharging {  get; private set; }
-
-    public void StartCharge()
+    
+    public bool IsCharging { get; private set; }
+    public Skill ChargingSkill;
+    public void StartCharge(Skill skill)
     {
-        owner.StartCharge();
         chargeCoroutine = StartCoroutine(ChargeCoroutine());
         IsCharging = true;
     }
@@ -121,7 +77,7 @@ public class ChargeSkill : Skill
             StopCoroutine(ChargeCoroutine());
         IsCharging = false;
 
-        UsingSkill();
+        //Shot();
     }
 
     protected Coroutine chargeCoroutine = null;
@@ -134,25 +90,24 @@ public class ChargeSkill : Skill
             yield return null;
         }
     }
-
-    public override void UsingSkill()
-    {
-        throw new System.NotImplementedException();
-    }
 }
 public class ComboSkill : Skill
 {
     public int maxComboCount;
     public int currentComboCount { get; set; }
 
-    public override void UsingSkill() //콤보공격
+    
+
+    public override void Shot() //콤보공격
     {
         //스킬
-        //animator.SetTrigger("Attack");
-        ComboCheck();
+        owner.SetAnimator(data.skillAnimation[currentComboCount]);
+        Instantiate(data.skillPrefab[currentComboCount], owner.transform.position, owner.transform.rotation);
+
+        ComboSet();
     }
 
-    protected void ComboCheck()
+    protected void ComboSet()
     {
         if (comboCoroutine != null) StopCoroutine(comboCoroutine);
 
@@ -175,13 +130,30 @@ public class ComboSkill : Skill
 
 public class OnOffSkill : Skill
 {
+    public GameObject skillObject;
     public bool IsOn { get; set; }
 
-    protected void On() { }
+    protected void On()
+    {
+        if (skillObject == null)
+        {
+            skillObject = Instantiate(data.skillPrefab[0],
+                owner.transform.position, owner.transform.rotation, owner.transform);
+        }
+        else
+            skillObject.SetActive(true);
+        
+    }
 
-    protected void Off() { }
+    protected void Off()
+    {
+        if (skillObject == null)
+            return;
 
-    public override void UsingSkill()
+        skillObject.SetActive(false);
+    }
+
+    public override void Shot()
     {
         if(IsOn) Off();
         else On();
@@ -189,7 +161,12 @@ public class OnOffSkill : Skill
 }
 #endregion
 
-
+public class SkillEffects
+{
+    string animationName;
+    ParticleSystem particle;
+    GameObject skillPrefab;
+}
 
 
 //Q.왜 추상클래스가 아닌 인터페이스?

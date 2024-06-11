@@ -28,8 +28,7 @@ public abstract class PlayerAttack : MonoBehaviour
     public bool CanAttack { get { return state == AttackState.Idle; } }
 
     PlayerClass playerClass;
-    List<Skill> skills = new List<Skill>();
-
+    
     public event EventHandler<Player> onChangedHp;
 
     public Animator animator;
@@ -42,9 +41,21 @@ public abstract class PlayerAttack : MonoBehaviour
         onChangedHp += GameUIManager.Instance.UserInfo.SetHpBar;
     }
 
-    #region Charge
-    public virtual void StartCharge()
+    public void SetClass()
     {
+
+    }
+
+    public void SetAnimator(string name)
+    {
+
+    }
+
+    #region Charge
+    Skill chargingSkill;
+    public virtual void StartCharge(Skill skill)
+    {
+        chargingSkill = skill;
         state = AttackState.Charge;
 
         //animator.SetTrigger("");
@@ -59,14 +70,22 @@ public abstract class PlayerAttack : MonoBehaviour
     #region Attack
     public int AttackCount { get; protected set; }
     
-    public virtual void UsingSkill(Skill skill) //스킬 인덱스로 참조하는 건?
+    public void TryUsingSkill(Skill skill)
+    {
+        if (!CanAttack)
+            return;
+
+        UsingSkill(skill);
+    }
+
+    private void UsingSkill(Skill skill) //스킬 인덱스로 참조하는 건?
     {
         state = AttackState.Attack;
 
         //animator.SetTrigger(animationName);
-        skill.UsingSkill();
+        skill.Shot();
 
-        if (AttackCount < 10) AttackCount++;
+        AttackCount++;
     }
 
     protected void ReturnIdleState()

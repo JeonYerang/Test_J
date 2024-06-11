@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SyringeAttack : Skill
 {
-    public override void UsingSkill()
+    public override void Shot()
     {
         //data.
     }

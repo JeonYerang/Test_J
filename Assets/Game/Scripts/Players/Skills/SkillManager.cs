@@ -1,18 +1,22 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class SkillManager : MonoBehaviour
 {
+    PlayerAttack playerAttack;
+
     public static SkillManager Instance { get; private set; }
 
-    public List<Skill> MySkills;
-    Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill>
-    
-    Dictionary<string, bool> skillUsableDic = new Dictionary<string, bool>(); //<skill name, is usable>
-    Dictionary<string, float> skillCoolDic;
+    List<Skill> skills = new List<Skill>();
 
+    Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill index>
+    Dictionary<Button, Skill> skillButtonDic = new Dictionary<Button, Skill>(); //<key string, skill index>
+
+    Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
 
     private void Awake()
     {
@@ -21,8 +25,13 @@ public class SkillManager : MonoBehaviour
 
     private void Start()
     {
+        InitSkills();
         SetKeyCode();
-        InitSkillDic();
+    }
+
+    private void InitSkills()
+    {
+
     }
 
     private void SetKeyCode() //Key Manager
@@ -30,90 +39,82 @@ public class SkillManager : MonoBehaviour
         skillKeyDic.Clear();
     }
 
-    private void InitSkillDic()
-    {
-        skillUsableDic.Clear();
-
-        foreach (var skill in MySkills)
-        {
-            skillUsableDic.Add(skill._name, false);
-        }
-    }
 
     public Skill currentSkill;
     private string chargingKeyFlag;
+
     private void Update()
     {
-        ConditionCheck();
-
-        if (Input.anyKeyDown)
+        if (chargingKeyFlag == null) //차징 중이지 않을 경우
         {
-            string input = Input.inputString;
-
-            if (skillKeyDic.ContainsKey(input))
+            if (Input.anyKeyDown)
             {
-                currentSkill = skillKeyDic[input];
+                string input = Input.inputString;
 
-                if (currentSkill.type == SkillType.Charge)
+                if (skillKeyDic.ContainsKey(input))
                 {
-                    if(chargingKeyFlag == null)
+                    currentSkill = skillKeyDic[input];
+
+                    if (currentSkill.type == SkillType.Charge)
                     {
-                        chargingKeyFlag = input;
-                        //playerAttack.Charging();
-                        print("차지 시작");
+                        if (chargingKeyFlag == null)
+                        {
+                            chargingKeyFlag = input;
+                            playerAttack.StartCharge(currentSkill);
+                            print("차지 시작");
+                        }
                     }
-                }
-                else
-                {
-                    //playerAttack.Attack(currentSkill);
-                    print("스킬 사용");
+                    else
+                    {
+                        playerAttack.TryUsingSkill(currentSkill);
+                        print("스킬 사용");
+                    }
                 }
             }
         }
-        if (chargingKeyFlag != null && Input.GetKeyUp(chargingKeyFlag))
+        else //차징 중일 경우
         {
-            currentSkill = skillKeyDic[chargingKeyFlag];
-            chargingKeyFlag = null;
-
-            //playerAttack.EndCharging();
-            //playerAttack.Attack(currentSkill);
-            print("차지 끝");
-        }
-    }
-
-    public void ConditionCheck()
-    {
-        foreach(Skill skill in MySkills)
-        {
-            SkillType type = skill.type;
-
-            /*switch (type)
+            if (Input.GetKeyUp(chargingKeyFlag))
             {
-                
+                chargingKeyFlag = null;
 
-                default:
-                    break;
-            }*/
+                playerAttack.EndCharge();
+                print("차지 끝");
+            }
         }
     }
 
-    /*public void CoolTimeCheck()
+    #region CoolDown
+    public void AddCoolDic(Skill skill)
     {
-        if (coolTimeCoroutine != null)
-            coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
-    }*/
-
-    protected Coroutine coolTimeCoroutine = null;
-    /*protected IEnumerator CoolTimeCoroutine()
-    {
-        RemainSec = requiredSec;
-
-        canUse = false;
-        while (RemainSec > 0)
+        if (skill.coolTime >= 0)
         {
-            yield return new WaitForSeconds(1f);
-            RemainSec--;
+            skillCoolDic.Add(skill.name, skill.coolTime);
+
+            if (conditionCheckCoroutine == null)
+                conditionCheckCoroutine = StartCoroutine(CoolCheck());
         }
-        canUse = true;
-    }*/
+    }
+
+    protected Coroutine conditionCheckCoroutine = null;
+    public IEnumerator CoolCheck()
+    {
+        while(true)
+        {
+            foreach(var skill in skillCoolDic.Keys)
+            {
+                skillCoolDic[skill] -= Time.deltaTime;
+
+                if (skillCoolDic[skill] <= 0)
+                {
+                    skillCoolDic.Remove(skill);
+
+                    if(skillCoolDic.Count == 0)
+                        yield break;
+                }
+            }
+            yield return null;
+        }
+    }
+    #endregion
 }

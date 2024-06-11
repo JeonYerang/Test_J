@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChargingArrow : ChargeSkill
 {
-    public override void UsingSkill()
+    public override void Shot()
     {
         damage *= CurrentChargeCount;
 
@@ -36,12 +36,12 @@ public class ShieldSkill : OnOffSkill
 
 public class ComboAttack : ComboSkill
 {
-    public override void UsingSkill()
+    public override void Shot()
     {
         damage *= currentComboCount;
 
         //owner.animator.SetTrigger("");
 
-        ComboCheck();
+        ComboSet();
     }
 }

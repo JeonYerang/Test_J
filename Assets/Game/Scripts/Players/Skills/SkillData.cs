@@ -7,12 +7,10 @@ public class SkillData : ScriptableObject
     public string _name;
 
     public int damage;
-    public float distance;
-    public float range;
+    public float coolTime;
 
-    //etc
     public Sprite icon;
-    public string animationName;
-    public GameObject skillPrefab;
-}
 
+    public string[] skillAnimation;
+    public GameObject[] skillPrefab;
+}
