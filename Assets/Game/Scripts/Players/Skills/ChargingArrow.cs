@@ -6,10 +6,10 @@ public class ChargingArrow : ChargeSkill
 {
     public override void Shot()
     {
-        damage *= CurrentChargeCount;
+        Damage *= CurrentChargeCount;
 
-        Instantiate(data.skillPrefab, 
-            owner.transform.position, owner.transform.rotation);
+        //Instantiate(data.skillPrefab, 
+        //    owner.transform.position, owner.transform.rotation);
     }
 }
 
@@ -38,7 +38,7 @@ public class ComboAttack : ComboSkill
 {
     public override void Shot()
     {
-        damage *= currentComboCount;
+        Damage *= currentComboCount;
 
         //owner.animator.SetTrigger("");
 

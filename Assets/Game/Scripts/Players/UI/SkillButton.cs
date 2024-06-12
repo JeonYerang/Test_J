@@ -18,10 +18,10 @@ public class SkillButton : MonoBehaviour
         skillButton.onClick.AddListener(OnClickSkillButton);
     }
 
-    public void SetSkill(Skill skill)
+    public void SetSkill(SkillData skillData)
     {
-        this.skill = skill;
-        this.icon = skill.data.icon;
+        //skill = skillData.skill;
+        icon = skillData.icon;
         SetSkillIcon();
     }
 

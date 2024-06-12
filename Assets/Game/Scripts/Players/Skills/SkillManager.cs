@@ -55,7 +55,7 @@ public class SkillManager : MonoBehaviour
                 {
                     currentSkill = skillKeyDic[input];
 
-                    if (currentSkill.type == SkillType.Charge)
+                    if (currentSkill.CastType == SkillCastType.Charge)
                     {
                         if (chargingKeyFlag == null)
                         {
@@ -87,9 +87,9 @@ public class SkillManager : MonoBehaviour
     #region CoolDown
     public void AddCoolDic(Skill skill)
     {
-        if (skill.coolTime >= 0)
+        if (skill.CoolTime >= 0)
         {
-            skillCoolDic.Add(skill.name, skill.coolTime);
+            skillCoolDic.Add(skill.name, skill.CoolTime);
 
             if (conditionCheckCoroutine == null)
                 conditionCheckCoroutine = StartCoroutine(CoolCheck());

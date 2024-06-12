@@ -12,4 +12,9 @@ public abstract class SkillObject : MonoBehaviour
         this.owner = owner;
         this.damage = damage;
     }
+
+    public virtual void GetDamage(Transform target)
+    {
+
+    }
 }

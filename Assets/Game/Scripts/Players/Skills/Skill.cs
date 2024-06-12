@@ -4,39 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public abstract class Skill : MonoBehaviour
-{
-    protected PlayerAttack owner;
-
-    public SkillData data;
-
-    public string _name;
-
-    public float coolTime;
-    public float damage;
-
-    public SkillType type;
-
-    public void Init(SkillData data)
-    {
-        this.data = data;
-        damage = data.damage;
-    }
-
-    public void SetOwner(PlayerAttack owner)
-    {
-        this.owner = owner;
-    }
-
-    public virtual void Shot()
-    {
-        Instantiate(data.skillPrefab[0], owner.transform.position, owner.transform.rotation);
-        owner.SetAnimator(data.skillAnimation[0]);
-    }
-}
-
-#region <스킬 타입>
-public enum SkillType
+public enum SkillCastType
 {
     Basic,
     Charge,
@@ -44,16 +12,32 @@ public enum SkillType
     OnOff
 }
 
-public class SkillRealeser : MonoBehaviour
+[Serializable]
+public abstract class Skill : MonoBehaviour
 {
-    public string[] skillAnimation;
-    public GameObject[] skillPrefab;
+    protected PlayerAttack owner;
 
-    public virtual void Shot()
+    public string Name {  get; protected set; }
+
+    public float Damage {  get; protected set; }
+    public float CoolTime {  get; protected set; }
+
+    public SkillCastType CastType {  get; protected set; }
+
+    public virtual void Init(SkillData data)
     {
-        //Instantiate(data.skillPrefab[0], owner.transform.position, owner.transform.rotation);
-        //owner.SetAnimator(data.skillAnimation[0]);
+        Name = data.name;
+        Damage = data.damage;
+        CoolTime = data.coolTime;
+        CastType = data.castType;
     }
+
+    public void SetOwner(PlayerAttack owner)
+    {
+        this.owner = owner;
+    }
+
+    public abstract void Shot();
 }
 
 public class ChargeSkill : Skill
@@ -61,11 +45,15 @@ public class ChargeSkill : Skill
     public float maxChargeCount;
     public float CurrentChargeCount { get; private set; }
 
+    public string skillAnimation;
+    public SkillObject skillPrefab;
+
     public GameObject ChargingEffect;
     
     public bool IsCharging { get; private set; }
-    public Skill ChargingSkill;
-    public void StartCharge(Skill skill)
+
+
+    public void StartCharge()
     {
         chargeCoroutine = StartCoroutine(ChargeCoroutine());
         IsCharging = true;
@@ -77,7 +65,7 @@ public class ChargeSkill : Skill
             StopCoroutine(ChargeCoroutine());
         IsCharging = false;
 
-        //Shot();
+        Shot();
     }
 
     protected Coroutine chargeCoroutine = null;
@@ -90,19 +78,38 @@ public class ChargeSkill : Skill
             yield return null;
         }
     }
+
+    public override void Shot()
+    {
+        Instantiate(skillPrefab, owner.transform.position, owner.transform.rotation);
+        owner.SetAnimator(skillAnimation);
+    }
 }
+
 public class ComboSkill : Skill
 {
     public int maxComboCount;
     public int currentComboCount { get; set; }
 
-    
+    public string[] skillAnimation;
+    public SkillObject[] skillPrefab;
+
+    public override void Init(SkillData data)
+    {
+        base.Init(data);
+
+        /*if (data is ComboSkillData)
+        {
+            //ComboSkillData comboSkillData = data as ComboSkillData;   
+            //this.maxComboCount = comboSkillData.maxComboCount;
+        }*/
+    }
 
     public override void Shot() //콤보공격
     {
         //스킬
-        owner.SetAnimator(data.skillAnimation[currentComboCount]);
-        Instantiate(data.skillPrefab[currentComboCount], owner.transform.position, owner.transform.rotation);
+        owner.SetAnimator(skillAnimation[currentComboCount]);
+        Instantiate(skillPrefab[currentComboCount], owner.transform.position, owner.transform.rotation);
 
         ComboSet();
     }
@@ -130,18 +137,21 @@ public class ComboSkill : Skill
 
 public class OnOffSkill : Skill
 {
-    public GameObject skillObject;
+    public string skillAnimation;
+    public SkillObject skillPrefab;
+
+    public SkillObject skillObject;
     public bool IsOn { get; set; }
 
     protected void On()
     {
         if (skillObject == null)
         {
-            skillObject = Instantiate(data.skillPrefab[0],
+            skillObject = Instantiate(skillPrefab,
                 owner.transform.position, owner.transform.rotation, owner.transform);
         }
         else
-            skillObject.SetActive(true);
+            skillObject.gameObject.SetActive(true);
         
     }
 
@@ -150,7 +160,7 @@ public class OnOffSkill : Skill
         if (skillObject == null)
             return;
 
-        skillObject.SetActive(false);
+        skillObject.gameObject.SetActive(false);
     }
 
     public override void Shot()
@@ -159,15 +169,6 @@ public class OnOffSkill : Skill
         else On();
     }
 }
-#endregion
-
-public class SkillEffects
-{
-    string animationName;
-    ParticleSystem particle;
-    GameObject skillPrefab;
-}
-
 
 //Q.왜 추상클래스가 아닌 인터페이스?
 //A.스킬의 조건과 스킬의 사용 방법을 각각 상속받기 위해
