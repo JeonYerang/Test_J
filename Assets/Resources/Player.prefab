@@ -204,9 +204,9 @@ GameObject:
   - component: {fileID: 156247933247501544}
   - component: {fileID: 156247933247501550}
   - component: {fileID: 156247933247501545}
+  - component: {fileID: 6429734904497068733}
   - component: {fileID: 4893663158471552256}
   - component: {fileID: 7523172492337294557}
-  - component: {fileID: 6429734904497068733}
   - component: {fileID: 5090811067806230526}
   m_Layer: 0
   m_Name: Player
@@ -279,6 +279,23 @@ MonoBehaviour:
   moveSpeed: 5
   jumpPower: 5
   state: 0
+--- !u!114 &6429734904497068733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156247933247501541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aab45a1c65986a4a99c5b60e232d60c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  maxHp: 0
+  attackPoint: 0
+  attackSpeed: 0
+  animator: {fileID: 0}
 --- !u!114 &4893663158471552256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,24 +335,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &6429734904497068733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156247933247501541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b96ff750b65ef647b0574fddba30dc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  maxHp: 10
-  attackPoint: 0
-  attackSpeed: 0
-  animator: {fileID: 0}
-  attackPrefab: {fileID: 0}
 --- !u!111 &5090811067806230526
 Animation:
   m_ObjectHideFlags: 0

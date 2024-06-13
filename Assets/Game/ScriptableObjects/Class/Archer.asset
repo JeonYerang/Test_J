@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e7858d17731f1a4281b075b6fa9ea04, type: 3}
   m_Name: Archer
   m_EditorClassIdentifier: 
-  classIcon: {fileID: 21300000, guid: 962d8365913f04935b5da32f81c41988, type: 3}
+  className: "\uAD81\uC218"
   classDescription: Archer Description
+  classIcon: {fileID: 21300000, guid: 962d8365913f04935b5da32f81c41988, type: 3}
   classRenderer: {fileID: 0}
-  attack: {fileID: 0}
-  attackPrefab: {fileID: 0}
+  skills: []

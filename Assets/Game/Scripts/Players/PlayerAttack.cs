@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PlayerAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviour
 {
     public enum AttackState
     {
@@ -20,7 +20,12 @@ public abstract class PlayerAttack : MonoBehaviour
     public int maxHp;
     protected int currentHp = 0;
     public int CurrentHp { get { return currentHp; } }
-    public int HpAmount { get { return currentHp / maxHp; } }
+    public int HpAmount { 
+        get {
+            if (currentHp <= 0) return 0;
+            else return currentHp / maxHp; 
+        } 
+    }
 
     public int attackPoint;
     public float attackSpeed;
@@ -28,7 +33,8 @@ public abstract class PlayerAttack : MonoBehaviour
     public bool CanAttack { get { return state == AttackState.Idle; } }
 
     PlayerClass playerClass;
-    
+    SkillSet[] skills;
+
     public event EventHandler<Player> onChangedHp;
 
     public Animator animator;
@@ -41,7 +47,7 @@ public abstract class PlayerAttack : MonoBehaviour
         onChangedHp += GameUIManager.Instance.UserInfo.SetHpBar;
     }
 
-    public void SetClass()
+    public void SetClass(PlayerClass playerClass)
     {
 
     }
@@ -78,7 +84,7 @@ public abstract class PlayerAttack : MonoBehaviour
         UsingSkill(skill);
     }
 
-    private void UsingSkill(Skill skill) //스킬 인덱스로 참조하는 건?
+    private void UsingSkill(Skill skill)
     {
         state = AttackState.Attack;
 

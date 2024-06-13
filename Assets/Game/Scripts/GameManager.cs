@@ -9,13 +9,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using PhotonHashtable = ExitGames.Client.Photon.Hashtable;
 
-public enum PlayerClass
-{
-    Warrior,
-    Archer,
-    Tanker,
-    Healer
-}
+
 
 public class GameManager : MonoBehaviour
 {
@@ -124,8 +118,7 @@ public class GameManager : MonoBehaviour
     #region Player
     public PlayerMove playerMove { get; private set; }
     public PlayerAttack playerAttack { get; private set; }
-    public ClassData[] classList = new ClassData[3];
-    
+
     public void SetPlayer(GameObject player)
     {
         playerMove = player.GetComponent<PlayerMove>();

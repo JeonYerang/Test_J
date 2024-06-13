@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e7858d17731f1a4281b075b6fa9ea04, type: 3}
   m_Name: Tanker
   m_EditorClassIdentifier: 
-  classIcon: {fileID: 21300000, guid: 143cc06ce061a49f3b2e8c92aa771554, type: 3}
+  className: "\uD0F1\uCEE4"
   classDescription: Tanker Description
+  classIcon: {fileID: 21300000, guid: 143cc06ce061a49f3b2e8c92aa771554, type: 3}
   classRenderer: {fileID: 0}
-  attack: {fileID: 0}
-  attackPrefab: {fileID: 0}
+  skills: []
