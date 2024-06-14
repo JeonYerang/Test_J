@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -49,6 +50,7 @@ public class PlayerAttack : MonoBehaviour
 
     public void SetClass(PlayerClass playerClass)
     {
+        this.playerClass = playerClass;
 
     }
 
@@ -57,31 +59,21 @@ public class PlayerAttack : MonoBehaviour
 
     }
 
-    #region Charge
-    Skill chargingSkill;
-    public virtual void StartCharge(Skill skill)
-    {
-        chargingSkill = skill;
-        state = AttackState.Charge;
-
-        //animator.SetTrigger("");
-    }
-
-    public virtual void EndCharge()
-    {
-        //animator.SetTrigger("");
-    }
-    #endregion
-
     #region Attack
     public int AttackCount { get; protected set; }
     
-    public void TryUsingSkill(Skill skill)
+    public bool TryUsingSkill(Skill skill)
     {
         if (!CanAttack)
-            return;
+            return false;
 
         UsingSkill(skill);
+        return true;
+    }
+
+    public void OnSkill0()
+    {
+        print("Skill0 »ç¿ë");
     }
 
     private void UsingSkill(Skill skill)

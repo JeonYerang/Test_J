@@ -25,4 +25,10 @@ public class ClassManager : MonoBehaviour
     {
         return classList[(int)playerClass];
     }
+
+    public SkillSet[] GetSkillSets(PlayerClass playerClass)
+    {
+        ClassData classData = classList[(int)playerClass];
+        return classData.skills;
+    }
 }

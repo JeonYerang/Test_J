@@ -18,7 +18,7 @@ public class GameUIManager : MonoBehaviour
 
         UserInfo = transform.Find("UserInfoUI").GetComponent<UserInfoUI>();
         Score = transform.Find("ScoreCard").GetComponent<ScoreUI>();
-        SkillButtons = transform.Find("SkillButtons").GetComponent<SkillButtonsUI>();
+        SkillButtons = transform.Find("SkillButtonArea").GetComponent<SkillButtonsUI>();
         Joystick = transform.Find("FixedJoystick").GetComponent<FixedJoystick>();
     }
 
@@ -41,6 +41,6 @@ public class GameUIManager : MonoBehaviour
     private void InitPanel()
     {
         UserInfo.Init();
-        SkillButtons.Init();
+        SkillButtons.InitJumpButton();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum State
 {
@@ -18,17 +19,15 @@ public class PlayerMove : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpPower = 5f;
 
+    [SerializeField]
     FixedJoystick joystick;
     CharacterController controller;
     
     Animator animator;
     PhotonView pv;
 
-    Vector3 moveDir;
+    Vector2 inputDir;
     float gravityValue;
-
-    float xInput;
-    float yInput;
 
     public State state;
 
@@ -49,23 +48,8 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
-        //방향키 입력
-        xInput = Input.GetAxis("Horizontal");
-        yInput = Input.GetAxis("Vertical");
-
-        //xInput = joystick.Horizontal;
-        //yInput = joystick.Vertical;
-
-        CalcMoveDir(xInput, yInput);
-
-        Move(moveDir);
+        Move();
         Gravity();
-
-        //상태 변화
-        if (Input.GetButtonDown("Jump"))
-        {
-            OnJump();
-        }
 
         if (controller.velocity.y < 0 && state != State.Climb)
         {
@@ -75,12 +59,12 @@ public class PlayerMove : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                if (xInput != 0 || yInput != 0)
+                if (inputDir != Vector2.zero)
                     state = State.Move;
                 break;
 
             case State.Move:
-                if (xInput == 0 && yInput == 0)
+                if (inputDir == Vector2.zero)
                     state = State.Idle;
                 break;
 
@@ -112,32 +96,32 @@ public class PlayerMove : MonoBehaviour
         this.jumpPower = jumpPower;
     }
 
-    private void CalcMoveDir(float x, float y)
+    public void OnMove(InputValue value)
     {
-        if (state == State.Climb)
-            moveDir = new Vector3(x, y, 0);
-        else
-            moveDir = new Vector3(x, 0, y);
-
-        float mag = Mathf.Min(moveDir.magnitude, 1f);
-
-        moveDir = moveDir.normalized * mag;
+        inputDir = value.Get<Vector2>();
     }
 
-    private void Move(Vector3 moveDir)
+    private void Move()
     {
+        Vector3 moveDir;
         float speed = moveSpeed;
 
         //점프or낙하 중에는 느리게 이동
-        if (state == State.Jump || state == State.Fall)
+        if (state == State.Jump || state == State.Fall || state == State.Climb)
         {
             speed *= 0.5f;
         }
 
         if (state == State.Climb)
+        {
+            moveDir = new Vector3(inputDir.x, inputDir.y, 0);
             controller.Move(transform.TransformDirection(moveDir) * speed * Time.deltaTime);
+        }
         else
+        {
+            moveDir = new Vector3(inputDir.x, 0, inputDir.y);
             controller.Move(moveDir * speed * Time.deltaTime);
+        }
 
         if (moveDir != Vector3.zero && state != State.Climb) //움직이지 않을 때는 돌리지 않음
             transform.forward = moveDir; //움직이는 방향으로 캐릭터 돌리기?
@@ -148,7 +132,7 @@ public class PlayerMove : MonoBehaviour
     private void Gravity() //박스캐스트로 땅 끄트머리 걸려있을때 isGrounded 체크 해주기
     {
         if (state == State.Climb)
-            gravityValue = -0.3f;
+            gravityValue = -0.5f;
         else
             gravityValue += Physics.gravity.y * Time.deltaTime;
 

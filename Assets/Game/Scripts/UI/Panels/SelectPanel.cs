@@ -74,7 +74,7 @@ public class SelectPanel : MonoBehaviour
 
     private void InitClassToggle(GameObject classEntry, PlayerClass playerClass)
     {
-        int index = (int)playerClass - 1;
+        int index = (int)playerClass;
 
         //클래스 이름 초기화
         if (classEntry.transform.Find("ClassLabel").TryGetComponent(out TextMeshProUGUI classText))
@@ -84,13 +84,13 @@ public class SelectPanel : MonoBehaviour
 
         //클래스 이미지 초기화
         if (classEntry.transform.Find("ClassImage").TryGetComponent(out Image classImage))
-            classImage.sprite = ClassManager.Instance.classList[(int)playerClass].classIcon;
+            classImage.sprite = ClassManager.Instance.classList[index].classIcon;
         else
             print("클래스 이미지 없음");
 
         //클래스 설명 초기화
         if (classEntry.transform.Find("ClassDescription").TryGetComponent(out TextMeshProUGUI classDescription))
-            classDescription.text = ClassManager.Instance.classList[(int)playerClass].classDescription;
+            classDescription.text = ClassManager.Instance.classList[index].classDescription;
         else
             print("클래스 설명 없음");
 

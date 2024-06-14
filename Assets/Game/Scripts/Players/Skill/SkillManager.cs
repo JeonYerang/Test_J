@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 //새로운 스킬 제작은 SkillSet으로
@@ -11,61 +12,46 @@ public class SkillManager : MonoBehaviour
 
     public static SkillManager Instance { get; private set; }
 
-    List<SkillSet> skills;
-
-    Dictionary<string, Skill> skillKeyDic = new Dictionary<string, Skill>(); //<key string, skill index>
-    Dictionary<Button, Skill> skillButtonDic = new Dictionary<Button, Skill>(); //<key string, skill index>
+    Skill[] skills;
 
     Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
+
+    KeyManager keyManager;
+    [SerializeField]
+    SkillButtonsUI skillButtonsUI;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    private void Start()
-    {
-        InitSkills();
-        SetKeyCode();
-    }
-
-    private void InitSkills()
-    {
-
-    }
-
-    private void SetKeyCode() //Key Manager
-    {
-        skillKeyDic.Clear();
-    }
-
-    public Skill currentSkill;
+    public int currentSkillIndex;
     private string chargingKeyFlag;
-
-    private void Update()
+    /*private void Update()
     {
         if (chargingKeyFlag == null) //차징 중이지 않을 경우
         {
+            
             if (Input.anyKeyDown)
             {
                 string input = Input.inputString;
 
-                if (skillKeyDic.ContainsKey(input))
+                if (KeySetting.skillKeyDic.ContainsKey(input))
                 {
-                    currentSkill = skillKeyDic[input];
+                    currentSkillIndex = KeySetting.skillKeyDic[input];
 
-                    if (currentSkill.CastType == SkillCastType.Charge)
+                    if (currentSkillIndex.CastType == SkillCastType.Charge)
                     {
                         if (chargingKeyFlag == null)
                         {
                             chargingKeyFlag = input;
-                            playerAttack.StartCharge(currentSkill);
+                            //playerAttack.StartCharge(currentSkill);
                             print("차지 시작");
                         }
                     }
                     else
                     {
-                        playerAttack.TryUsingSkill(currentSkill);
+                        TryUsingSkill(currentSkillIndex);
                         print("스킬 사용");
                     }
                 }
@@ -77,10 +63,43 @@ public class SkillManager : MonoBehaviour
             {
                 chargingKeyFlag = null;
 
-                playerAttack.EndCharge();
+                //playerAttack.EndCharge();
                 print("차지 끝");
             }
         }
+
+        if (Input.GetKeyDown(KeySetting.jumpKey))
+        {
+            if (GameManager.Instance.playerMove != null)
+                GameManager.Instance.playerMove.OnJump();
+        }
+    }*/
+
+    private void InitSkills(SkillSet[] skillSets)
+    {
+        skills = new Skill[skillSets.Length];
+
+        for(int i = 0; i < skillSets.Length; i++)
+        {
+            skills[i] = null;
+        }
+
+        skillButtonsUI.InitSkillButtons(skillSets);
+    }
+
+    public void TryUsingSkill(int skillIndex)
+    {
+        bool isUsed = false;
+        Skill targetSkill = skills[skillIndex];
+
+        if (GameManager.Instance.playerAttack != null)
+        {
+            isUsed
+                = GameManager.Instance.playerAttack.TryUsingSkill(targetSkill);
+        }
+
+        if(isUsed)
+            AddCoolDic(targetSkill);
     }
 
     #region CoolDown
@@ -103,6 +122,8 @@ public class SkillManager : MonoBehaviour
             foreach(var skill in skillCoolDic.Keys)
             {
                 skillCoolDic[skill] -= Time.deltaTime;
+                skillButtonsUI.skillButtons[currentSkillIndex]
+                    .ShowCoolTime(skillCoolDic[skill]);
 
                 if (skillCoolDic[skill] <= 0)
                 {

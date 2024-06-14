@@ -36,7 +36,9 @@ public class PlayerInfo : MonoBehaviour
     private void OnEnable()
     {
         player = pv.Owner;
-        SetInfo();
+
+        if(PhotonNetwork.IsConnected)
+            SetInfo();
     }
 
     public void SetInfo()

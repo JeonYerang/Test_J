@@ -5,44 +5,52 @@ using UnityEngine.UI;
 
 public class SkillButtonsUI : MonoBehaviour
 {
-    PlayerMove playerMove;
-    PlayerAttack playerAttack;
+    [SerializeField]
+    Transform skillButtonsParent;
+    public SkillButton[] skillButtons;
 
-    Button[] skillButtons = new Button[2];
+    [SerializeField]
     Button jumpButton;
 
-    public void Init()
-    {
-        playerMove = GameManager.Instance.playerMove;
-        playerAttack = GameManager.Instance.playerAttack;
-        InitJumpButton();
-        InitSkillButtons();
-    }
+    //<button, skill index>
+    Dictionary<Button, int> skillButtonDic = new Dictionary<Button, int>(); 
 
-    private void InitSkillButtons()
+    private void Awake()
     {
-        Transform buttonsTransform = transform.Find("SkillButtons");
+        skillButtons = skillButtonsParent.GetComponentsInChildren<SkillButton>();
 
         for (int i = 0; i < skillButtons.Length; i++)
         {
-            skillButtons[i] = buttonsTransform.GetChild(i).GetComponent<Button>();
-            skillButtons[i].onClick.AddListener(OnClickSkillButton);
+            skillButtons[i].InitIndex(i);
         }
     }
 
-    private void InitJumpButton()
+    public void InitSkillButtons(SkillSet[] skillSets)
     {
-        jumpButton = transform.Find("JumpButton").GetComponent<Button>();
-        jumpButton.onClick.AddListener(OnClickJumpButton);
+        if (skillButtons.Length >= skillSets.Length)
+        {
+            for (int i = 0; i < skillSets.Length; i++)
+            {
+                skillButtons[i].SetSkill(skillSets[i]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < skillButtons.Length; i++)
+            {
+                skillButtons[i].SetSkill(skillSets[i]);
+            }
+        }
     }
 
-    private void OnClickSkillButton()
+    public void InitJumpButton()
     {
-
+        jumpButton.onClick.AddListener(OnClickJumpButton);
     }
 
     private void OnClickJumpButton()
     {
-        playerMove.OnJump();
+        if (GameManager.Instance.playerMove != null)
+            GameManager.Instance.playerMove.OnJump();
     }
 }
