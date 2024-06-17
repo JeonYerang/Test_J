@@ -5,6 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -71,9 +73,19 @@ public class PlayerAttack : MonoBehaviour
         return true;
     }
 
-    public void OnSkill0()
+    public void TryUsingSkill(InputAction.CallbackContext context)
     {
-        print("Skill0 »ç¿ë");
+        var key = (KeyCode)((context.control as KeyControl).keyCode);
+        print(key.ToString());
+
+        if (!context.performed)
+            return;
+
+        if (!CanAttack)
+            return;
+
+        //UsingSkill(skill);
+        return;
     }
 
     private void UsingSkill(Skill skill)

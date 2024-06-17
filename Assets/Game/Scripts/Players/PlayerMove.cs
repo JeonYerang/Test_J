@@ -96,9 +96,12 @@ public class PlayerMove : MonoBehaviour
         this.jumpPower = jumpPower;
     }
 
-    public void OnMove(InputValue value)
+    public void OnMove(InputAction.CallbackContext context)
     {
-        inputDir = value.Get<Vector2>();
+        Vector2 input = context.ReadValue<Vector2>();
+
+        if (input != null)
+            inputDir = input;
     }
 
     private void Move()
@@ -144,11 +147,27 @@ public class PlayerMove : MonoBehaviour
         controller.Move(Vector3.up * gravityValue * Time.deltaTime);
     }
 
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (!context.performed) //눌렸는지 체크
+            return;
+
+        if (!controller.isGrounded)
+            return;
+
+        if (state != State.Jump)
+            state = State.Jump;
+
+        gravityValue = jumpPower;
+
+        //animator.SetTrigger("OnJump");
+    }
+
     public void OnJump()
     {
         if (!controller.isGrounded)
             return;
-        
+
         if (state != State.Jump)
             state = State.Jump;
 

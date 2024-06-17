@@ -16,7 +16,7 @@ public class SkillManager : MonoBehaviour
 
     Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
 
-    KeyManager keyManager;
+    KeyBinder keyManager;
     [SerializeField]
     SkillButtonsUI skillButtonsUI;
 
@@ -27,53 +27,6 @@ public class SkillManager : MonoBehaviour
 
     public int currentSkillIndex;
     private string chargingKeyFlag;
-    /*private void Update()
-    {
-        if (chargingKeyFlag == null) //차징 중이지 않을 경우
-        {
-            
-            if (Input.anyKeyDown)
-            {
-                string input = Input.inputString;
-
-                if (KeySetting.skillKeyDic.ContainsKey(input))
-                {
-                    currentSkillIndex = KeySetting.skillKeyDic[input];
-
-                    if (currentSkillIndex.CastType == SkillCastType.Charge)
-                    {
-                        if (chargingKeyFlag == null)
-                        {
-                            chargingKeyFlag = input;
-                            //playerAttack.StartCharge(currentSkill);
-                            print("차지 시작");
-                        }
-                    }
-                    else
-                    {
-                        TryUsingSkill(currentSkillIndex);
-                        print("스킬 사용");
-                    }
-                }
-            }
-        }
-        else //차징 중일 경우
-        {
-            if (Input.GetKeyUp(chargingKeyFlag))
-            {
-                chargingKeyFlag = null;
-
-                //playerAttack.EndCharge();
-                print("차지 끝");
-            }
-        }
-
-        if (Input.GetKeyDown(KeySetting.jumpKey))
-        {
-            if (GameManager.Instance.playerMove != null)
-                GameManager.Instance.playerMove.OnJump();
-        }
-    }*/
 
     private void InitSkills(SkillSet[] skillSets)
     {
@@ -99,6 +52,21 @@ public class SkillManager : MonoBehaviour
         }
 
         if(isUsed)
+            AddCoolDic(targetSkill);
+    }
+
+    public void TryChargingSkill(int skillIndex)
+    {
+        bool isUsed = false;
+        Skill targetSkill = skills[skillIndex];
+
+        if (GameManager.Instance.playerAttack != null)
+        {
+            isUsed
+                = GameManager.Instance.playerAttack.TryUsingSkill(targetSkill);
+        }
+
+        if (isUsed)
             AddCoolDic(targetSkill);
     }
 
