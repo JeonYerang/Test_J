@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class OnOffSkill : Skill
 {
-    public string skillAnimation;
-    public SkillObject skillPrefab;
+    private string skillAnimation;
+    private SkillObject skillPrefab;
 
-    public SkillObject skillObject;
-    public bool IsOn { get; set; }
+    private SkillObject skillObject;
+    public bool IsOn { get; private set; }
 
     public override void Init(SkillSet set)
     {
@@ -23,7 +23,7 @@ public class OnOffSkill : Skill
                 owner.transform.position, owner.transform.rotation, owner.transform);
     }
 
-    protected void On()
+    private void On()
     {
         skillObject.gameObject.SetActive(true);
 
@@ -31,7 +31,7 @@ public class OnOffSkill : Skill
             owner.SetAnimator(skillAnimation);
     }
 
-    protected void Off()
+    private void Off()
     {
         if (skillObject == null)
             return;

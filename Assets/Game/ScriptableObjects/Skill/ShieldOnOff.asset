@@ -18,11 +18,11 @@ MonoBehaviour:
   coolTime: 0
   castType: 3
   castData:
-    rid: 3687222463245058050
+    rid: 3687222554288979981
   references:
     version: 2
     RefIds:
-    - rid: 3687222463245058050
+    - rid: 3687222554288979981
       type: {class: OnOffCastData, ns: , asm: Assembly-CSharp}
       data:
         skillAnimation: 

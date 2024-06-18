@@ -8,29 +8,22 @@ using UnityEngine.Rendering;
 [CustomEditor(typeof(SkillSet))]
 public class SkillSetEditor : Editor
 {
-    //SkillData skillData = null;
-
-    private Dictionary<SkillCastType, Type> castDataDic;
-
-    public SerializedProperty castTypeProperty;
-    public SerializedProperty castDataProperty;
-
-    private void OnEnable()
-    {
-        InitCastDataDic();
-        castTypeProperty = serializedObject.FindProperty("castType");
-        castDataProperty = serializedObject.FindProperty("castData");
-    }
-
-    private void InitCastDataDic()
-    {
-        castDataDic = new Dictionary<SkillCastType, Type>()
+    private Dictionary<SkillCastType, Type> castDataDic 
+        = new Dictionary<SkillCastType, Type>()
         {
             { SkillCastType.Basic, typeof(BasicCastData) },
             { SkillCastType.Charge, typeof(ChargeCastData) },
             { SkillCastType.Combo, typeof(ComboCastData) },
             { SkillCastType.OnOff, typeof(OnOffCastData) },
         };
+
+    public SerializedProperty castTypeProperty;
+    public SerializedProperty castDataProperty;
+
+    private void OnEnable()
+    {
+        castTypeProperty = serializedObject.FindProperty("castType");
+        castDataProperty = serializedObject.FindProperty("castData");
     }
 
     public override void OnInspectorGUI()
@@ -57,16 +50,16 @@ public class SkillSetEditor : Editor
 
     public void MapCastSet()
     {
+        castDataProperty.managedReferenceValue = null;
+
         SkillCastType SelectedCastType = (SkillCastType)castTypeProperty.enumValueIndex;
+        Type classType = castDataDic[SelectedCastType];
+        var createdInstance = (ISkillCastData)Activator.CreateInstance(classType);
 
-        if (castDataDic.TryGetValue(SelectedCastType, out Type classType))
-        {
-            var createdInstance = (SkillCastData)Activator.CreateInstance(classType);
-            castDataProperty.managedReferenceValue = createdInstance;
+        castDataProperty.managedReferenceValue = createdInstance;
 
-            serializedObject.ApplyModifiedProperties();
+        serializedObject.ApplyModifiedProperties();
 
-            Debug.Log($"{createdInstance} 积己凳");
-        }
+        Debug.Log($"{createdInstance} 积己凳");
     }
 }

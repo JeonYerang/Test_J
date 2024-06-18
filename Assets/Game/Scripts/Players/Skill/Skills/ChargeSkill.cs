@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class ChargeSkill : Skill
 {
-    public int maxChargeCount;
+    private int maxChargeCount;
     public int CurrentChargeCount { get; private set; }
     public float ChargeInterval { get; private set; }
 
     public bool IsCharging { get; private set; }
 
-    protected string skillAnimation;
-    protected SkillObject[] skillPrefab;
+    private string skillAnimation;
+    private SkillObject[] skillPrefab;
 
-    public string chargingAnimation;
-    protected GameObject chargingPrefab;
+    private string chargingAnimation;
+    private GameObject chargingPrefab;
 
     public override void Init(SkillSet set)
     {
@@ -50,8 +50,8 @@ public class ChargeSkill : Skill
         Shot();
     }
 
-    protected Coroutine chargeCoroutine = null;
-    protected IEnumerator ChargeCoroutine()
+    private Coroutine chargeCoroutine = null;
+    private IEnumerator ChargeCoroutine()
     {
         CurrentChargeCount = 0;
         while (CurrentChargeCount < maxChargeCount)

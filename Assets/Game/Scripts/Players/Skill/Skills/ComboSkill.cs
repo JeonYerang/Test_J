@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ComboSkill : Skill
 {
-    public int maxComboCount;
-    public int currentComboCount { get; set; }
+    private int maxComboCount;
+    public int currentComboCount { get; private set; }
 
-    public string[] skillAnimation;
-    public SkillObject[] skillPrefab;
+    private string[] skillAnimation;
+    private SkillObject[] skillPrefab;
 
     public override void Init(SkillSet set)
     {
@@ -30,10 +30,10 @@ public class ComboSkill : Skill
         if (skillPrefab != null)
             Instantiate(skillPrefab[currentComboCount], owner.transform.position, owner.transform.rotation);
 
-        ComboSet();
+        ComboCheck();
     }
 
-    protected void ComboSet()
+    private void ComboCheck()
     {
         if (comboCoroutine != null) StopCoroutine(comboCoroutine);
 

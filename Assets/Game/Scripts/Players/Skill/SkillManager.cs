@@ -1,6 +1,9 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -11,8 +14,6 @@ public class SkillManager : MonoBehaviour
     PlayerAttack playerAttack;
 
     public static SkillManager Instance { get; private set; }
-
-    Skill[] skills;
 
     Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
 
@@ -28,46 +29,44 @@ public class SkillManager : MonoBehaviour
     public int currentSkillIndex;
     private string chargingKeyFlag;
 
+    private Dictionary<SkillCastType, Type> skillClassDic
+        = new Dictionary<SkillCastType, Type>()
+        {
+            { SkillCastType.Basic, typeof(BasicSkill) },
+            { SkillCastType.Charge, typeof(ChargeSkill) },
+            { SkillCastType.Combo, typeof(ComboSkill) },
+            { SkillCastType.OnOff, typeof(OnOffSkill) },
+        };
+
     private void InitSkills(SkillSet[] skillSets)
     {
-        skills = new Skill[skillSets.Length];
+        skillButtonsUI.InitSkillButtons(skillSets);
+    }
 
-        for(int i = 0; i < skillSets.Length; i++)
+    public Skill[] GetSkillList(SkillSet[] skillSets)
+    {
+        Skill[] skillList = new Skill[skillSets.Length];
+
+        for (int i = 0; i < skillSets.Length; i++)
         {
-            skills[i] = null;
+            Type classType = skillClassDic[skillSets[i].castType];
+            Skill createdSkill = (Skill)Activator.CreateInstance(classType);
+            skillList[i] = createdSkill;
         }
 
-        skillButtonsUI.InitSkillButtons(skillSets);
+        return skillList;
     }
 
     public void TryUsingSkill(int skillIndex)
     {
-        bool isUsed = false;
-        Skill targetSkill = skills[skillIndex];
-
         if (GameManager.Instance.playerAttack != null)
-        {
-            isUsed
-                = GameManager.Instance.playerAttack.TryUsingSkill(targetSkill);
-        }
-
-        if(isUsed)
-            AddCoolDic(targetSkill);
+            GameManager.Instance.playerAttack.TryUsingSkill(skillIndex);
     }
 
     public void TryChargingSkill(int skillIndex)
     {
-        bool isUsed = false;
-        Skill targetSkill = skills[skillIndex];
-
-        if (GameManager.Instance.playerAttack != null)
-        {
-            isUsed
-                = GameManager.Instance.playerAttack.TryUsingSkill(targetSkill);
-        }
-
-        if (isUsed)
-            AddCoolDic(targetSkill);
+        //if (GameManager.Instance.playerAttack != null)
+        //    GameManager.Instance.playerAttack.TryChargingSkill(skillIndex);
     }
 
     #region CoolDown
@@ -83,7 +82,7 @@ public class SkillManager : MonoBehaviour
     }
 
     protected Coroutine conditionCheckCoroutine = null;
-    public IEnumerator CoolCheck()
+    private IEnumerator CoolCheck()
     {
         while(true)
         {

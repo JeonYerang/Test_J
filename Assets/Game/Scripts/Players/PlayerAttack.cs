@@ -14,9 +14,8 @@ public class PlayerAttack : MonoBehaviour
     {
         Idle,
         Attack,
-        Charge,
         BeAttacked,
-        Die
+        Died
     }
     public AttackState state;
 
@@ -36,7 +35,7 @@ public class PlayerAttack : MonoBehaviour
     public bool CanAttack { get { return state == AttackState.Idle; } }
 
     PlayerClass playerClass;
-    SkillSet[] skills;
+    Skill[] skills;
 
     public event EventHandler<Player> onChangedHp;
 
@@ -64,27 +63,28 @@ public class PlayerAttack : MonoBehaviour
     #region Attack
     public int AttackCount { get; protected set; }
     
-    public bool TryUsingSkill(Skill skill)
+    public bool TryUsingSkill(int skillIndex)
     {
         if (!CanAttack)
             return false;
 
-        UsingSkill(skill);
+        UsingSkill(skills[skillIndex]);
         return true;
     }
 
     public void TryUsingSkill(InputAction.CallbackContext context)
     {
-        var key = (KeyCode)((context.control as KeyControl).keyCode);
-        print(key.ToString());
-
         if (!context.performed)
             return;
+
+        var key = (KeyCode)((context.control as KeyControl).keyCode);
+        print(key.ToString());
+        //var keyInteraction = context.interaction
 
         if (!CanAttack)
             return;
 
-        //UsingSkill(skill);
+        //UsingSkill(skills[skillIndex]);
         return;
     }
 
@@ -96,6 +96,7 @@ public class PlayerAttack : MonoBehaviour
         skill.Shot();
 
         AttackCount++;
+        SkillManager.Instance.AddCoolDic(skill);
     }
 
     protected void ReturnIdleState()
@@ -107,7 +108,7 @@ public class PlayerAttack : MonoBehaviour
     #region About Hp
     public void GetDamage(int damage)
     {
-        if (state == AttackState.Die)
+        if (state == AttackState.Died)
             return;
 
         //state = AttackState.BeAttacked;
@@ -125,7 +126,7 @@ public class PlayerAttack : MonoBehaviour
 
     public void TakeHeal(int amount)
     {
-        if (state == AttackState.Die)
+        if (state == AttackState.Died)
             return;
 
         currentHp += amount;
@@ -139,7 +140,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Die()
     {
-        state = AttackState.Die;
+        state = AttackState.Died;
         SpawnManager.Instance.DespawnCharacter();
     }
     #endregion

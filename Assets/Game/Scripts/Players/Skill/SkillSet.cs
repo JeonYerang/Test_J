@@ -19,24 +19,20 @@ public class SkillSet : ScriptableObject
     public SkillCastType castType;
 
     [SerializeReference]
-    public SkillCastData castData;
+    public ISkillCastData castData;
 }
 
-[Serializable]
-public class SkillCastData
-{
-
-}
+public interface ISkillCastData { }
 
 [Serializable]
-public class BasicCastData : SkillCastData
+public class BasicCastData : ISkillCastData
 {
     public string skillAnimation;
     public SkillObject skillPrefab;
 }
 
 [Serializable]
-public class ComboCastData : SkillCastData
+public class ComboCastData : ISkillCastData
 {
     public int maxComboCount;
 
@@ -45,7 +41,7 @@ public class ComboCastData : SkillCastData
 }
 
 [Serializable]
-public class ChargeCastData : SkillCastData
+public class ChargeCastData : ISkillCastData
 {
     public int maxChargeCount;
     public float chargeInterval; //몇 초 마다 충전될 건지
@@ -58,7 +54,7 @@ public class ChargeCastData : SkillCastData
 }
 
 [Serializable]
-public class OnOffCastData : SkillCastData
+public class OnOffCastData : ISkillCastData
 {
     public string skillAnimation;
     public SkillObject skillPrefab;

@@ -18,6 +18,7 @@ public class LoadingSceneManager : MonoBehaviour
     {
         nextScene = sceneName;
         SceneManager.LoadScene("LoadingScene");
+        System.GC.Collect();
     }
 
     IEnumerator LoadSceneCoroutine()
@@ -46,6 +47,5 @@ public class LoadingSceneManager : MonoBehaviour
                 }
             }
         }
-
     }
 }

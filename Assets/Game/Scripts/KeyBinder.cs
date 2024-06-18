@@ -3,23 +3,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public static class KeySetting //inputAction의 바인딩 내용과 같음을 어떻게 보장?
+public static class KeySetting
 {
     //<key code, skill index>
     public static Dictionary<Key, int> skillKeyDic;
-    /*static KeySetting()
-    {
-        skillKeyDic = new Dictionary<Key, int>()
-        {
-            { Key.Z, 0 },
-            { Key.X, 1 },
-            { Key.C, 2 }
-        };
-
-        foreach (var key in KeySetting.skillKeyDic.Keys)
-            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}");
-    }*/
-
 }
 
 public class KeyBinder : MonoBehaviour
@@ -31,6 +18,7 @@ public class KeyBinder : MonoBehaviour
     private void Awake()
     {
         skillAction = inputActionAsset.FindActionMap("Player").FindAction("Skill");
+        InitSkillKey();
     }
 
     private void OnEnable()
@@ -41,6 +29,19 @@ public class KeyBinder : MonoBehaviour
     private void OnDisable()
     {
         newSkillKeyDic.Clear();
+    }
+
+    public void InitSkillKey()
+    {
+        KeySetting.skillKeyDic = new Dictionary<Key, int>()
+        {
+            { Key.Z, 0 },
+            { Key.X, 1 },
+            { Key.C, 2 }
+        };
+
+        foreach (var key in KeySetting.skillKeyDic.Keys)
+            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}");
     }
 
     public void SetSkillKey(Key newKey, int skillIndex) //새로 스킬을 등록하는 경우

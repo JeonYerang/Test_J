@@ -18,11 +18,11 @@ MonoBehaviour:
   coolTime: 0
   castType: 2
   castData:
-    rid: 3687222463245058049
+    rid: 3687222554288979979
   references:
     version: 2
     RefIds:
-    - rid: 3687222463245058049
+    - rid: 3687222554288979979
       type: {class: ComboCastData, ns: , asm: Assembly-CSharp}
       data:
         maxComboCount: 3

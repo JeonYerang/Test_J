@@ -983,15 +983,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa748f001fd5d3f479bdfc84be81785c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
+  inputActionAsset: {fileID: -944628639613478452, guid: 90d5b3f2464d82443b4a76b40d6b6acc, type: 3}
 --- !u!1 &239941464
 GameObject:
   m_ObjectHideFlags: 0

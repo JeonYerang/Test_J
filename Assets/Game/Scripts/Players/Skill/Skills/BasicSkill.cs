@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class BasicSkill : Skill
 {
-    protected string skillAnimation;
-    protected SkillObject skillPrefab;
+    private string skillAnimation;
+    private SkillObject skillPrefab;
 
     public override void Init(SkillSet set)
     {

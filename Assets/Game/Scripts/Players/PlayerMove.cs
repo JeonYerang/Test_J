@@ -5,15 +5,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum State
-{
-    Idle,
-    Move,
-    Jump,
-    Fall,
-    Climb //사다리 타기?
-}
-
 public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed = 5f;
@@ -29,7 +20,15 @@ public class PlayerMove : MonoBehaviour
     Vector2 inputDir;
     float gravityValue;
 
-    public State state;
+    public enum MoveState
+    {
+        Idle,
+        Move,
+        Jump,
+        Fall,
+        Climb //사다리 타기?
+    }
+    public MoveState moveState;
 
     private void Awake()
     {
@@ -38,7 +37,7 @@ public class PlayerMove : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         pv = GetComponent<PhotonView>();
 
-        state = State.Idle;
+        moveState = MoveState.Idle;
     }
 
     private void Update()
@@ -51,34 +50,34 @@ public class PlayerMove : MonoBehaviour
         Move();
         Gravity();
 
-        if (controller.velocity.y < 0 && state != State.Climb)
+        if (controller.velocity.y < 0 && moveState != MoveState.Climb)
         {
-            state = State.Fall;
+            moveState = MoveState.Fall;
         }
 
-        switch (state)
+        switch (moveState)
         {
-            case State.Idle:
+            case MoveState.Idle:
                 if (inputDir != Vector2.zero)
-                    state = State.Move;
+                    moveState = MoveState.Move;
                 break;
 
-            case State.Move:
+            case MoveState.Move:
                 if (inputDir == Vector2.zero)
-                    state = State.Idle;
+                    moveState = MoveState.Idle;
                 break;
 
-            case State.Jump:
+            case MoveState.Jump:
                 if (gravityValue < 0.1)
-                    state = State.Fall;
+                    moveState = MoveState.Fall;
                 break;
 
-            case State.Fall:
+            case MoveState.Fall:
                 if (controller.isGrounded)
-                    state = State.Idle;
+                    moveState = MoveState.Idle;
                 break;
 
-            case State.Climb:
+            case MoveState.Climb:
 
                 break;
 
@@ -110,12 +109,12 @@ public class PlayerMove : MonoBehaviour
         float speed = moveSpeed;
 
         //점프or낙하 중에는 느리게 이동
-        if (state == State.Jump || state == State.Fall || state == State.Climb)
+        if (moveState == MoveState.Jump || moveState == MoveState.Fall || moveState == MoveState.Climb)
         {
             speed *= 0.5f;
         }
 
-        if (state == State.Climb)
+        if (moveState == MoveState.Climb)
         {
             moveDir = new Vector3(inputDir.x, inputDir.y, 0);
             controller.Move(transform.TransformDirection(moveDir) * speed * Time.deltaTime);
@@ -126,7 +125,7 @@ public class PlayerMove : MonoBehaviour
             controller.Move(moveDir * speed * Time.deltaTime);
         }
 
-        if (moveDir != Vector3.zero && state != State.Climb) //움직이지 않을 때는 돌리지 않음
+        if (moveDir != Vector3.zero && moveState != MoveState.Climb) //움직이지 않을 때는 돌리지 않음
             transform.forward = moveDir; //움직이는 방향으로 캐릭터 돌리기?
 
         //animator.SetFloat("RunSpeed", moveDir.magnitude);
@@ -134,7 +133,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Gravity() //박스캐스트로 땅 끄트머리 걸려있을때 isGrounded 체크 해주기
     {
-        if (state == State.Climb)
+        if (moveState == MoveState.Climb)
             gravityValue = -0.5f;
         else
             gravityValue += Physics.gravity.y * Time.deltaTime;
@@ -155,8 +154,8 @@ public class PlayerMove : MonoBehaviour
         if (!controller.isGrounded)
             return;
 
-        if (state != State.Jump)
-            state = State.Jump;
+        if (moveState != MoveState.Jump)
+            moveState = MoveState.Jump;
 
         gravityValue = jumpPower;
 
@@ -168,8 +167,8 @@ public class PlayerMove : MonoBehaviour
         if (!controller.isGrounded)
             return;
 
-        if (state != State.Jump)
-            state = State.Jump;
+        if (moveState != MoveState.Jump)
+            moveState = MoveState.Jump;
 
         gravityValue = jumpPower;
 

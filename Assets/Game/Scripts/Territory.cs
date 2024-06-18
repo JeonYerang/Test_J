@@ -95,10 +95,10 @@ public class Territory : MonoBehaviour
 
         string newTeam = null;
 
-        if ((redCount == 0) ^ (blueCount == 0)) //한 팀만 0일 경우
+        if ((redCount == 0) ^ (blueCount == 0)) //점령: 한 쪽 팀원만 있는 경우
         {
             newTeam
-                = redPlayers.Count > bluePlayers.Count ? "Red" : "Blue";
+                = redCount == 0 ? "Blue" : "Red";
 
             if (CurrentTeam != newTeam) //원래 점령 중이던 팀이 새로 점령하는 팀과 같지 않을 경우
             {
@@ -108,12 +108,12 @@ public class Territory : MonoBehaviour
                 countCoroutine = StartCoroutine(OccupiedCountDown(newTeam));
             }
         }
-        else
+        else //중립
         {
             if (countCoroutine != null)
                 StopCoroutine(countCoroutine);
 
-            Occupied(); //중립
+            Occupied();
 
             if (redCount == 0) //아무도 없으면
             {

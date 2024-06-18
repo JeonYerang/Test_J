@@ -18,9 +18,12 @@ MonoBehaviour:
   coolTime: 0
   castType: 0
   castData:
-    rid: -2
+    rid: 3687222554288979983
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 3687222554288979983
+      type: {class: BasicCastData, ns: , asm: Assembly-CSharp}
+      data:
+        skillAnimation: 
+        skillPrefab: {fileID: 0}
