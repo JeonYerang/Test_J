@@ -7,6 +7,7 @@ public static class KeySetting
 {
     //<key code, skill index>
     public static Dictionary<Key, int> skillKeyDic;
+    public static Dictionary<string, int> skillKeyPathDic = new Dictionary<string, int>();
 }
 
 public class KeyBinder : MonoBehaviour
@@ -33,7 +34,16 @@ public class KeyBinder : MonoBehaviour
 
     public void InitSkillKey()
     {
-        KeySetting.skillKeyDic = new Dictionary<Key, int>()
+        var inputBindings = skillAction.bindings;
+        for (int i = 0; i < inputBindings.Count; i++)
+        {
+            string keyPath = inputBindings[i].path;
+            keyPath = keyPath.Replace("<", "/");
+            keyPath = keyPath.Replace(">", "");
+            KeySetting.skillKeyPathDic.Add(keyPath, i);
+        }
+
+        /*KeySetting.skillKeyDic = new Dictionary<Key, int>()
         {
             { Key.Z, 0 },
             { Key.X, 1 },
@@ -41,7 +51,9 @@ public class KeyBinder : MonoBehaviour
         };
 
         foreach (var key in KeySetting.skillKeyDic.Keys)
-            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}");
+            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}");*/
+
+        //action.AddBinding("<Gamepad>/leftStick").WithInteractions("tap(duration=0.8)");
     }
 
     public void SetSkillKey(Key newKey, int skillIndex) //새로 스킬을 등록하는 경우
@@ -95,5 +107,25 @@ public class KeyBinder : MonoBehaviour
 
         KeySetting.skillKeyDic.Clear();
         KeySetting.skillKeyDic = newSkillKeyDic;
+    }
+
+    InputActionRebindingExtensions.RebindingOperation oper;
+    public void StartKeyBinding()
+    {
+        skillAction.Disable();
+
+        oper = skillAction.PerformInteractiveRebinding().Start();
+    }
+
+    public void CancelKeyBinding()
+    {
+        oper.Cancel();
+    }
+
+    public void ConfirmKeyBinding()
+    {
+        oper.Dispose();
+
+        skillAction.Enable();
     }
 }

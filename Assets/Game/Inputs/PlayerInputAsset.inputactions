@@ -11,7 +11,7 @@
                     "id": "16cc0c6b-569f-462b-93c6-8b01ff3ca1d8",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -25,11 +25,11 @@
                 },
                 {
                     "name": "Skill",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "558d781b-ddc6-4d34-ae95-dd8dcbb741e4",
-                    "expectedControlType": "Key",
+                    "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold,Press",
+                    "interactions": "",
                     "initialStateCheck": true
                 }
             ],
@@ -99,6 +99,39 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "40cdae3b-c91f-474d-9c14-5749f31f3c70",
+                    "path": "<Keyboard>/z",
+                    "interactions": "Hold(duration=0.2,pressPoint=0.5)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dc308202-3025-4369-9f0b-bb18ab0a4f7b",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b6c3b23-e4ee-498e-8ffd-bb7680c8b711",
+                    "path": "<Keyboard>/c",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

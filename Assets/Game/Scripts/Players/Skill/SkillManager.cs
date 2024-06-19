@@ -1,14 +1,8 @@
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
-//새로운 스킬 제작은 SkillSet으로
 public class SkillManager : MonoBehaviour
 {
     PlayerAttack playerAttack;
@@ -17,7 +11,6 @@ public class SkillManager : MonoBehaviour
 
     Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
 
-    KeyBinder keyManager;
     [SerializeField]
     SkillButtonsUI skillButtonsUI;
 
@@ -27,7 +20,6 @@ public class SkillManager : MonoBehaviour
     }
 
     public int currentSkillIndex;
-    private string chargingKeyFlag;
 
     private Dictionary<SkillCastType, Type> skillClassDic
         = new Dictionary<SkillCastType, Type>()

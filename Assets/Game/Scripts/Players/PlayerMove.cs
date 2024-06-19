@@ -99,6 +99,8 @@ public class PlayerMove : MonoBehaviour
     {
         Vector2 input = context.ReadValue<Vector2>();
 
+        print($"OnMove: {input}");
+
         if (input != null)
             inputDir = input;
     }
@@ -148,8 +150,12 @@ public class PlayerMove : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.performed) //눌렸는지 체크
+        //started(누를 때), performed(interaction에 따라 다름?), canceled(뗄 때) 세 번 발동
+        //if문으로 performed일 때만 수행하도록
+        if (!context.performed) 
             return;
+
+        print("OnJump");
 
         if (!controller.isGrounded)
             return;
