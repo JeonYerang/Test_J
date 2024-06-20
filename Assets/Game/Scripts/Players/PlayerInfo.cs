@@ -11,20 +11,23 @@ public class PlayerInfo : MonoBehaviour
 {
     public Player player;
     PhotonView pv;
+    public bool IsMine { get { return pv.IsMine; } }
 
     Camera playerCam;
     GameObject renderObj;
 
     public string PlayerName {  get; private set; }
     public string Team {  get; private set; }
-    public PlayerClass PlayerClass { get; private set; }
+    public bool IsTeam
+    {
+        get { return PhotonNetwork.LocalPlayer.GetPhotonTeam().Name == Team; }
+    }
+    public PlayerClass playerClass { get; private set; }
 
     [SerializeField]
     PlayerInfoUI playerInfoUI;
 
-    public bool IsMine { get { return pv.IsMine; }}
-    public bool IsTeam { 
-        get { return PhotonNetwork.LocalPlayer.GetPhotonTeam().Name == Team; } }
+    PlayerAttack playerAttack;
 
     private void Awake()
     {
@@ -45,20 +48,16 @@ public class PlayerInfo : MonoBehaviour
     {
         PlayerName = player.NickName;
         Team = player.GetPhotonTeam().Name;
-        PlayerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
+        playerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
 
         playerInfoUI.Init(this);
 
-        if (pv.IsMine)
+        if (pv.IsMine) //카메라 설정
         {
             renderObj.layer = LayerMask.NameToLayer("Me");
             playerCam.gameObject.SetActive(true);
         }
-    }
 
-    public void SetClass()
-    {
-        PlayerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
-        playerInfoUI.SetClassIcon();
+        playerAttack.SetClass(playerClass);
     }
 }

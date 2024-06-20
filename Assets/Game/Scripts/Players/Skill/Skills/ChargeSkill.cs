@@ -6,48 +6,55 @@ public class ChargeSkill : Skill
 {
     private int maxChargeCount;
     public int CurrentChargeCount { get; private set; }
-    public float ChargeInterval { get; private set; }
+    private float chargeInterval;
 
     public bool IsCharging { get; private set; }
 
     private string skillAnimation;
-    private SkillObject[] skillPrefab;
+    private SkillObject[] skillPrefabs;
 
     private string chargingAnimation;
     private GameObject chargingPrefab;
 
-    public override void Init(SkillSet set)
+    public override void Init(SkillData skillData)
     {
-        base.Init(set);
+        base.Init(skillData);
 
-        var castData = (ChargeCastData)set.castData;
+        var castData = (ChargeCastData)skillData.castData;
+
+        maxChargeCount = castData.maxChargeCount;
+        chargeInterval = castData.chargeInterval;
+
         skillAnimation = castData.skillAnimation;
-        skillPrefab = castData.skillPrefab;
+        skillPrefabs = castData.skillPrefabs;
+        chargingAnimation = castData.chargingAnimation;
         chargingPrefab = castData.ChargingPrefab;
+
+        IsCharging = false;
     }
 
+    GameObject chargingObject = null;
     public void StartCharge()
     {
         IsCharging = true;
-
         chargeCoroutine = StartCoroutine(ChargeCoroutine());
 
         if (chargingAnimation != null)
             owner.SetAnimator(chargingAnimation);
 
         if (chargingPrefab != null)
-            Instantiate(chargingPrefab, owner.transform.position, owner.transform.rotation);
+            chargingObject 
+                = Instantiate(chargingPrefab, owner.transform.position, owner.transform.rotation);
 
     }
 
     public void EndCharge()
     {
         IsCharging = false;
-
         if (chargeCoroutine != null)
             StopCoroutine(ChargeCoroutine());
 
-        Shot();
+        Destroy(chargingObject);
     }
 
     private Coroutine chargeCoroutine = null;
@@ -56,19 +63,19 @@ public class ChargeSkill : Skill
         CurrentChargeCount = 0;
         while (CurrentChargeCount < maxChargeCount)
         {
-            yield return new WaitForSeconds(ChargeInterval);
+            yield return new WaitForSeconds(chargeInterval);
             CurrentChargeCount++;
         }
     }
 
     public override void Shot()
     {
-        int shotDamage = Damage * CurrentChargeCount;
+        int shotDamage = damage * CurrentChargeCount;
 
         if (skillAnimation != null)
             owner.SetAnimator(skillAnimation);
 
-        if (skillPrefab != null)
-            Instantiate(skillPrefab[CurrentChargeCount], owner.transform.position, owner.transform.rotation);
+        if (skillPrefabs != null)
+            Instantiate(skillPrefabs[CurrentChargeCount], owner.transform.position, owner.transform.rotation);
     }
 }

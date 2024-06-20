@@ -1,13 +1,21 @@
+using Photon.Pun;
 using Photon.Realtime;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 
+/*public enum AttackAnimation
+{
+
+}*/
+
 //본인의 포톤뷰가 아닐 경우 return
-//input이랑 Attack 분리하기?
 public class PlayerAttack : MonoBehaviour
 {
+    PhotonView pv;
+    public bool IsMine { get { return pv.IsMine; } }
+
     public enum AttackState
     {
         Idle,
@@ -41,6 +49,11 @@ public class PlayerAttack : MonoBehaviour
     public Animator animator;
 
     public ChargeSkill testSkill;
+
+    private void Awake()
+    {
+        pv = GetComponent<PhotonView>();
+    }
 
     private void Start()
     {
@@ -79,11 +92,6 @@ public class PlayerAttack : MonoBehaviour
             };*/
     }
 
-    public void TryUsingSkill()
-    {
-        print("Shot!");
-    }
-
     protected void Init()
     {
         currentHp = maxHp;
@@ -95,6 +103,8 @@ public class PlayerAttack : MonoBehaviour
     public void SetClass(PlayerClass playerClass)
     {
         this.playerClass = playerClass;
+        SkillData[] skillSets = ClassManager.Instance.GetSkillSets(playerClass);
+        skills = SkillManager.Instance.GetSkillList(skillSets);
     }
 
     public void SetAnimator(string name)
@@ -106,21 +116,19 @@ public class PlayerAttack : MonoBehaviour
     public int AttackCount { get; protected set; }
     public void OnPressSkillKey(InputAction.CallbackContext context)
     {
+        KeySetting.skillKeyPathDic.TryGetValue(context.control.path, out int skillIndex);
+
         if (context.performed)
         {
             if (CanAttack)
             {
                 if (context.interaction is HoldInteraction)
                 {
-                    state = AttackState.Charge;
-                    print($"Start Charging");
+                    StartCharge(skillIndex);
                 }
                 else
                 {
-                    if (KeySetting.skillKeyPathDic.TryGetValue(context.control.path, out int skillIndex))
-                    {
-                        UsingSkill(skillIndex);
-                    }
+                    UsingSkill(skillIndex);
                 }
             }
         }
@@ -128,10 +136,8 @@ public class PlayerAttack : MonoBehaviour
         {
             if (state == AttackState.Charge)
             {
-                if (KeySetting.skillKeyPathDic.TryGetValue(context.control.path, out int skillIndex))
-                {
-                    UsingSkill(skillIndex);
-                }
+                if(skillIndex == chargeIndex)
+                    EndCharge();
             }
         }
     }
@@ -145,6 +151,7 @@ public class PlayerAttack : MonoBehaviour
         return true;
     }
 
+    [PunRPC]
     private void UsingSkill(int skillIndex)
     {
         state = AttackState.Attack;
@@ -162,6 +169,42 @@ public class PlayerAttack : MonoBehaviour
 
         ReturnIdleState();
     }
+
+    #region Charging
+    int chargeIndex = -1;
+    ChargeSkill chargeSkill = null;
+    [PunRPC]
+    public void StartCharge(int skillIndex)
+    {
+        print($"Start Charging: {skillIndex}");
+
+        chargeSkill = skills[skillIndex] as ChargeSkill;
+
+        if( chargeSkill != null)
+        {
+            state = AttackState.Charge;
+
+            chargeIndex = skillIndex;
+            chargeSkill.StartCharge();
+        }
+    }
+
+    [PunRPC]
+    public void EndCharge()
+    {
+        print($"End Charging: {chargeIndex}");
+
+        state = AttackState.Attack;
+
+        chargeIndex = -1;
+
+        if(chargeSkill != null)
+        {
+            chargeSkill?.EndCharge();
+            UsingSkill(chargeIndex);
+        }
+    }
+    #endregion
 
     private void ReturnIdleState() //애니메이터 key event
     {

@@ -6,6 +6,7 @@ using UnityEngine;
 public class SkillManager : MonoBehaviour
 {
     PlayerAttack playerAttack;
+    Skill[] skills;
 
     public static SkillManager Instance { get; private set; }
 
@@ -30,12 +31,12 @@ public class SkillManager : MonoBehaviour
             { SkillCastType.OnOff, typeof(OnOffSkill) },
         };
 
-    private void InitSkills(SkillSet[] skillSets)
+    private void InitSkills(SkillData[] skillSets)
     {
         skillButtonsUI.InitSkillButtons(skillSets);
     }
 
-    public Skill[] GetSkillList(SkillSet[] skillSets)
+    public Skill[] GetSkillList(SkillData[] skillSets)
     {
         Skill[] skillList = new Skill[skillSets.Length];
 
@@ -49,24 +50,27 @@ public class SkillManager : MonoBehaviour
         return skillList;
     }
 
-    public void TryUsingSkill(int skillIndex)
+    public void UsingSkill()
     {
-        if (GameManager.Instance.playerAttack != null)
-            GameManager.Instance.playerAttack.TryUsingSkill(skillIndex);
+
     }
 
-    public void TryChargingSkill(int skillIndex)
+    public void Charging()
     {
-        //if (GameManager.Instance.playerAttack != null)
-        //    GameManager.Instance.playerAttack.TryChargingSkill(skillIndex);
+
+    }
+
+    public void InstantiateSkillPrefab()
+    {
+
     }
 
     #region CoolDown
     public void AddCoolDic(Skill skill)
     {
-        if (skill.CoolTime >= 0)
+        if (skill.coolTime >= 0)
         {
-            skillCoolDic.Add(skill.name, skill.CoolTime);
+            skillCoolDic.Add(skill._name, skill.coolTime);
 
             if (conditionCheckCoroutine == null)
                 conditionCheckCoroutine = StartCoroutine(CoolCheck());

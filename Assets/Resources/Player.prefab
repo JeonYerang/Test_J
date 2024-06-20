@@ -205,10 +205,10 @@ GameObject:
   - component: {fileID: 156247933247501550}
   - component: {fileID: 156247933247501545}
   - component: {fileID: 6429734904497068733}
-  - component: {fileID: 4893663158471552256}
-  - component: {fileID: 7523172492337294557}
   - component: {fileID: 5090811067806230526}
   - component: {fileID: 3504501509141408650}
+  - component: {fileID: 4893663158471552256}
+  - component: {fileID: 7523172492337294557}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -280,7 +280,7 @@ MonoBehaviour:
   moveSpeed: 5
   jumpPower: 5
   joystick: {fileID: 0}
-  state: 0
+  moveState: 0
 --- !u!114 &6429734904497068733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,45 +298,7 @@ MonoBehaviour:
   attackPoint: 0
   attackSpeed: 0
   animator: {fileID: 0}
---- !u!114 &4893663158471552256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156247933247501541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 7523172492337294557}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &7523172492337294557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156247933247501541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  testSkill: {fileID: 0}
 --- !u!111 &5090811067806230526
 Animation:
   m_ObjectHideFlags: 0
@@ -425,19 +387,50 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 558d781b-ddc6-4d34-ae95-dd8dcbb741e4
     m_ActionName: Player/Skill0[/Keyboard/z]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: d1850338-bc92-4041-b913-eaf9b5d2d7b6
-    m_ActionName: Player/Skill1[/Keyboard/x]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cbc38a2b-43cc-42a1-884a-16633fce3ce9
-    m_ActionName: Player/Skill2[/Keyboard/c]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &4893663158471552256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156247933247501541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7523172492337294557}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7523172492337294557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156247933247501541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &760636755180518707
 GameObject:
   m_ObjectHideFlags: 0

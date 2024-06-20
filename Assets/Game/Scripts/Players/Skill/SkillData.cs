@@ -6,8 +6,8 @@ using System;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
-[CreateAssetMenu(fileName = "Skill Set", menuName = "Scriptable Object/Skill Set")]
-public class SkillSet : ScriptableObject
+[CreateAssetMenu(fileName = "Skill Data", menuName = "Scriptable Object/Skill Data")]
+public class SkillData : ScriptableObject
 {
     public string _name;
     public Sprite icon;
@@ -36,8 +36,8 @@ public class ComboCastData : ISkillCastData
 {
     public int maxComboCount;
 
-    public string[] skillAnimation;
-    public SkillObject[] skillPrefab;
+    public string[] skillAnimations;
+    public SkillObject[] skillPrefabs;
 }
 
 [Serializable]
@@ -47,7 +47,7 @@ public class ChargeCastData : ISkillCastData
     public float chargeInterval; //몇 초 마다 충전될 건지
 
     public string skillAnimation;
-    public SkillObject[] skillPrefab;
+    public SkillObject[] skillPrefabs;
 
     public string chargingAnimation;
     public GameObject ChargingPrefab;

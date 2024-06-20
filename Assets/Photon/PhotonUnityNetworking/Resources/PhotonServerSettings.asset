@@ -46,6 +46,9 @@ MonoBehaviour:
   - GetScore
   - BroadCastRemainCount
   - BroadCastCompleteCount
+  - EndCharge
+  - StartCharge
+  - UsingSkill
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

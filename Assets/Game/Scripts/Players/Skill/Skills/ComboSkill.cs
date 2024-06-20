@@ -1,34 +1,37 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ComboSkill : Skill
 {
     private int maxComboCount;
-    public int currentComboCount { get; private set; }
+    public int CurrentComboCount { get; private set; }
 
-    private string[] skillAnimation;
-    private SkillObject[] skillPrefab;
+    private string[] skillAnimations;
+    private SkillObject[] skillPrefabs;
 
-    public override void Init(SkillSet set)
+    public override void Init(SkillData skillData)
     {
-        base.Init(set);
+        base.Init(skillData);
 
-        var castData = (ComboCastData)set.castData;
-        skillAnimation = castData.skillAnimation;
-        skillPrefab = castData.skillPrefab;
+        var castData = (ComboCastData)skillData.castData;
+
+        maxComboCount = castData.maxComboCount;
+
+        skillAnimations = castData.skillAnimations;
+        skillPrefabs = castData.skillPrefabs;
     }
 
     public override void Shot() //콤보공격
     {
-        int shotDamage = Damage * currentComboCount;
+        int shotDamage = damage * CurrentComboCount;
 
         //스킬
-        if (skillAnimation != null)
-            owner.SetAnimator(skillAnimation[currentComboCount]);
+        if (skillAnimations.Length > CurrentComboCount)
+            owner.SetAnimator(skillAnimations[CurrentComboCount]);
 
-        if (skillPrefab != null)
-            Instantiate(skillPrefab[currentComboCount], owner.transform.position, owner.transform.rotation);
+        if (skillPrefabs.Length > CurrentComboCount)
+            Instantiate(skillPrefabs[CurrentComboCount], owner.transform.position, owner.transform.rotation);
 
         ComboCheck();
     }
@@ -37,19 +40,19 @@ public class ComboSkill : Skill
     {
         if (comboCoroutine != null) StopCoroutine(comboCoroutine);
 
-        if (currentComboCount < maxComboCount)
+        if (CurrentComboCount < maxComboCount)
         {
-            currentComboCount++;
+            CurrentComboCount++;
             comboCoroutine = StartCoroutine(ComboCoroutine());
         }
         else
-            currentComboCount = 0;
+            CurrentComboCount = 0;
     }
 
     Coroutine comboCoroutine = null;
     private IEnumerator ComboCoroutine()
     {
         yield return new WaitForSeconds(3);
-        currentComboCount = 0;
+        CurrentComboCount = 0;
     }
 }

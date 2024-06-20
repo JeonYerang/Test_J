@@ -8,18 +8,19 @@ public class BasicSkill : Skill
     private string skillAnimation;
     private SkillObject skillPrefab;
 
-    public override void Init(SkillSet set)
+    public override void Init(SkillData skillData)
     {
-        base.Init(set);
+        base.Init(skillData);
 
-        var castData = (BasicCastData)set.castData;
+        var castData = (BasicCastData)skillData.castData;
+
         skillAnimation = castData.skillAnimation;
         skillPrefab = castData.skillPrefab;
     }
 
     public override void Shot()
     {
-        int shotDamage = Damage;
+        int shotDamage = damage;
 
         if (skillAnimation != null)
             owner.SetAnimator(skillAnimation);

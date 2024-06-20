@@ -29,7 +29,7 @@ public class KeyBinder : MonoBehaviour
 
     private void OnDisable()
     {
-        newSkillKeyDic.Clear();
+        //newSkillKeyDic.Clear();
     }
 
     public void InitSkillKey()

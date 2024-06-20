@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-[CustomEditor(typeof(SkillSet))]
+[CustomEditor(typeof(SkillData))]
 public class SkillSetEditor : Editor
 {
     private Dictionary<SkillCastType, Type> castDataDic 

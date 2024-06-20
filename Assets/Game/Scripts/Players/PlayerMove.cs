@@ -89,20 +89,18 @@ public class PlayerMove : MonoBehaviour
         //animator.SetInteger("State", (int)state);
     }
 
-    public void Init(float moveSpeed, float jumpPower)
-    {
-        this.moveSpeed = moveSpeed;
-        this.jumpPower = jumpPower;
-    }
-
     public void OnMove(InputAction.CallbackContext context)
     {
+        print(context.phase);
         Vector2 input = context.ReadValue<Vector2>();
-
-        print($"OnMove: {input}");
 
         if (input != null)
             inputDir = input;
+    }
+
+    public void EndMove(InputAction.CallbackContext context)
+    {
+
     }
 
     private void Move()
@@ -154,8 +152,6 @@ public class PlayerMove : MonoBehaviour
         //if문으로 performed일 때만 수행하도록
         if (!context.performed) 
             return;
-
-        print("OnJump");
 
         if (!controller.isGrounded)
             return;

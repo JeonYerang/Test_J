@@ -25,7 +25,7 @@ public class SkillButtonsUI : MonoBehaviour
         }
     }
 
-    public void InitSkillButtons(SkillSet[] skillSets)
+    public void InitSkillButtons(SkillData[] skillSets)
     {
         if (skillButtons.Length >= skillSets.Length)
         {

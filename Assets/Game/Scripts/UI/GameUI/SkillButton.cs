@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +11,9 @@ public class SkillButton : MonoBehaviour
     Image icon;
     Image coolIndicator;
     Image chargeIndicator;
+    GameObject emphasizeIndicator;
+
+    bool isChargingButton;
 
     private void Awake()
     {
@@ -27,10 +29,16 @@ public class SkillButton : MonoBehaviour
         this.index = index;
     }
 
-    public void SetSkill(SkillSet skillData)
+    public void SetSkill(SkillData skillData)
     {
         icon.sprite = skillData.icon;
-        skillButton.onClick.AddListener(OnClickSkillButton);
+
+        if (skillData.castType == SkillCastType.Charge)
+            isChargingButton = true;
+        else
+            isChargingButton = false;
+
+        skillButton.onClick.AddListener(OnClick);
     }
 
     public void ResetSkill()
@@ -39,15 +47,59 @@ public class SkillButton : MonoBehaviour
         skillButton.onClick.RemoveAllListeners();
     }
 
-    private void OnClickSkillButton()
+    #region Click Event
+    private void OnClick()
     {
-        SkillManager.Instance.TryUsingSkill(index);
+        if (isChargingButton)
+        {
+            longClickCheckCoroutine = StartCoroutine(LongClickCheck());
+        }
     }
 
-    public void Emphasize() //쿨타임 종료, 차징 카운트 올랐을시 강조
+    float holdTime = 0.2f;
+    private void OnLongClick()
     {
-
+        
     }
+
+    private void OnCancel()
+    {
+        if (!isChargingButton)
+        {
+            //shot
+        }
+        else
+        {
+            if (longClickCheckCoroutine == null)
+                return; //shot
+            else
+                StopCoroutine(longClickCheckCoroutine);
+        }
+    }
+
+    Coroutine longClickCheckCoroutine = null;
+    IEnumerator LongClickCheck()
+    {
+        yield return new WaitForSeconds(holdTime);
+        OnLongClick();
+    }
+    #endregion
+
+    #region Emphasize
+    public void Emphasize() //쿨타임 종료, 차징 완료 시 강조
+    {
+        emphasizeIndicator.SetActive(true);
+    }
+    public void Emphasize(float sec)
+    {
+        emphasizeIndicator.SetActive(true);
+        Invoke("StopEmphasize", sec);
+    }
+    public void StopEmphasize()
+    {
+        emphasizeIndicator.SetActive(false);
+    }
+    #endregion
 
     //condition
     public void ShowCoolTime(float amount)
@@ -55,7 +107,7 @@ public class SkillButton : MonoBehaviour
         if(amount <= 0)
         {
             coolIndicator.gameObject.SetActive(false);
-            Emphasize();
+            //Emphasize();
         }
         else
         {

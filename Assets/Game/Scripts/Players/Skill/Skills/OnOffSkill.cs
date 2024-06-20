@@ -10,11 +10,17 @@ public class OnOffSkill : Skill
     private SkillObject skillObject;
     public bool IsOn { get; private set; }
 
-    public override void Init(SkillSet set)
+    private void OnDestroy()
     {
-        base.Init(set);
+        Destroy(skillObject);
+    }
 
-        var castData = (OnOffCastData)set.castData;
+    public override void Init(SkillData skillData)
+    {
+        base.Init(skillData);
+
+        var castData = (OnOffCastData)skillData.castData;
+
         skillAnimation = castData.skillAnimation;
         skillPrefab = castData.skillPrefab;
 

@@ -9,7 +9,6 @@ using UnityEngine.UI;
 
 public class PlayerInfoUI : MonoBehaviour
 {
-    PlayerInfo playerInfo;
     PlayerAttack playerAttack;
 
     [SerializeField]
@@ -29,23 +28,18 @@ public class PlayerInfoUI : MonoBehaviour
 
     public void Init(PlayerInfo playerInfo)
     {
-        this.playerInfo = playerInfo;
-
-        SetNameLabel();
-        SetOutLineColor();
-        SetClassIcon();
+        SetNameLabel(playerInfo.PlayerName);
+        SetOutLineColor(playerInfo.Team);
+        SetClassIcon(playerInfo.playerClass);
     }
 
-    public void SetNameLabel()
+    public void SetNameLabel(string name)
     {
-        string name = playerInfo.PlayerName;
         nameLabel.text = name;
     }
 
-    public void SetOutLineColor()
+    public void SetOutLineColor(string team)
     {
-        string team = playerInfo.Team;
-
         switch (team)
         {
             case "Blue":
@@ -60,9 +54,8 @@ public class PlayerInfoUI : MonoBehaviour
         }
     }
 
-    public void SetClassIcon()
+    public void SetClassIcon(PlayerClass playerClass)
     {
-        PlayerClass playerClass = playerInfo.PlayerClass;
         Sprite classIcon = ClassManager.Instance.classList[(int)playerClass].classIcon;
         this.classIcon.sprite = classIcon;
     }

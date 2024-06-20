@@ -7,8 +7,8 @@ public class ClassData : ScriptableObject
 {
     public string className;
     public string classDescription;
-    public Sprite classIcon;
 
-    public GameObject classRenderer;
-    public SkillSet[] skills;
+    public Sprite classIcon;
+    public GameObject weaponPrefab;
+    public SkillData[] skills;
 }
