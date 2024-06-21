@@ -1,16 +1,26 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct SkillPair
+{
+    public SkillCastType skillCastType;
+    public Skill skill;
+}
+
 public class SkillManager : MonoBehaviour
 {
-    PlayerAttack playerAttack;
-    Skill[] skills;
-
     public static SkillManager Instance { get; private set; }
 
-    Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
+    [SerializeField]
+    SkillPair[] skillPairList;
+
+    private Dictionary<SkillCastType, Skill> skillCreateDic
+        = new Dictionary<SkillCastType, Skill>();
 
     [SerializeField]
     SkillButtonsUI skillButtonsUI;
@@ -18,33 +28,32 @@ public class SkillManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        InitSkillCreateDic();
     }
 
-    public int currentSkillIndex;
-
-    private Dictionary<SkillCastType, Type> skillClassDic
-        = new Dictionary<SkillCastType, Type>()
-        {
-            { SkillCastType.Basic, typeof(BasicSkill) },
-            { SkillCastType.Charge, typeof(ChargeSkill) },
-            { SkillCastType.Combo, typeof(ComboSkill) },
-            { SkillCastType.OnOff, typeof(OnOffSkill) },
-        };
-
-    private void InitSkills(SkillData[] skillSets)
+    private void InitSkillCreateDic()
     {
-        skillButtonsUI.InitSkillButtons(skillSets);
+        foreach (var skillPair in skillPairList)
+        {
+            if(skillPair.skill != null)
+                skillCreateDic.Add(skillPair.skillCastType, skillPair.skill);
+        }
     }
 
-    public Skill[] GetSkillList(SkillData[] skillSets)
+    private void InitSkillUI(SkillData[] skillDataList)
     {
-        Skill[] skillList = new Skill[skillSets.Length];
+        skillButtonsUI.InitSkillButtons(skillDataList);
+    }
 
-        for (int i = 0; i < skillSets.Length; i++)
+    public Skill[] GetSkillList(SkillData[] skillDataList)
+    {
+        Skill[] skillList = new Skill[skillDataList.Length];
+
+        for (int i = 0; i < skillDataList.Length; i++)
         {
-            Type classType = skillClassDic[skillSets[i].castType];
-            Skill createdSkill = (Skill)Activator.CreateInstance(classType);
-            skillList[i] = createdSkill;
+            Skill newSkill = Instantiate(skillCreateDic[skillDataList[i].castType]);
+            newSkill.Init(skillDataList[i]);
+            skillList[i] = newSkill;
         }
 
         return skillList;
@@ -55,38 +64,29 @@ public class SkillManager : MonoBehaviour
 
     }
 
-    public void Charging()
-    {
-
-    }
-
-    public void InstantiateSkillPrefab()
-    {
-
-    }
-
     #region CoolDown
+    Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
     public void AddCoolDic(Skill skill)
     {
         if (skill.coolTime >= 0)
         {
             skillCoolDic.Add(skill._name, skill.coolTime);
 
-            if (conditionCheckCoroutine == null)
-                conditionCheckCoroutine = StartCoroutine(CoolCheck());
+            if (coolDownCoroutine == null)
+                coolDownCoroutine = StartCoroutine(CoolDown());
         }
     }
 
-    protected Coroutine conditionCheckCoroutine = null;
-    private IEnumerator CoolCheck()
+    protected Coroutine coolDownCoroutine = null;
+    private IEnumerator CoolDown()
     {
         while(true)
         {
             foreach(var skill in skillCoolDic.Keys)
             {
                 skillCoolDic[skill] -= Time.deltaTime;
-                skillButtonsUI.skillButtons[currentSkillIndex]
-                    .ShowCoolTime(skillCoolDic[skill]);
+                //skillButtonsUI.skillButtons[]
+                //    .ShowCoolTime(skillCoolDic[skill]);
 
                 if (skillCoolDic[skill] <= 0)
                 {
@@ -98,6 +98,12 @@ public class SkillManager : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    public bool checkIsCooling()
+    {
+        //skillCoolDic.ContainsKey();
+        return false;
     }
     #endregion
 }

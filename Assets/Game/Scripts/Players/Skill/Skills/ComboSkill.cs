@@ -33,7 +33,7 @@ public class ComboSkill : Skill
         if (skillPrefabs.Length > CurrentComboCount)
             Instantiate(skillPrefabs[CurrentComboCount], owner.transform.position, owner.transform.rotation);
 
-        ComboCheck();
+        ComboCheck(); //오버랩스피어, 공격이 맞았을 시
     }
 
     private void ComboCheck()

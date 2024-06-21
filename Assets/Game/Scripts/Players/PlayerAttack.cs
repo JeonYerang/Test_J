@@ -168,6 +168,24 @@ public class PlayerAttack : MonoBehaviour
         SkillManager.Instance.AddCoolDic(skill);*/
 
         ReturnIdleState();
+
+        pv.RPC("InstantiateSkillEffect", RpcTarget.All, transform.position, transform.forward);
+    }
+    string animationName;
+    SkillObject skillPrefab;
+
+    [PunRPC]
+    private void InstantiateSkillEffect(Vector3 shotPos, Vector3 shotDir, int damage, PhotonMessageInfo info)
+    {
+        Player owner = info.Sender;
+
+        //지연(시차)
+        float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+
+        var skillEffect = Instantiate(skillPrefab, shotPos, Quaternion.identity);
+        skillEffect.InitAndShot(owner, damage);
+
+        //지연 보상
     }
 
     #region Charging
@@ -213,6 +231,7 @@ public class PlayerAttack : MonoBehaviour
     #endregion
 
     #region About Hp
+    [PunRPC]
     public void GetDamage(int damage)
     {
         if (state == AttackState.Died)
