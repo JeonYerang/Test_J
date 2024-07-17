@@ -14,8 +14,8 @@ public abstract class SkillObject : MonoBehaviour
         this.damage = damage;
     }
 
-    public virtual void GetDamage(Transform target)
+    public virtual void TakeDamage(PlayerAttack target)
     {
-
+        target.GetDamage(damage);
     }
 }

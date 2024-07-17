@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PanelManager : MonoBehaviour
+public class LobbyPanelManager : MonoBehaviour
 {
-    public static PanelManager Instance;
+    public static LobbyPanelManager Instance;
 
     public LoginPanel loginPanel;
+    public UpdateInfoPanel updatePanel;
     public LobbyPanel lobbyPanel;
     public RoomPanel roomPanel;
-    public UpdateInfoPanel updatePanel;
 
     Dictionary<string, GameObject> panelDic;
 

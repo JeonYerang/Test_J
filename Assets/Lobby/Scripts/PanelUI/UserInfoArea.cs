@@ -24,12 +24,12 @@ public class UserInfoArea : MonoBehaviour
 
     private void OnUpdateButtonClick()
     {
-        PanelManager.Instance.PanelOpen("Update");
+        LobbyPanelManager.Instance.PanelOpen("Update");
     }
 
     private void OnLogoutButtonClick()
     {
         PhotonNetwork.Disconnect();
-        PanelManager.Instance.PanelOpen("Login");
+        LobbyPanelManager.Instance.PanelOpen("Login");
     }
 }

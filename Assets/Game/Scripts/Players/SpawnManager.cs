@@ -68,6 +68,9 @@ public class SpawnManager : MonoBehaviour
 
     public void DespawnCharacter()
     {
+        if (PhotonNetwork.LocalPlayer.ActorNumber == -1)
+            return;
+
         int actorNum = PhotonNetwork.LocalPlayer.ActorNumber;
         PhotonNetwork.Destroy(spawnedPlayers[actorNum]);
         spawnedPlayers.Remove(actorNum);

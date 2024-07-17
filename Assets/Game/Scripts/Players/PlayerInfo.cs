@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+//playerState: Select, Gaming, Died, Out
 public class PlayerInfo : MonoBehaviour
 {
     public Player player;
@@ -48,8 +48,16 @@ public class PlayerInfo : MonoBehaviour
     {
         PlayerName = player.NickName;
         Team = player.GetPhotonTeam().Name;
-        playerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
 
+        int playerClassNum = (int)player.CustomProperties["Class"];
+        if (playerClassNum != -1)
+        {
+            playerClass = (PlayerClass)(playerClassNum);
+            playerAttack.SetClass(playerClass);
+        }
+        //else?
+
+        //모든 정보가 존재할 경우
         playerInfoUI.Init(this);
 
         if (pv.IsMine) //카메라 설정
@@ -57,7 +65,5 @@ public class PlayerInfo : MonoBehaviour
             renderObj.layer = LayerMask.NameToLayer("Me");
             playerCam.gameObject.SetActive(true);
         }
-
-        playerAttack.SetClass(playerClass);
     }
 }

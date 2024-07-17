@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     {
         SetClassProperties(PhotonNetwork.LocalPlayer);
 
-        GamePanelManager.Instance.PanelOpen(GamePanel.Select);
+        PanelManager.Instance.PanelOpen(PanelName.Select);
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void ShowTimer(int sec)
     {
-        GamePanelManager.Instance.selectPanel.SetCount(sec);
+        (PanelManager.Instance.GetPanel(PanelName.Select) as SelectPanel)?.SetCount(sec);
     }
 
     [PunRPC]
@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         playerAttack = player.GetComponent<PlayerAttack>();
 
         cam.Follow = playerMove.transform;
-        GamePanelManager.Instance.PanelOpen(GamePanel.Game);
+        PanelManager.Instance.AllPanelClose();
     }
     #endregion
 

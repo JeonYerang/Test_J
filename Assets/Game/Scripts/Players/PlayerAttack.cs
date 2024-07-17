@@ -250,7 +250,7 @@ public class PlayerAttack : MonoBehaviour
         onChangedHp?.Invoke(this, player);
     }
 
-    public void TakeHeal(int amount)
+    public void GetHeal(int amount)
     {
         if (state == AttackState.Died)
             return;

@@ -70,6 +70,6 @@ public class UpdateInfoPanel : MonoBehaviour
 
     private void OnCancelButtonClick()
     {
-        PanelManager.Instance.PanelOpen("Lobby");
+        LobbyPanelManager.Instance.PanelOpen("Lobby");
     }
 }

@@ -9,12 +9,12 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
     public static PhotonManager Instance { get; private set; }
-    GamePanelManager panelManager;
+    PanelManager panelManager;
 
     private void Awake()
     {
         Instance = this;
-        panelManager = GamePanelManager.Instance;
+        panelManager = PanelManager.Instance;
     }
 
     public override void OnLeftRoom()
@@ -24,12 +24,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        panelManager.selectPanel.AddPlayerEntry(newPlayer);
+        (panelManager.GetPanel(PanelName.Select) as SelectPanel)?.AddPlayerEntry(newPlayer);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        panelManager.selectPanel.RemovePlayerEntry(otherPlayer.ActorNumber);
+        (panelManager.GetPanel(PanelName.Select) as SelectPanel)?.RemovePlayerEntry(otherPlayer.ActorNumber);
         //panelManager.gamePanel.UserInfo.
     }
 
@@ -39,8 +39,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         {
             if (panelManager != null)
             {
-                panelManager.selectPanel.OnClassPropertyChanged(targetPlayer);
-                panelManager.gamePanel.UserInfo.SetClass(targetPlayer);
+                (panelManager.GetPanel(PanelName.Select) as SelectPanel)?.OnClassPropertyChanged(targetPlayer);
+                GameUIManager.Instance.UserInfo.SetClass(targetPlayer);
             }
         }
     }

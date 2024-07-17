@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class SelectPanel : MonoBehaviour
+public class SelectPanel : Panel
 {
     Transform classSelectParent;
     Transform playerListParent;
@@ -40,6 +40,11 @@ public class SelectPanel : MonoBehaviour
     private void OnDisable()
     {
         ResetPlayerList();
+    }
+
+    public override void Init()
+    {
+        panelName = "Select";
     }
 
     #region CountDown

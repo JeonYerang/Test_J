@@ -12,7 +12,7 @@ public class Syringe : Projectile
             PlayerAttack targetAttack = other.GetComponent<PlayerAttack>();
             if(owner.Team == target.Team)
             {
-                targetAttack.TakeHeal(damage);
+                targetAttack.GetHeal(damage);
             }
             else
             {

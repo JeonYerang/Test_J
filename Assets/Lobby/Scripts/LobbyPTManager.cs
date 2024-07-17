@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class LobbyPTManager : MonoBehaviourPunCallbacks
 {
     public static LobbyPTManager Instance;
-    private PanelManager panelManager;
+    private LobbyPanelManager panelManager;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class LobbyPTManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        panelManager = PanelManager.Instance;
+        panelManager = LobbyPanelManager.Instance;
     }
 
     #region Connect

@@ -184,7 +184,9 @@ public class Territory : MonoBehaviour
                 getScoreCoroutine = StartCoroutine(GetScoreCoroutine(teamName));
         }
     }
+    #endregion
 
+    #region GetScore
     Coroutine getScoreCoroutine = null;
     IEnumerator GetScoreCoroutine(string teamName)
     {
