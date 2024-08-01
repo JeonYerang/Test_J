@@ -34,6 +34,7 @@ public class PlayerInfo : MonoBehaviour
         pv = GetComponent<PhotonView>();
         playerCam = transform.Find("PlayerCam").GetComponent<Camera>();
         renderObj = transform.Find("Renderer").gameObject;
+        playerAttack = GetComponent<PlayerAttack>();
     }
 
     private void OnEnable()

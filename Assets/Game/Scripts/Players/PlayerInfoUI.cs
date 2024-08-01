@@ -52,6 +52,8 @@ public class PlayerInfoUI : MonoBehaviour
                 outline.OutlineColor = Color.white;
                 break;
         }
+
+        outline.gameObject.SetActive(true);
     }
 
     public void SetClassIcon(PlayerClass playerClass)

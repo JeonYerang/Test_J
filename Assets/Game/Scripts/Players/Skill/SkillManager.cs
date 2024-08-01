@@ -40,7 +40,7 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    private void InitSkillUI(SkillData[] skillDataList)
+    public void InitSkillInput(SkillData[] skillDataList)
     {
         skillButtonsUI.InitSkillButtons(skillDataList);
     }
@@ -58,6 +58,55 @@ public class SkillManager : MonoBehaviour
 
         return skillList;
     }
+
+    public void SetSkillKey(SkillData skillData)
+    {
+        if (skillData.castType == SkillCastType.Charge)
+            isChargeKey = true;
+        else
+            isChargeKey = false;
+
+        //skillButton.onClick.AddListener(OnClick);
+    }
+
+    #region Press Event
+    bool isChargeKey = false;
+    private void OnPress()
+    {
+        if (isChargeKey)
+        {
+            longClickCheckCoroutine = StartCoroutine(LongPressCheck());
+        }
+    }
+
+    float holdTime = 0.2f;
+    private void OnLongPress()
+    {
+
+    }
+
+    private void OnCancel()
+    {
+        if (!isChargeKey)
+        {
+            //shot
+        }
+        else
+        {
+            if (longClickCheckCoroutine == null)
+                return; //shot
+            else
+                StopCoroutine(longClickCheckCoroutine);
+        }
+    }
+
+    Coroutine longClickCheckCoroutine = null;
+    IEnumerator LongPressCheck()
+    {
+        yield return new WaitForSeconds(holdTime);
+        OnLongPress();
+    }
+    #endregion
 
     public void UsingSkill()
     {

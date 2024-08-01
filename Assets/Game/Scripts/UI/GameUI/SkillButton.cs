@@ -31,6 +31,7 @@ public class SkillButton : MonoBehaviour
 
     public void SetSkill(SkillData skillData)
     {
+        print("SetSkill");
         icon.sprite = skillData.icon;
 
         if (skillData.castType == SkillCastType.Charge)
@@ -50,6 +51,7 @@ public class SkillButton : MonoBehaviour
     #region Click Event
     private void OnClick()
     {
+        print($"OnClick {index}");
         if (isChargingButton)
         {
             longClickCheckCoroutine = StartCoroutine(LongClickCheck());
@@ -59,7 +61,7 @@ public class SkillButton : MonoBehaviour
     float holdTime = 0.2f;
     private void OnLongClick()
     {
-        
+        print($"OnLongClick {index}");
     }
 
     private void OnCancel()

@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -104,6 +105,8 @@ public class PlayerAttack : MonoBehaviour
     {
         this.playerClass = playerClass;
         SkillData[] skillSets = ClassManager.Instance.GetSkillSets(playerClass);
+
+        SkillManager.Instance.InitSkillInput(skillSets);
         skills = SkillManager.Instance.GetSkillList(skillSets);
     }
 

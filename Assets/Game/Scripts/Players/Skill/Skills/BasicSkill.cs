@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.VersionControl;
-using UnityEngine;
-
 public class BasicSkill : Skill
 {
     private string skillAnimation;

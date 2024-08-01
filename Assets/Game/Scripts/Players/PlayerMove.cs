@@ -91,7 +91,6 @@ public class PlayerMove : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        print(context.phase);
         Vector2 input = context.ReadValue<Vector2>();
 
         if (input != null)

@@ -1469,7 +1469,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillButtonsParent: {fileID: 1351851237}
-  skillButtons: []
+  skillButtons:
+  - {fileID: 2026313517}
+  - {fileID: 1684853080}
+  - {fileID: 813543964}
   jumpButton: {fileID: 1291037872}
 --- !u!1 &504571642
 GameObject:
@@ -3832,7 +3835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1868778516}
   isGameStart: 0
-  startCount: 3
+  startCount: 5
 --- !u!114 &1256115628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4987,8 +4990,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec34e4a262f215c4cba5ea1f920423e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillPairList: []
-  skillButtonsUI: {fileID: 0}
+  skillPairList:
+  - skillCastType: 0
+    skill: {fileID: 7002785099781992464, guid: ad6a2dd19dac40a47a48096c6b974c6e, type: 3}
+  - skillCastType: 1
+    skill: {fileID: -9058385810994874557, guid: 7ab5e4ac3ba3f09429fdbce176048df6, type: 3}
+  - skillCastType: 2
+    skill: {fileID: -3234201028915635936, guid: dd4886d067d8a2843a8e1bf5aaca6536, type: 3}
+  - skillCastType: 3
+    skill: {fileID: -606870478737255062, guid: c51601ea19c752b4dbce70d6aeac1f50, type: 3}
+  skillButtonsUI: {fileID: 501144615}
 --- !u!1 &1684853075
 GameObject:
   m_ObjectHideFlags: 0

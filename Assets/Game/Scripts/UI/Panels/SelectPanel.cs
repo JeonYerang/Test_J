@@ -127,10 +127,19 @@ public class SelectPanel : Panel
     public void SelectClass(int select)
     {
         Player localPlayer = PhotonNetwork.LocalPlayer;
-        Hashtable customProps = localPlayer.CustomProperties;
+        Hashtable classProps 
+            = new Hashtable(){ { "Class", (int)localPlayer.CustomProperties["Class"] } };
 
-        customProps["Class"] = select;
-        localPlayer.SetCustomProperties(customProps);
+        if((int)classProps["Class"] == select)
+        {
+            classProps["Class"] = select;
+        }
+        else
+        {
+            classProps["Class"] = select;
+        }
+
+        localPlayer.SetCustomProperties(classProps);
     }
 
     public void OnClassPropertyChanged(Player player)

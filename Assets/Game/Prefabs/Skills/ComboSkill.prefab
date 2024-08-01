@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6846878513125101903}
-  - component: {fileID: 7002785099781992464}
+  - component: {fileID: -3234201028915635936}
   m_Layer: 0
-  m_Name: BasicSkill
+  m_Name: ComboSkill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7002785099781992464
+--- !u!114 &-3234201028915635936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,6 +41,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7596055778422958958}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f983bc9a7760c974cbc01d33a314c161, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a85c3929a735bb46982edafe6ff56de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
