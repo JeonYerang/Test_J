@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -77,5 +78,10 @@ public class ChargeSkill : Skill
 
         if (skillPrefabs != null)
             Instantiate(skillPrefabs[CurrentChargeCount], owner.transform.position, owner.transform.rotation);
+    }
+
+    public override void InstantiateEffect(Vector3 shotPos, Quaternion shotDir, int damage, Player target)
+    {
+        
     }
 }

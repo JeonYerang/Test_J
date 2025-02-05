@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using UnityEngine;
 
@@ -32,4 +34,7 @@ public abstract class Skill : MonoBehaviour
     }
 
     public abstract void Shot();
+
+    [PunRPC]
+    public abstract void InstantiateEffect(Vector3 shotPos, Quaternion shotDir, int damage, Player target);
 }

@@ -1,3 +1,7 @@
+using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine;
+
 public class BasicSkill : Skill
 {
     private string skillAnimation;
@@ -15,12 +19,20 @@ public class BasicSkill : Skill
 
     public override void Shot()
     {
-        int shotDamage = damage;
-
+        //애니메이션
         if (skillAnimation != null)
             owner.SetAnimator(skillAnimation);
 
         if (skillPrefab != null)
             Instantiate(skillPrefab, owner.transform.position, owner.transform.rotation);
+
+        //InstantiateEffect();
+    }
+
+    public override void InstantiateEffect(Vector3 shotPos, Quaternion shotDir, int damage, Player target)
+    {
+        //스킬 이펙트
+        var skillEffect = Instantiate(skillPrefab, shotPos, shotDir);
+        //skillEffect.SetObject(, damage);
     }
 }

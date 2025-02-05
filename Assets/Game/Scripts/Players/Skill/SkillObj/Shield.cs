@@ -1,7 +1,9 @@
+using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//상대팀 공격만 제거
 public class Shield : MonoBehaviour
 {
     public int maxHp;

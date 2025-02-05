@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -34,6 +35,11 @@ public class ComboSkill : Skill
             Instantiate(skillPrefabs[CurrentComboCount], owner.transform.position, owner.transform.rotation);
 
         ComboCheck(); //오버랩스피어, 공격이 맞았을 시
+    }
+
+    public override void InstantiateEffect(Vector3 shotPos, Quaternion shotDir, int damage, Player target)
+    {
+
     }
 
     private void ComboCheck()
