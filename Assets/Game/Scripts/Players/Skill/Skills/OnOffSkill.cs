@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,5 +51,10 @@ public class OnOffSkill : Skill
     {
         if (IsOn) Off();
         else On();
+    }
+
+    public override void InstantiateEffect(Vector3 shotPos, Quaternion shotDir, int damage, Player target)
+    {
+        throw new System.NotImplementedException();
     }
 }
