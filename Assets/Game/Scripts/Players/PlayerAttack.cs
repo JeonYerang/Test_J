@@ -56,43 +56,6 @@ public class PlayerAttack : MonoBehaviour
         pv = GetComponent<PhotonView>();
     }
 
-    private void Start()
-    {
-        /*chargeSkillAction = GetComponent<PlayerInput>().actions.FindAction("Skill");
-        chargeSkillAction.started +=
-            ctx =>
-            {
-                if (ctx.interaction is SlowTapInteraction)
-                {
-                    isCharging = true;
-                    //testSkill.StartCharge();
-                    print("Start Charge");
-                }
-            };
-        chargeSkillAction.canceled +=
-            ctx =>
-            {
-                isCharging = false;
-            };
-        chargeSkillAction.performed +=
-            ctx =>
-            {
-                if (isCharging)
-                {
-                    isCharging = false;
-                    //testSkill.EndCharge();
-                    print("Charging Shot");
-                }
-            };
-
-        skillAction = GetComponent<PlayerInput>().actions.FindAction("Skill1");
-        skillAction.performed +=
-            ctx =>
-            {
-                print("Shot");
-            };*/
-    }
-
     protected void Init()
     {
         currentHp = maxHp;
@@ -116,64 +79,27 @@ public class PlayerAttack : MonoBehaviour
     }
 
     #region Using SKill
-    public int AttackCount { get; protected set; }
-    public void OnPressSkillKey(InputAction.CallbackContext context)
+    public Skill GetSkill(int index)
     {
-        KeySetting.skillKeyPathDic.TryGetValue(context.control.path, out int skillIndex);
-
-        if (context.performed)
-        {
-            if (CanAttack)
-            {
-                if (context.interaction is HoldInteraction)
-                {
-                    StartCharge(skillIndex);
-                }
-                else
-                {
-                    UsingSkill(skillIndex);
-                }
-            }
-        }
-        else if (context.canceled)
-        {
-            if (state == AttackState.Charge)
-            {
-                if(skillIndex == chargeIndex)
-                    EndCharge();
-            }
-        }
-    }
-
-    public bool TryUsingSkill(int skillIndex)
-    {
-        if (!CanAttack)
-            return false;
-
-        UsingSkill(skillIndex);
-        return true;
+        return skills[index];
     }
 
     [PunRPC]
-    private void UsingSkill(int skillIndex)
+    public void UsingSkill(int skillIndex)
     {
-        state = AttackState.Attack;
+        if (!CanAttack)
+        {
+            return;
+        }
 
-        print($"Shot!: {skillIndex}");
+        state = AttackState.Attack;
 
         Skill skill = skills[skillIndex];
 
-        //if (skill.castType == SkillCastType.Charge)
-            //차징 시작
-        //else
-            //사용
+        print($"Shot!: {skill.name}");
+        skill.Shot();
 
         //animator.SetTrigger(animationName);
-
-        print($"Shot!: {skill.name}");
-
-        AttackCount++;
-        SkillManager.Instance.AddCoolDic(skill);
 
         ReturnIdleState();
     }
@@ -183,20 +109,20 @@ public class PlayerAttack : MonoBehaviour
 
     #region Charging
     int chargeIndex = -1;
-    ChargeSkill chargeSkill = null;
+    ChargeSkill currentChargeSkill = null;
     [PunRPC]
     public void StartCharge(int skillIndex)
     {
         print($"Start Charging: {skillIndex}");
 
-        chargeSkill = skills[skillIndex] as ChargeSkill;
+        currentChargeSkill = skills[skillIndex] as ChargeSkill;
 
-        if( chargeSkill != null)
+        if( currentChargeSkill != null)
         {
             state = AttackState.Charge;
 
             chargeIndex = skillIndex;
-            chargeSkill.StartCharge();
+            currentChargeSkill.StartCharge();
         }
     }
 
@@ -209,9 +135,9 @@ public class PlayerAttack : MonoBehaviour
 
         chargeIndex = -1;
 
-        if(chargeSkill != null)
+        if(currentChargeSkill != null)
         {
-            chargeSkill?.EndCharge();
+            currentChargeSkill?.EndCharge();
             UsingSkill(chargeIndex);
         }
     }

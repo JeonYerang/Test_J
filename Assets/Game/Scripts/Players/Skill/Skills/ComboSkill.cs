@@ -15,7 +15,7 @@ public class ComboSkill : Skill
     {
         base.Init(skillData);
 
-        var castData = (ComboCastData)skillData.castData;
+        var castData = (ComboTypeParam)skillData.typeParam;
 
         maxComboCount = castData.maxComboCount;
 

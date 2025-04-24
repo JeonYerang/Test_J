@@ -11,19 +11,19 @@ public class SkillSetEditor : Editor
     private Dictionary<SkillCastType, Type> castDataDic 
         = new Dictionary<SkillCastType, Type>()
         {
-            { SkillCastType.Basic, typeof(BasicCastData) },
-            { SkillCastType.Charge, typeof(ChargeCastData) },
-            { SkillCastType.Combo, typeof(ComboCastData) },
-            { SkillCastType.OnOff, typeof(OnOffCastData) },
+            { SkillCastType.Basic, typeof(BasicTypeParam) },
+            { SkillCastType.Charge, typeof(ChargeTypeParam) },
+            { SkillCastType.Combo, typeof(ComboTypeParam) },
+            { SkillCastType.OnOff, typeof(OnOffTypeParam) },
         };
 
     public SerializedProperty castTypeProperty;
-    public SerializedProperty castDataProperty;
+    public SerializedProperty typeParamProperty;
 
     private void OnEnable()
     {
         castTypeProperty = serializedObject.FindProperty("castType");
-        castDataProperty = serializedObject.FindProperty("castData");
+        typeParamProperty = serializedObject.FindProperty("typeParam");
     }
 
     public override void OnInspectorGUI()
@@ -50,16 +50,16 @@ public class SkillSetEditor : Editor
 
     public void MapCastSet()
     {
-        castDataProperty.managedReferenceValue = null;
+        typeParamProperty.managedReferenceValue = null;
 
         SkillCastType SelectedCastType = (SkillCastType)castTypeProperty.enumValueIndex;
         Type classType = castDataDic[SelectedCastType];
-        var createdInstance = (ISkillCastData)Activator.CreateInstance(classType);
+        var createdInstance = (ISkillTypeParam)Activator.CreateInstance(classType);
 
-        castDataProperty.managedReferenceValue = createdInstance;
+        typeParamProperty.managedReferenceValue = createdInstance;
 
         serializedObject.ApplyModifiedProperties();
 
-        Debug.Log($"{createdInstance} 积己凳");
+        //Debug.Log($"{createdInstance} 积己凳");
     }
 }

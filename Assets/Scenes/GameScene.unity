@@ -1428,7 +1428,7 @@ GameObject:
   - component: {fileID: 501144614}
   - component: {fileID: 501144615}
   m_Layer: 5
-  m_Name: SkillButtonArea
+  m_Name: ControlButtonArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1465,7 +1465,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 501144613}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84df7490ecffe8d4188cb299a83b9fb9, type: 3}
+  m_Script: {fileID: 11500000, guid: 653bc5c63a622f5439dbefbad528f422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   skillButtonsParent: {fileID: 1351851237}

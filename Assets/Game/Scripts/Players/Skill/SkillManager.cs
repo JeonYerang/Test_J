@@ -17,13 +17,13 @@ public class SkillManager : MonoBehaviour
     public static SkillManager Instance { get; private set; }
 
     [SerializeField]
-    SkillPair[] skillPairList;
+    SkillPair[] skillPairList; //¿ŒΩ∫∆Â≈Õ∑Œ Ω∫≈≥ µÒº≈≥ ∏Æ √ ±‚»≠øÎ
 
     private Dictionary<SkillCastType, Skill> skillCreateDic
         = new Dictionary<SkillCastType, Skill>();
 
     [SerializeField]
-    SkillButtonsUI skillButtonsUI;
+    ButtonBinder skillButtonsUI;
 
     private void Awake()
     {
@@ -61,98 +61,59 @@ public class SkillManager : MonoBehaviour
 
     public void SetSkillKey(SkillData skillData)
     {
-        if (skillData.castType == SkillCastType.Charge)
+        /*if (skillData.castType == SkillCastType.Charge)
             isChargeKey = true;
         else
-            isChargeKey = false;
+            isChargeKey = false;*/
 
         //skillButton.onClick.AddListener(OnClick);
     }
 
-    #region Press Event
-    bool isChargeKey = false;
-    private void OnPress()
+    PlayerAttack player;
+    int currentSKill = -1;
+    public void TryUsingSkill(int skillIndex)
     {
-        if (isChargeKey)
+        if (currentSKill != -1)
         {
-            longClickCheckCoroutine = StartCoroutine(LongPressCheck());
+            return;
+        }
+
+        if (!player.CanAttack)
+        {
+            return;
+        }
+
+        Skill skill = player.GetSkill(skillIndex);
+
+        /*if(skillCoolDic.ContainsKey(skill._name))
+        {
+            return;
+        }*/
+
+        if (skill.castType == SkillCastType.Basic)
+        {
+            player.UsingSkill(skillIndex);
+        }
+        else if(skill.castType == SkillCastType.Charge)
+        {
+            currentSKill = skillIndex;
+            player.StartCharge(skillIndex);
         }
     }
 
-    float holdTime = 0.2f;
-    private void OnLongPress()
+    public void EndSKill(int skillIndex)
     {
-
-    }
-
-    private void OnCancel()
-    {
-        if (!isChargeKey)
+        if(currentSKill != skillIndex)
         {
-            //shot
+            return;
         }
-        else
+
+        Skill skill = player.GetSkill(currentSKill);
+
+        if (skill.castType == SkillCastType.Charge)
         {
-            if (longClickCheckCoroutine == null)
-                return; //shot
-            else
-                StopCoroutine(longClickCheckCoroutine);
+            player.EndCharge();
         }
+        currentSKill = -1;
     }
-
-    Coroutine longClickCheckCoroutine = null;
-    IEnumerator LongPressCheck()
-    {
-        yield return new WaitForSeconds(holdTime);
-        OnLongPress();
-    }
-    #endregion
-
-    public void UsingSkill()
-    {
-
-    }
-
-    #region CoolDown
-    Dictionary<string, float> skillCoolDic = new Dictionary<string, float>();
-    public void AddCoolDic(Skill skill)
-    {
-        if (skill.coolTime >= 0)
-        {
-            skillCoolDic.Add(skill._name, skill.coolTime);
-
-            if (coolDownCoroutine == null)
-                coolDownCoroutine = StartCoroutine(CoolDown());
-        }
-    }
-
-    protected Coroutine coolDownCoroutine = null;
-    private IEnumerator CoolDown()
-    {
-        while(true)
-        {
-            foreach(var skill in skillCoolDic.Keys)
-            {
-                skillCoolDic[skill] -= Time.deltaTime;
-                //skillButtonsUI.skillButtons[]
-                //    .ShowCoolTime(skillCoolDic[skill]);
-
-                if (skillCoolDic[skill] <= 0)
-                {
-                    skillCoolDic.Remove(skill);
-
-                    if(skillCoolDic.Count == 0)
-                        yield break;
-                }
-            }
-            yield return null;
-        }
-    }
-
-    public bool checkIsCooling()
-    {
-        //skillCoolDic.ContainsKey();
-        return false;
-    }
-    #endregion
 }

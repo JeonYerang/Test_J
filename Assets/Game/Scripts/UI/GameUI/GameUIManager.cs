@@ -9,7 +9,7 @@ public class GameUIManager : MonoBehaviour
 
     public UserInfoUI UserInfo {  get; private set; }
     public ScoreUI Score { get; private set; }
-    public SkillButtonsUI SkillButtons { get; private set; }
+    public ButtonBinder SkillButtons { get; private set; }
     public FixedJoystick Joystick { get; private set; }
 
     private void Awake()
@@ -18,7 +18,7 @@ public class GameUIManager : MonoBehaviour
 
         UserInfo = transform.Find("UserInfoUI").GetComponent<UserInfoUI>();
         Score = transform.Find("ScoreCard").GetComponent<ScoreUI>();
-        SkillButtons = transform.Find("SkillButtonArea").GetComponent<SkillButtonsUI>();
+        SkillButtons = transform.Find("SkillButtonArea").GetComponent<ButtonBinder>();
         Joystick = transform.Find("FixedJoystick").GetComponent<FixedJoystick>();
     }
 

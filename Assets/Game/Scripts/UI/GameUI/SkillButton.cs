@@ -1,4 +1,6 @@
 using System.Collections;
+using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,12 +10,12 @@ public class SkillButton : MonoBehaviour
 
     Button skillButton;
 
+    TextMeshProUGUI numText;
+
     Image icon;
     Image coolIndicator;
     Image chargeIndicator;
     GameObject emphasizeIndicator;
-
-    bool isChargingButton;
 
     private void Awake()
     {
@@ -34,11 +36,6 @@ public class SkillButton : MonoBehaviour
         print("SetSkill");
         icon.sprite = skillData.icon;
 
-        if (skillData.castType == SkillCastType.Charge)
-            isChargingButton = true;
-        else
-            isChargingButton = false;
-
         skillButton.onClick.AddListener(OnClick);
     }
 
@@ -52,38 +49,11 @@ public class SkillButton : MonoBehaviour
     private void OnClick()
     {
         print($"OnClick {index}");
-        if (isChargingButton)
-        {
-            longClickCheckCoroutine = StartCoroutine(LongClickCheck());
-        }
-    }
-
-    float holdTime = 0.2f;
-    private void OnLongClick()
-    {
-        print($"OnLongClick {index}");
     }
 
     private void OnCancel()
     {
-        if (!isChargingButton)
-        {
-            //shot
-        }
-        else
-        {
-            if (longClickCheckCoroutine == null)
-                return; //shot
-            else
-                StopCoroutine(longClickCheckCoroutine);
-        }
-    }
-
-    Coroutine longClickCheckCoroutine = null;
-    IEnumerator LongClickCheck()
-    {
-        yield return new WaitForSeconds(holdTime);
-        OnLongClick();
+        print($"OnCancel {index}");
     }
     #endregion
 

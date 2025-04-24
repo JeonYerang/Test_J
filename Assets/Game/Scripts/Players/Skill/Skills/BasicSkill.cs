@@ -11,7 +11,7 @@ public class BasicSkill : Skill
     {
         base.Init(skillData);
 
-        var castData = (BasicCastData)skillData.castData;
+        var castData = (BasicTypeParam)skillData.typeParam;
 
         skillAnimation = castData.skillAnimation;
         skillPrefab = castData.skillPrefab;

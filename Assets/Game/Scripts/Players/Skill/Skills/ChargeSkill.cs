@@ -21,7 +21,7 @@ public class ChargeSkill : Skill
     {
         base.Init(skillData);
 
-        var castData = (ChargeCastData)skillData.castData;
+        var castData = (ChargeTypeParam)skillData.typeParam;
 
         maxChargeCount = castData.maxChargeCount;
         chargeInterval = castData.chargeInterval;

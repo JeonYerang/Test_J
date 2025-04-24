@@ -17,14 +17,14 @@ MonoBehaviour:
   damage: 1
   coolTime: 0
   castType: 2
-  castData:
-    rid: 3687222554288979979
+  typeParam:
+    rid: 1785241299100893187
   references:
     version: 2
     RefIds:
-    - rid: 3687222554288979979
-      type: {class: ComboCastData, ns: , asm: Assembly-CSharp}
+    - rid: 1785241299100893187
+      type: {class: ComboTypeParam, ns: , asm: Assembly-CSharp}
       data:
-        maxComboCount: 3
-        skillAnimation: []
-        skillPrefab: []
+        maxComboCount: 0
+        skillAnimations: []
+        skillPrefabs: []

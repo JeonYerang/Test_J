@@ -20,7 +20,7 @@ public class OnOffSkill : Skill
     {
         base.Init(skillData);
 
-        var castData = (OnOffCastData)skillData.castData;
+        var castData = (OnOffTypeParam)skillData.typeParam;
 
         skillAnimation = castData.skillAnimation;
         skillPrefab = castData.skillPrefab;

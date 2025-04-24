@@ -17,17 +17,17 @@ MonoBehaviour:
   damage: 1
   coolTime: 0
   castType: 1
-  castData:
-    rid: 3687222554288979977
+  typeParam:
+    rid: 1785241299100893185
   references:
     version: 2
     RefIds:
-    - rid: 3687222554288979977
-      type: {class: ChargeCastData, ns: , asm: Assembly-CSharp}
+    - rid: 1785241299100893185
+      type: {class: ChargeTypeParam, ns: , asm: Assembly-CSharp}
       data:
-        maxChargeCount: 3
-        chargeInterval: 1
+        maxChargeCount: 0
+        chargeInterval: 0
         skillAnimation: 
-        skillPrefab: []
+        skillPrefabs: []
         chargingAnimation: 
         ChargingPrefab: {fileID: 0}
