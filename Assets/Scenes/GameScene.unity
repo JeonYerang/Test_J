@@ -1428,7 +1428,7 @@ GameObject:
   - component: {fileID: 501144614}
   - component: {fileID: 501144615}
   m_Layer: 5
-  m_Name: ControlButtonArea
+  m_Name: SkillButtonArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1468,11 +1468,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653bc5c63a622f5439dbefbad528f422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillButtonsParent: {fileID: 1351851237}
-  skillButtons:
-  - {fileID: 2026313517}
-  - {fileID: 1684853080}
-  - {fileID: 813543964}
+  skillButtonParent: {fileID: 1351851237}
+  skillButtons: []
   jumpButton: {fileID: 1291037872}
 --- !u!1 &504571642
 GameObject:

@@ -15,7 +15,7 @@ public class KeyBinder : MonoBehaviour
 {
     public InputActionAsset inputActionAsset;
     private InputAction skillAction;
-    private Dictionary<Key, int> newSkillKeyDic;
+    private Dictionary<Key, int> editSkillKeyDic;
 
     private void Awake()
     {
@@ -25,17 +25,18 @@ public class KeyBinder : MonoBehaviour
 
     private void OnEnable()
     {
-        newSkillKeyDic = KeySetting.skillKeyDic;
+        editSkillKeyDic = KeySetting.skillKeyDic;
     }
 
     private void OnDisable()
     {
-        //newSkillKeyDic.Clear();
+        editSkillKeyDic.Clear();
     }
 
+    #region 스킬키 바인딩
     public void InitSkillKey()
     {
-        /*KeySetting.skillKeyDic = new Dictionary<Key, int>()
+        KeySetting.skillKeyDic = new Dictionary<Key, int>() //기본값
         {
             { Key.Z, 0 },
             { Key.X, 1 },
@@ -43,54 +44,28 @@ public class KeyBinder : MonoBehaviour
         };
 
         foreach (var key in KeySetting.skillKeyDic.Keys)
-            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}");*/
+            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}", "Hold");
 
         //action.AddBinding("<Gamepad>/leftStick").WithInteractions("tap(duration=0.8)");
+
+        //둘 중 뭐지?
+        skillAction.started += OnStartSkillKey;
+        skillAction.canceled += OnCancelSkillKey;
     }
 
-    #region 스킬키 지정
-    public void SetSkillKey(Key newKey, int skillIndex) //새로 스킬을 등록하는 경우
-    {
-        if (newSkillKeyDic.ContainsKey(newKey)) //해당 키에 다른 스킬이 등록되어있는 경우
-            newSkillKeyDic[newKey] = skillIndex;
-        else
-            newSkillKeyDic.Add(newKey, skillIndex);
-    }
-
-    public void ReSetSkillKey(Key prevKey, Key newKey) //등록된 스킬을 다른 키로 옮기는 경우
-    {
-        if (!newSkillKeyDic.ContainsKey(prevKey))
-            return;
-
-        if (newSkillKeyDic.ContainsKey(newKey)) //새로운 키에 다른 스킬이 등록되어있는 경우: 스왑
-            (newSkillKeyDic[prevKey], newSkillKeyDic[newKey])
-            = (newSkillKeyDic[newKey], newSkillKeyDic[prevKey]);
-        else
-        {
-            newSkillKeyDic.Add(newKey, newSkillKeyDic[prevKey]);
-            newSkillKeyDic.Remove(prevKey);
-        }
-    }
-
-    public void RemoveSkillKey(Key prevKey) //등록된 스킬을 삭제하는 경우
-    {
-        if (newSkillKeyDic.ContainsKey(prevKey))
-            newSkillKeyDic.Remove(prevKey);
-    }
-
-    public void SaveSkillAction()
+    public void SaveSkillAction() //저장
     {
         Dictionary<Key, int> AddedKeyDic
-            = newSkillKeyDic.Where(entry => !KeySetting.skillKeyDic.ContainsKey(entry.Key))
+            = editSkillKeyDic.Where(entry => !KeySetting.skillKeyDic.ContainsKey(entry.Key))
             .ToDictionary(entry => entry.Key, entry => entry.Value);
 
         Dictionary<Key, int> RemovedKeyDic
-            = KeySetting.skillKeyDic.Where(entry => !newSkillKeyDic.ContainsKey(entry.Key))
+            = KeySetting.skillKeyDic.Where(entry => !editSkillKeyDic.ContainsKey(entry.Key))
             .ToDictionary(entry => entry.Key, entry => entry.Value);
 
         foreach (var key in AddedKeyDic.Keys)
         {
-            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}");
+            skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}", "Hold");
         }
 
         foreach (var key in RemovedKeyDic.Keys)
@@ -101,10 +76,10 @@ public class KeyBinder : MonoBehaviour
         }
 
         KeySetting.skillKeyDic.Clear();
-        KeySetting.skillKeyDic = newSkillKeyDic;
+        KeySetting.skillKeyDic = editSkillKeyDic;
     }
 
-    public void OnPressSkillKey(InputAction.CallbackContext context)
+    public void OnStartSkillKey(InputAction.CallbackContext context)
     {
         int skillIndex = -1;
 
@@ -117,16 +92,57 @@ public class KeyBinder : MonoBehaviour
 
         if (skillIndex != -1)
         {
-            if (context.started || context.performed)
-            {
-                print($"OnClick {skillIndex}");
-            }
-            else if (context.canceled)
-            {
-                print($"OnCancel {skillIndex}");
-            }
+            print($"OnStarted {skillIndex}");
         }
     }
+
+    public void OnCancelSkillKey(InputAction.CallbackContext context)
+    {
+        int skillIndex = -1;
+
+        var control = context.control;
+        if (control is KeyControl keyControl)
+        {
+            Key key = keyControl.keyCode;
+            KeySetting.skillKeyDic.TryGetValue(key, out skillIndex);
+        }
+
+        if (skillIndex != -1)
+        {
+            print($"OnCancel {skillIndex}");
+        }
+    }
+
+    #region 스킬키 세팅 편집 딕셔너리
+    public void SetSkillKey(Key newKey, int skillIndex) //새로 스킬을 등록하는 경우
+    {
+        if (editSkillKeyDic.ContainsKey(newKey)) //해당 키에 다른 스킬이 등록되어있는 경우
+            editSkillKeyDic[newKey] = skillIndex;
+        else
+            editSkillKeyDic.Add(newKey, skillIndex);
+    }
+
+    public void MoveSkillKey(Key prevKey, Key newKey) //등록된 스킬을 다른 키로 옮기는 경우
+    {
+        if (!editSkillKeyDic.ContainsKey(prevKey))
+            return;
+
+        if (editSkillKeyDic.ContainsKey(newKey)) //새로운 키에 다른 스킬이 등록되어있는 경우: 스왑
+            (editSkillKeyDic[prevKey], editSkillKeyDic[newKey])
+            = (editSkillKeyDic[newKey], editSkillKeyDic[prevKey]);
+        else
+        {
+            editSkillKeyDic.Add(newKey, editSkillKeyDic[prevKey]);
+            editSkillKeyDic.Remove(prevKey);
+        }
+    }
+
+    public void RemoveSkillKey(Key prevKey) //등록된 스킬을 삭제하는 경우
+    {
+        if (editSkillKeyDic.ContainsKey(prevKey))
+            editSkillKeyDic.Remove(prevKey);
+    }
+    #endregion
     #endregion
 
     #region 키 바인딩

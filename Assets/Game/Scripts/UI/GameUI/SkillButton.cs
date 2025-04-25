@@ -2,9 +2,10 @@ using System.Collections;
 using TMPro;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SkillButton : MonoBehaviour
+public class SkillButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     int index;
 
@@ -35,8 +36,6 @@ public class SkillButton : MonoBehaviour
     {
         print("SetSkill");
         icon.sprite = skillData.icon;
-
-        skillButton.onClick.AddListener(OnClick);
     }
 
     public void ResetSkill()
@@ -45,17 +44,20 @@ public class SkillButton : MonoBehaviour
         skillButton.onClick.RemoveAllListeners();
     }
 
-    #region Click Event
-    private void OnClick()
+    //Click Event
+    public void OnPointerDown(PointerEventData eventData)
     {
+        skillButton.interactable = false;
+
         print($"OnClick {index}");
     }
 
-    private void OnCancel()
+    public void OnPointerUp(PointerEventData eventData)
     {
+        skillButton.interactable = true;
+
         print($"OnCancel {index}");
     }
-    #endregion
 
     #region Emphasize
     public void Emphasize() //쿨타임 종료, 차징 완료 시 강조

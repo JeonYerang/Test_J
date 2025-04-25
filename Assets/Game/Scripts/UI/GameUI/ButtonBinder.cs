@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class ButtonBinder : MonoBehaviour
 {
     [SerializeField]
-    Transform skillButtonsParent;
-    public SkillButton[] skillButtons;
+    Transform skillButtonParent;
+    [SerializeField]
+    SkillButton[] skillButtons;
 
     [SerializeField]
     Button jumpButton;
@@ -17,7 +18,7 @@ public class ButtonBinder : MonoBehaviour
 
     private void Awake()
     {
-        skillButtons = skillButtonsParent.GetComponentsInChildren<SkillButton>();
+        skillButtons = skillButtonParent.GetComponentsInChildren<SkillButton>();
 
         for (int i = 0; i < skillButtons.Length; i++)
         {
