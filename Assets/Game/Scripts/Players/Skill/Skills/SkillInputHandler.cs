@@ -1,11 +1,25 @@
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 
 public class SkillInputHandler : MonoBehaviour
 {
-    KeyBinder keyBinder;
-    ButtonBinder buttonBinder;
+    PlayerAttack playerAttack;
 
+    private void Awake()
+    {
+        KeyBinder.OnInputSkillKey += OnInput;
+        ButtonBinder.OnInputSkillButton += OnInput;
+    }
 
+    public void OnInput(int index, bool isPressed)
+    {
+        if (playerAttack == null)
+            return;
+
+        if (isPressed)
+            playerAttack.TryUsingSkill(index);
+
+        else
+            playerAttack.EndSKill(index);
+    }
 }

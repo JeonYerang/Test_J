@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 [Serializable]
@@ -31,6 +32,7 @@ public class SkillManager : MonoBehaviour
         InitSkillCreateDic();
     }
 
+    #region 스킬 리스트 초기화
     private void InitSkillCreateDic()
     {
         foreach (var skillPair in skillPairList)
@@ -40,7 +42,7 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    public void InitSkillInput(SkillData[] skillDataList)
+    public void InitSkillUI(SkillData[] skillDataList)
     {
         skillButtonsUI.InitSkillButtons(skillDataList);
     }
@@ -58,62 +60,5 @@ public class SkillManager : MonoBehaviour
 
         return skillList;
     }
-
-    public void SetSkillKey(SkillData skillData)
-    {
-        /*if (skillData.castType == SkillCastType.Charge)
-            isChargeKey = true;
-        else
-            isChargeKey = false;*/
-
-        //skillButton.onClick.AddListener(OnClick);
-    }
-
-    PlayerAttack player;
-    int currentSKill = -1;
-    public void TryUsingSkill(int skillIndex)
-    {
-        if (currentSKill != -1)
-        {
-            return;
-        }
-
-        if (!player.CanAttack)
-        {
-            return;
-        }
-
-        Skill skill = player.GetSkill(skillIndex);
-
-        /*if(skillCoolDic.ContainsKey(skill._name))
-        {
-            return;
-        }*/
-
-        if (skill.castType == SkillCastType.Basic)
-        {
-            player.UsingSkill(skillIndex);
-        }
-        else if(skill.castType == SkillCastType.Charge)
-        {
-            currentSKill = skillIndex;
-            player.StartCharge(skillIndex);
-        }
-    }
-
-    public void EndSKill(int skillIndex)
-    {
-        if(currentSKill != skillIndex)
-        {
-            return;
-        }
-
-        Skill skill = player.GetSkill(currentSKill);
-
-        if (skill.castType == SkillCastType.Charge)
-        {
-            player.EndCharge();
-        }
-        currentSKill = -1;
-    }
+    #endregion
 }

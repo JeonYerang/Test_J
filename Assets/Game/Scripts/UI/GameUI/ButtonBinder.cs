@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.PointerEventData;
 
 public class ButtonBinder : MonoBehaviour
 {
@@ -14,7 +18,9 @@ public class ButtonBinder : MonoBehaviour
     Button jumpButton;
 
     //<button, skill index>
-    Dictionary<Button, int> skillButtonDic = new Dictionary<Button, int>(); 
+    Dictionary<Button, int> skillButtonDic = new Dictionary<Button, int>();
+
+    public static event Action<int, bool> OnInputSkillButton;
 
     private void Awake()
     {
@@ -24,6 +30,16 @@ public class ButtonBinder : MonoBehaviour
         {
             skillButtons[i].InitIndex(i);
         }
+    }
+
+    private void OnEnable()
+    {
+        SkillButton.OnInputButton += OnPointerDown;
+    }
+
+    private void OnDisable()
+    {
+        SkillButton.OnInputButton -= OnPointerDown;
     }
 
     public void InitSkillButtons(SkillData[] skillSets)
@@ -53,5 +69,10 @@ public class ButtonBinder : MonoBehaviour
     {
         if (GameManager.Instance.playerMove != null)
             GameManager.Instance.playerMove.OnJump();
+    }
+
+    public void OnPointerDown(int index, bool isPressed)
+    {
+        OnInputSkillButton?.Invoke(index, isPressed);
     }
 }

@@ -2271,6 +2271,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelName: 
+  classSelectParent: {fileID: 57022459}
+  playerListParent: {fileID: 1986736992}
   countDownText: {fileID: 301382817}
   classTogglePrefab: {fileID: 9056955531677221875, guid: 1ccbd138737d8ab429a6b3b3669add63, type: 3}
   playerEntryPrefab: {fileID: 3655036857036297225, guid: bb9178b91fd3e1e4a8f84d5ea1a33152, type: 3}
@@ -4225,9 +4227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be0c414f4eb881344ac0d183dbccf1a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoints:
-  - {fileID: 1775353871}
-  - {fileID: 1148242039}
+  bluTeamSpawnPoint: {fileID: 1775353871}
+  redTeamSpawnPoint: {fileID: 1148242039}
 --- !u!1 &1325268234
 GameObject:
   m_ObjectHideFlags: 0
@@ -5645,7 +5646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41d99cbab23385478d6bdae1bd07a11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  classList:
+  classDataList:
   - {fileID: 11400000, guid: a172293271f00d142bf2c8feecb3d31d, type: 2}
   - {fileID: 11400000, guid: f26f4a135d64ffe4d8c7638c86fd007e, type: 2}
   - {fileID: 11400000, guid: 3974198b1e22148408d9470b9ddeef4a, type: 2}

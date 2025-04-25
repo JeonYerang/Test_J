@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -45,8 +46,6 @@ public class PlayerAttack : MonoBehaviour
     PlayerClass playerClass;
     Skill[] skills;
 
-    public event EventHandler<Player> onChangedHp;
-
     public Animator animator;
 
     public ChargeSkill testSkill;
@@ -62,6 +61,7 @@ public class PlayerAttack : MonoBehaviour
         state = AttackState.Idle;
 
         onChangedHp += GameUIManager.Instance.UserInfo.SetHpBar;
+        
     }
 
     public void SetClass(PlayerClass playerClass)
@@ -69,7 +69,7 @@ public class PlayerAttack : MonoBehaviour
         this.playerClass = playerClass;
         SkillData[] skillSets = ClassManager.Instance.GetSkillSets(playerClass);
 
-        SkillManager.Instance.InitSkillInput(skillSets);
+        SkillManager.Instance.InitSkillUI(skillSets);
         skills = SkillManager.Instance.GetSkillList(skillSets);
     }
 
@@ -79,19 +79,48 @@ public class PlayerAttack : MonoBehaviour
     }
 
     #region Using SKill
-    public Skill GetSkill(int index)
+    int currentSkill = -1;
+    public void TryUsingSkill(int skillIndex)
     {
-        return skills[index];
+        print($"OnClick {skillIndex}");
+
+        if (!CanAttack)
+            return;
+
+        if (currentSkill != -1)
+            return;
+
+        Skill skill = skills[skillIndex];
+
+        if (skill.castType == SkillCastType.Basic)
+        {
+            ShotSkill(skillIndex);
+        }
+        else if (skill.castType == SkillCastType.Charge)
+        {
+            currentSkill = skillIndex;
+            StartCharge(skillIndex);
+        }
+    }
+    public void EndSKill(int skillIndex)
+    {
+        print($"OnCancel {skillIndex}");
+
+        if (currentSkill != skillIndex)
+            return;
+
+        Skill skill = skills[skillIndex];
+
+        if (skill.castType == SkillCastType.Charge)
+        {
+            EndCharge(skillIndex);
+        }
+        currentSkill = -1;
     }
 
     [PunRPC]
-    public void UsingSkill(int skillIndex)
+    public void ShotSkill(int skillIndex)
     {
-        if (!CanAttack)
-        {
-            return;
-        }
-
         state = AttackState.Attack;
 
         Skill skill = skills[skillIndex];
@@ -108,7 +137,6 @@ public class PlayerAttack : MonoBehaviour
     SkillObject skillPrefab;
 
     #region Charging
-    int chargeIndex = -1;
     ChargeSkill currentChargeSkill = null;
     [PunRPC]
     public void StartCharge(int skillIndex)
@@ -121,25 +149,24 @@ public class PlayerAttack : MonoBehaviour
         {
             state = AttackState.Charge;
 
-            chargeIndex = skillIndex;
             currentChargeSkill.StartCharge();
         }
     }
 
     [PunRPC]
-    public void EndCharge()
+    public void EndCharge(int skillIndex)
     {
-        print($"End Charging: {chargeIndex}");
+        if(currentChargeSkill == null)
+        {
+            return;
+        }
+
+        print($"End Charging: {skillIndex}");
+
+        currentChargeSkill?.EndCharge();
+        currentChargeSkill = null;
 
         state = AttackState.Attack;
-
-        chargeIndex = -1;
-
-        if(currentChargeSkill != null)
-        {
-            currentChargeSkill?.EndCharge();
-            UsingSkill(chargeIndex);
-        }
     }
     #endregion
 
@@ -150,6 +177,7 @@ public class PlayerAttack : MonoBehaviour
     #endregion
 
     #region About Hp
+    public event EventHandler<Player> onChangedHp;
     [PunRPC]
     public void GetDamage(int damage)
     {

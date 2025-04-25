@@ -56,6 +56,8 @@ public class ChargeSkill : Skill
             StopCoroutine(ChargeCoroutine());
 
         Destroy(chargingObject);
+
+        Shot();
     }
 
     private Coroutine chargeCoroutine = null;

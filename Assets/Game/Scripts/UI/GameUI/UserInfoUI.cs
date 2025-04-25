@@ -47,7 +47,7 @@ public class UserInfoUI : MonoBehaviour
         Player player = PhotonNetwork.LocalPlayer;
         PlayerClass playerClass = (PlayerClass)((int)player.CustomProperties["Class"]);
         myInfo.Find("ClassImage").GetComponent<Image>().sprite 
-            = ClassManager.Instance.classList[(int)playerClass].classIcon;
+            = ClassManager.Instance.GetClassData(playerClass).classIcon;
     }
     public void SetHpBar()
     {
@@ -135,13 +135,13 @@ public class UserInfoUI : MonoBehaviour
         {
             teamDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
                 = num == -1 ?
-                null : ClassManager.Instance.classList[num].classIcon;
+                null : ClassManager.Instance.GetClassData(num).classIcon;
         }
         else if (enemyDic.ContainsKey(player.ActorNumber)) //적군이면
         {
             enemyDic[player.ActorNumber].Find("ClassImage").GetComponent<Image>().sprite
                 = num == -1 ?
-                null : ClassManager.Instance.classList[num].classIcon;
+                null : ClassManager.Instance.GetClassData(num).classIcon;
         }
 
     }

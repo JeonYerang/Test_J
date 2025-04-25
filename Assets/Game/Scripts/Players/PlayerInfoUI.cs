@@ -58,7 +58,7 @@ public class PlayerInfoUI : MonoBehaviour
 
     public void SetClassIcon(PlayerClass playerClass)
     {
-        Sprite classIcon = ClassManager.Instance.classList[(int)playerClass].classIcon;
+        Sprite classIcon = ClassManager.Instance.GetClassData(playerClass).classIcon;
         this.classIcon.sprite = classIcon;
     }
 

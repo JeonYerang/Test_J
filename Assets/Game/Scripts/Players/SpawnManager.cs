@@ -9,7 +9,10 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager Instance;
-    public Transform[] spawnPoints;
+
+    [Header("spawn points")]
+    public Transform bluTeamSpawnPoint;
+    public Transform redTeamSpawnPoint;
 
     public Dictionary<int, GameObject> spawnedPlayers 
         = new Dictionary<int, GameObject>();
@@ -19,6 +22,10 @@ public class SpawnManager : MonoBehaviour
         Instance = this;
     }
 
+    public void SpawnCharacter(string playerName, PlayerClass playerClass, string team)
+    {
+
+    }
     public void SpawnCharacter()
     {
         string team = PhotonNetwork.LocalPlayer.GetPhotonTeam().Name;
@@ -28,12 +35,12 @@ public class SpawnManager : MonoBehaviour
         {
             case "Blue":
                 spawnedPlayer
-                    = PhotonNetwork.Instantiate("Player", spawnPoints[0].position, Quaternion.identity);
+                    = PhotonNetwork.Instantiate("Player", bluTeamSpawnPoint.position, Quaternion.identity);
                 break;
 
             case "Red":
                 spawnedPlayer
-                    = PhotonNetwork.Instantiate("Player", spawnPoints[1].position, Quaternion.identity);
+                    = PhotonNetwork.Instantiate("Player", redTeamSpawnPoint.position, Quaternion.identity);
                 break;
 
             default:

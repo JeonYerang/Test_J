@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEditor.Experimental.GraphView;
@@ -45,18 +46,18 @@ public class SkillButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
     //Click Event
+    public static event Action<int, bool> OnInputButton;
+    PlayerAttack playerAttack;
     public void OnPointerDown(PointerEventData eventData)
     {
         skillButton.interactable = false;
-
-        print($"OnClick {index}");
+        OnInputButton?.Invoke(index, true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         skillButton.interactable = true;
-
-        print($"OnCancel {index}");
+        OnInputButton?.Invoke(index, false);
     }
 
     #region Emphasize

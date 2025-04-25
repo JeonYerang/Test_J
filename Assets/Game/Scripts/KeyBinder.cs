@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -17,6 +19,8 @@ public class KeyBinder : MonoBehaviour
     private InputAction skillAction;
     private Dictionary<Key, int> editSkillKeyDic;
 
+    public static event Action<int, bool> OnInputSkillKey;
+
     private void Awake()
     {
         skillAction = inputActionAsset.FindActionMap("Player").FindAction("Skill");
@@ -26,11 +30,17 @@ public class KeyBinder : MonoBehaviour
     private void OnEnable()
     {
         editSkillKeyDic = KeySetting.skillKeyDic;
+
+        skillAction.started += OnSkillAction;
+        skillAction.canceled += OnSkillAction;
     }
 
     private void OnDisable()
     {
         editSkillKeyDic.Clear();
+
+        skillAction.started -= OnSkillAction;
+        skillAction.canceled -= OnSkillAction;
     }
 
     #region 스킬키 바인딩
@@ -47,10 +57,6 @@ public class KeyBinder : MonoBehaviour
             skillAction.AddBinding($"<Keyboard>/{key.ToString().ToLower()}", "Hold");
 
         //action.AddBinding("<Gamepad>/leftStick").WithInteractions("tap(duration=0.8)");
-
-        //둘 중 뭐지?
-        skillAction.started += OnStartSkillKey;
-        skillAction.canceled += OnCancelSkillKey;
     }
 
     public void SaveSkillAction() //저장
@@ -79,7 +85,9 @@ public class KeyBinder : MonoBehaviour
         KeySetting.skillKeyDic = editSkillKeyDic;
     }
 
-    public void OnStartSkillKey(InputAction.CallbackContext context)
+    //input Event
+    PlayerAttack playerAttack;
+    public void OnSkillAction(InputAction.CallbackContext context)
     {
         int skillIndex = -1;
 
@@ -90,26 +98,12 @@ public class KeyBinder : MonoBehaviour
             KeySetting.skillKeyDic.TryGetValue(key, out skillIndex);
         }
 
-        if (skillIndex != -1)
+        if (skillIndex != -1 && playerAttack != null)
         {
-            print($"OnStarted {skillIndex}");
-        }
-    }
-
-    public void OnCancelSkillKey(InputAction.CallbackContext context)
-    {
-        int skillIndex = -1;
-
-        var control = context.control;
-        if (control is KeyControl keyControl)
-        {
-            Key key = keyControl.keyCode;
-            KeySetting.skillKeyDic.TryGetValue(key, out skillIndex);
-        }
-
-        if (skillIndex != -1)
-        {
-            print($"OnCancel {skillIndex}");
+            if(context.started)
+                OnInputSkillKey?.Invoke(skillIndex, true);
+            else if(context.canceled)
+                OnInputSkillKey?.Invoke(skillIndex, false);
         }
     }
 

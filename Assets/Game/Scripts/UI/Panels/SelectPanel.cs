@@ -14,14 +14,13 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class SelectPanel : Panel
 {
+    [SerializeField]
     Transform classSelectParent;
+    [SerializeField]
     Transform playerListParent;
 
     private void Awake()
     {
-        classSelectParent = transform.Find("ClassSelects");
-        playerListParent = transform.Find("PlayerList");
-
         classToggleGroup = classSelectParent.GetComponent<ToggleGroup>();
     }
 
@@ -80,6 +79,7 @@ public class SelectPanel : Panel
     private void InitClassToggle(GameObject classEntry, PlayerClass playerClass)
     {
         int index = (int)playerClass;
+        ClassData classData = ClassManager.Instance.GetClassData(index);
 
         //클래스 이름 초기화
         if (classEntry.transform.Find("ClassLabel").TryGetComponent(out TextMeshProUGUI classText))
@@ -89,13 +89,13 @@ public class SelectPanel : Panel
 
         //클래스 이미지 초기화
         if (classEntry.transform.Find("ClassImage").TryGetComponent(out Image classImage))
-            classImage.sprite = ClassManager.Instance.classList[index].classIcon;
+            classImage.sprite = classData.classIcon;
         else
             print("클래스 이미지 없음");
 
         //클래스 설명 초기화
         if (classEntry.transform.Find("ClassDescription").TryGetComponent(out TextMeshProUGUI classDescription))
-            classDescription.text = ClassManager.Instance.classList[index].classDescription;
+            classDescription.text = classData.classDescription;
         else
             print("클래스 설명 없음");
 
@@ -122,6 +122,31 @@ public class SelectPanel : Panel
         }
         else
             print("클래스 토글 없음");
+    }
+
+    //To-Do
+    //열거형 playerClass에 0 = None 만들기
+    //연관된 것들 코드 모두 수정
+    //PlayerClass형식으로 매개변수 받도록 수정
+    //패널에 직업 정보 띄울 때 0은 제외하도록
+    public void SelectClass(PlayerClass playerClass)
+    {
+        int select = (int)playerClass;
+
+        Player localPlayer = PhotonNetwork.LocalPlayer;
+        Hashtable classProps
+            = new Hashtable() { { "Class", (int)localPlayer.CustomProperties["Class"] } };
+
+        if ((int)classProps["Class"] == select)
+        {
+            classProps["Class"] = select;
+        }
+        else
+        {
+            classProps["Class"] = select;
+        }
+
+        localPlayer.SetCustomProperties(classProps);
     }
 
     public void SelectClass(int select)
