@@ -11,6 +11,7 @@ public static class KeySetting
 {
     //<key code, skill index>
     public static Dictionary<Key, int> skillKeyDic;
+    //public static Dictionary<Key, int> skillTypeDic;
 }
 
 public class KeyBinder : MonoBehaviour
@@ -89,6 +90,7 @@ public class KeyBinder : MonoBehaviour
     PlayerAttack playerAttack;
     public void OnSkillAction(InputAction.CallbackContext context)
     {
+        print("KeyBinder: Å° ´­¸²");
         int skillIndex = -1;
 
         var control = context.control;

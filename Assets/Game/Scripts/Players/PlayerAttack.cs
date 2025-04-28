@@ -136,6 +136,11 @@ public class PlayerAttack : MonoBehaviour
     string animationName;
     SkillObject skillPrefab;
 
+    public Skill GetSkillWithIndex(int skillIndex)
+    {
+        return skills[skillIndex];
+    }
+
     #region Charging
     ChargeSkill currentChargeSkill = null;
     [PunRPC]

@@ -1,20 +1,21 @@
 using System;
-using System.Collections;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+//버튼이자 인디게이터...
+//state로 관리? (default, charging, cool) 
 public class SkillButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     int index;
+    SkillCastType buttonType;
 
     Button skillButton;
 
-    TextMeshProUGUI numText;
-
     Image icon;
+
+    TextMeshProUGUI textIndicator;
     Image coolIndicator;
     Image chargeIndicator;
     GameObject emphasizeIndicator;
@@ -46,37 +47,29 @@ public class SkillButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
 
     //Click Event
-    public static event Action<int, bool> OnInputButton;
-    PlayerAttack playerAttack;
+    public event Action<int, bool> OnInputCallback;
     public void OnPointerDown(PointerEventData eventData)
     {
+        print($"Button{index}: 버튼 눌림");
         skillButton.interactable = false;
-        OnInputButton?.Invoke(index, true);
+        OnInputCallback?.Invoke(index, true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         skillButton.interactable = true;
-        OnInputButton?.Invoke(index, false);
+        OnInputCallback?.Invoke(index, false);
     }
 
-    #region Emphasize
-    public void Emphasize() //쿨타임 종료, 차징 완료 시 강조
+    public void ShowState()
     {
-        emphasizeIndicator.SetActive(true);
+        if (buttonType == SkillCastType.Charge)
+            StartShowChargeTime(0);
     }
-    public void Emphasize(float sec)
-    {
-        emphasizeIndicator.SetActive(true);
-        Invoke("StopEmphasize", sec);
-    }
-    public void StopEmphasize()
-    {
-        emphasizeIndicator.SetActive(false);
-    }
-    #endregion
 
-    //condition
+
+
+    #region indicator
     public void ShowCoolTime(float amount)
     {
         if(amount <= 0)
@@ -90,16 +83,34 @@ public class SkillButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 coolIndicator.gameObject.SetActive(true);
 
             coolIndicator.fillAmount = amount;
+            ShowText($"{amount}s");
         }
-    }
-
-    public void ShowRemainCount(float amount)
-    {
-        coolIndicator.fillAmount = amount;
     }
 
     public void StartShowChargeTime(float amount)
     {
         chargeIndicator.fillAmount = amount;
     }
+
+    public void ShowText(string str)
+    {
+        textIndicator.text = str;
+    }
+
+    #region Emphasize: 쿨타임 종료, 차징 완료 시 강조
+    public void Emphasize() 
+    {
+        emphasizeIndicator.SetActive(true);
+    }
+    public void Emphasize(float sec)
+    {
+        emphasizeIndicator.SetActive(true);
+        Invoke("StopEmphasize", sec);
+    }
+    public void StopEmphasize()
+    {
+        emphasizeIndicator.SetActive(false);
+    }
+    #endregion
+    #endregion
 }
